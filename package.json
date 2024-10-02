@@ -3,6 +3,10 @@
 	"scripts": {
 		"dev": "next dev",
 		"build": "next build",
+		"check:lint": "biome lint .",
+		"check:format": "biome format .",
+		"check": "biome check .",
+		"fix": "biome check --write .",
 		"start": "next start"
 	},
 	"dependencies": {
