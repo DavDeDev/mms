@@ -41,7 +41,9 @@ export default async function CohortsGrid({
 						<tr key={cohort.id}>
 							<td className="px-6 py-4 whitespace-nowrap">{cohort.semester}</td>
 							<td className="px-6 py-4 whitespace-nowrap">{cohort.semester}</td>
-							<td className="px-6 py-4 whitespace-nowrap">{cohort.start_date}</td>
+							<td className="px-6 py-4 whitespace-nowrap">
+								{cohort.start_date}
+							</td>
 							<td className="px-6 py-4 whitespace-nowrap">{cohort.end_date}</td>
 						</tr>
 					))}
