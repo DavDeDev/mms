@@ -21,6 +21,7 @@
 		"class-variance-authority": "^0.7.0",
 		"clsx": "^2.1.1",
 		"geist": "^1.2.1",
+		"google-one-tap": "^1.0.6",
 		"lucide-react": "^0.436.0",
 		"next": "latest",
 		"next-themes": "^0.3.0",
@@ -31,6 +32,7 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.9.2",
+		"@types/google-one-tap": "^1.2.6",
 		"@types/node": "20.10.6",
 		"@types/react": "18.2.46",
 		"@types/react-dom": "18.2.18",

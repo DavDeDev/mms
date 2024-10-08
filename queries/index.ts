@@ -1,32 +1,29 @@
-import { Client } from "../types";
+import type { Client } from "../types";
 
-
-
-export async function getUserQuery(supabase: Client, userId: string) {
-  return supabase
-    .from("user_profile")
-    .select("*")
-    .eq("user_id", userId)
-    .single()
-    .throwOnError();
+export async function getUserProfileQuery(supabase: Client, userId: string) {
+	return supabase
+		.from("users")
+		.select("*")
+		.eq("id", userId)
+		.single()
+		.throwOnError();
 }
-
 
 export async function getCohorts(supabase: Client, userId: string) {
-  console.log("USER ID", userId)
-  return supabase
-    .from('cohort')
-    .select(`
+	const { data } = await supabase
+		.from("cohorts")
+		.select(`
       *,
-      cohort_mentor(
-      *
-      ),
-      cohort_mentee(
-      *
+      cohort_members (
+        *,
+        users (
+          *
+        )
       )
     `)
-    // .select('*')
-    .eq('user_id::text', userId)
-    .throwOnError();
-}
+		// .eq("cohort_member.users.user_id", userId)
+		// .returns<Tables<'cohort'>[]>()
+		.throwOnError();
 
+	return data;
+}

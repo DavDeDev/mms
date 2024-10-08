@@ -1,37 +1,52 @@
-import { Button } from "@/components/ui/button";
-import { createClient } from "@/utils/supabase/server";
+import type { Tables } from "@/types";
 
-export default async function CohortsGrid() {
-  const { data: { session } } = await createClient().auth.getSession();
-  let decodedPayload;
-  if (session?.access_token) {
-    const [header, payload, signature] = session.access_token.split('.');
-    decodedPayload = JSON.parse(atob(payload));
-    // console.log("Decoded JWT payload:", decodedPayload);
-  } else {
-    // console.log("No access token available");
-  }
-  // Check user's role from the jwt token
-  // check user_role in the payload, if the user role is admin, show all the cohorts, if the user role is user, show only the cohorts that the user is part of
-  if (decodedPayload.user_role === "admin") {
-    // fetch all the cohorts
-    const { data: cohorts, error } = await createClient().from('cohort').select('*');
-    if (error) {
-      console.error("Error fetching cohorts:", error);
-    }
-    console.log("Cohorts:", cohorts);
-  } else {
-    // fetch the cohorts that the user is part of
-  }
-	
-	return(
+export default async function CohortsGrid({
+	cohorts,
+}: { cohorts: Tables<"cohorts">[] }) {
+	console.log(cohorts);
+	return (
 		<div className="flex items-center gap-4">
 			<h1>Cohorts</h1>
-      <div>
-        <Button>
-          Add Cohort
-        </Button>
-      </div>  
+			<table className="min-w-full divide-y divide-gray-200">
+				<thead className="bg-gray-50">
+					<tr>
+						<th
+							scope="col"
+							className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+						>
+							Name
+						</th>
+						<th
+							scope="col"
+							className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+						>
+							Semester
+						</th>
+						<th
+							scope="col"
+							className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+						>
+							Year
+						</th>
+						<th
+							scope="col"
+							className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+						>
+							Duration
+						</th>
+					</tr>
+				</thead>
+				<tbody className="bg-white divide-y divide-gray-200">
+					{cohorts.map((cohort) => (
+						<tr key={cohort.id}>
+							<td className="px-6 py-4 whitespace-nowrap">{cohort.semester}</td>
+							<td className="px-6 py-4 whitespace-nowrap">{cohort.semester}</td>
+							<td className="px-6 py-4 whitespace-nowrap">{cohort.start_date}</td>
+							<td className="px-6 py-4 whitespace-nowrap">{cohort.end_date}</td>
+						</tr>
+					))}
+				</tbody>
+			</table>
 		</div>
-	)
+	);
 }
