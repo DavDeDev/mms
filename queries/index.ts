@@ -1,7 +1,7 @@
 import type { Client } from "../types";
 
 export async function getUserProfileQuery(supabase: Client, userId: string) {
-	console.log("💩Cache expired, retrieving user")
+	console.log("💩Cache expired, retrieving user");
 	return supabase
 		.from("users")
 		.select("*")
