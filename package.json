@@ -8,8 +8,8 @@
 		"check": "biome check .",
 		"fix": "biome check --write .",
 		"start": "next start",
-		"generate:types": "supabase gen types --lang=typescript --project-id lhxhwcwsgkbqnsxvabmk --schema public > ./types/db.ts",
-		"generate:enums": "node ./scripts/generate-enums.js"
+		"generate:types": "supabase gen types --lang=typescript --project-id lhxhwcwsgkbqnsxvabmk --schema public > ./types/db.ts && biome check --write .",
+		"generate:enums": "node ./scripts/generate-enums.js && biome check --write ."
 	},
 	"dependencies": {
 		"@hookform/resolvers": "^3.9.0",
