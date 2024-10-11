@@ -59,8 +59,7 @@ export default function InterestsInput({
 
 	return (
 		<div className="w-full">
-			<div className="relative">
-				<div className="flex flex-wrap items-center gap-2 p-2 border min-h-[42px]">
+				<div className="flex flex-wrap items-center gap-2 p-2 border rounded-md min-h-[42px]">
 					{/* TODO: Tooltip is not workink */}
 					<TooltipProvider>
 						{value.map((interest, index) => (
@@ -70,8 +69,9 @@ export default function InterestsInput({
 										{trimInterest(interest)}
 										<Button
 											onClick={() => removeInterest(interest)}
-											className="ml-1 rounded-full "
+											className="ml-1 p-0 h-0"
 											aria-label={`Remove ${interest}`}
+                      variant="link"
 										>
 											<X size={12} />
 										</Button>
@@ -95,7 +95,6 @@ export default function InterestsInput({
 						/>
 					)}
 				</div>
-			</div>
 		</div>
 	);
 }
