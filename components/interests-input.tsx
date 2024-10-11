@@ -59,42 +59,42 @@ export default function InterestsInput({
 
 	return (
 		<div className="w-full">
-				<div className="flex flex-wrap items-center gap-2 p-2 border rounded-md min-h-[42px]">
-					{/* TODO: Tooltip is not workink */}
-					<TooltipProvider>
-						{value.map((interest, index) => (
-							<Tooltip key={index}>
-								<TooltipTrigger asChild>
-									<Badge variant="secondary" className="text-sm">
-										{trimInterest(interest)}
-										<Button
-											onClick={() => removeInterest(interest)}
-											className="ml-1 p-0 h-0"
-											aria-label={`Remove ${interest}`}
-                      variant="link"
-										>
-											<X size={12} />
-										</Button>
-									</Badge>
-								</TooltipTrigger>
-								<TooltipContent>
-									<p>{interest}</p>
-								</TooltipContent>
-							</Tooltip>
-						))}
-					</TooltipProvider>
-					{value.length < MAX_INTERESTS && (
-						<input
-							ref={inputRef}
-							type="text"
-							placeholder="Type an interest and press Enter"
-							value={inputValue}
-							onChange={handleInputChange}
-							onKeyDown={handleInputKeyDown}
-							className="flex-grow outline-none bg-transparent text-sm min-w-[120px]"
-						/>
-					)}
-				</div>
+			<div className="flex flex-wrap items-center gap-2 p-2 border rounded-md min-h-[42px]">
+				{/* TODO: Tooltip is not workink */}
+				<TooltipProvider>
+					{value.map((interest, index) => (
+						<Tooltip key={index}>
+							<TooltipTrigger asChild>
+								<Badge variant="secondary" className="text-sm">
+									{trimInterest(interest)}
+									<Button
+										onClick={() => removeInterest(interest)}
+										className="ml-1 p-0 h-0"
+										aria-label={`Remove ${interest}`}
+										variant="link"
+									>
+										<X size={12} />
+									</Button>
+								</Badge>
+							</TooltipTrigger>
+							<TooltipContent>
+								<p>{interest}</p>
+							</TooltipContent>
+						</Tooltip>
+					))}
+				</TooltipProvider>
+				{value.length < MAX_INTERESTS && (
+					<input
+						ref={inputRef}
+						type="text"
+						placeholder="Type an interest and press Enter"
+						value={inputValue}
+						onChange={handleInputChange}
+						onKeyDown={handleInputKeyDown}
+						className="flex-grow outline-none bg-transparent text-sm min-w-[120px]"
+					/>
+				)}
+			</div>
 		</div>
 	);
 }

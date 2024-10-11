@@ -64,10 +64,11 @@ export default function UserProfileUpdateForm({
 		},
 	});
 
-	function onSubmit(values: z.infer<typeof updateUserSchema>) {
-		console.log(values);
-		updateUserAction(values);
-	}
+	const onSubmit = form.handleSubmit(
+		(values: z.infer<typeof updateUserSchema>) => {
+			return updateUserAction(values);
+		},
+	);
 
 	const handleProfilePictureChange = (
 		event: React.ChangeEvent<HTMLInputElement>,
@@ -83,7 +84,7 @@ export default function UserProfileUpdateForm({
 	};
 
 	return (
-		<Card className="w-full mx-auto">
+		<Card className="w-full rounded-none border-none">
 			<CardHeader>
 				<CardTitle>Update Your Profile</CardTitle>
 				<CardDescription>
@@ -92,7 +93,7 @@ export default function UserProfileUpdateForm({
 			</CardHeader>
 			<CardContent>
 				<Form {...form}>
-					<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+					<form onSubmit={onSubmit} className="space-y-6">
 						<div className="space-y-2">
 							<Label>Profile Picture</Label>
 							<div className="flex items-center space-x-4">
@@ -101,7 +102,10 @@ export default function UserProfileUpdateForm({
 										src={profilePicture || "/placeholder.svg"}
 										alt="Profile picture"
 									/>
-									<AvatarFallback>UP</AvatarFallback>
+									<AvatarFallback>
+										{" "}
+										{`${form.getValues("firstName")[0] ?? ""}${form.getValues("lastName")[0] ?? ""}`.toUpperCase()}
+									</AvatarFallback>
 								</Avatar>
 								<Input
 									id="picture"
@@ -292,7 +296,7 @@ export default function UserProfileUpdateForm({
 								<FormItem>
 									<FormLabel>School ID</FormLabel>
 									<FormControl>
-										<Input placeholder="Enter your school ID" {...field} />
+										<Input placeholder="3012XXXXX" {...field} />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -375,8 +379,12 @@ export default function UserProfileUpdateForm({
 							</p>
 						</div>
 
-						<Button type="submit" className="w-full">
-							Save Changes
+						<Button
+							type="submit"
+							className="w-full"
+							disabled={form.formState.isSubmitting}
+						>
+							{form.formState.isSubmitting ? "Saving..." : "Save Changes"}
 						</Button>
 					</form>
 				</Form>

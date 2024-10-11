@@ -10,6 +10,7 @@ const supabase = createClient();
 export const updateUserAction = async (
 	data: z.infer<typeof updateUserSchema>,
 ) => {
+	// throw error;
 	// Destructure data for clarity
 	const {
 		firstName,
@@ -43,5 +44,5 @@ export const updateUserAction = async (
 	};
 
 	// Call update function with mapped data
-	updateUser(supabase, mappedData);
+	return updateUser(supabase, mappedData);
 };
