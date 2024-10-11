@@ -10,22 +10,39 @@ const supabase = createClient();
 export const updateUserAction = async (
 	data: z.infer<typeof updateUserSchema>,
 ) => {
-	const normalizedInterests =
-		typeof data.interests === "string"
-			? [data.interests] // convert string to an array with one element
-			: data.interests;
-	const mappedData = {
-		first_name: data.firstName,
-		last_name: data.lastName,
-		sex: data.sex, // Assuming sex values match Supabase ("male" | "female" | "other" | null)
-		campus: data.campus, // Adjust if necessary for the campus values
-		school_id: data.schoolId,
-		is_international: data.isInternational,
-		email: data.email ?? null, // Handle optional fields with default null
-		bio: data.bio ?? null,
-		program_of_study: data.program ?? null,
-		country_of_origin: data.country ?? null,
-		interests: normalizedInterests ?? null,
+	// Destructure data for clarity
+	const {
+		firstName,
+		lastName,
+		sex,
+		campus,
+		schoolId,
+		isInternational,
+		email,
+		bio,
+		program,
+		country,
+		interests,
+	} = data;
+
+	// Ensure interests is always an array
+	const normalizedInterests = Array.isArray(interests) ? interests : [interests];
+
+	// Map data directly
+	const mappedData: Tables<"users"> = {
+		first_name: firstName,
+		last_name: lastName,
+		sex, // Assuming Supabase expects ("male" | "female" | "other" | null)
+		campus,
+		school_id: schoolId,
+		is_international: isInternational,
+		email: email || null, // Use fallback for optional fields
+		bio: bio || null,
+		program_of_study: program || null,
+		country_of_origin: country || null,
+		interests: normalizedInterests.length > 0 ? normalizedInterests : null || null, // Handle empty array case
 	};
-	updateUser(supabase, mappedData as Tables<"users">);
+
+	// Call update function with mapped data
+	updateUser(supabase, mappedData);
 };

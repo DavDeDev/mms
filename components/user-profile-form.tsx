@@ -34,7 +34,7 @@ import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { updateUserSchema } from "@/mutations/schema";
 import type { Tables } from "@/types";
-import { CollegeCampuses, type UserSex } from "@/types/enums";
+import { CollegeCampuses, UserSex } from "@/types/enums";
 import { createClient } from "@/utils/supabase/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
@@ -44,10 +44,9 @@ import type * as z from "zod";
 export default function UserProfileUpdateForm({
 	user,
 }: { user: Tables<"users"> }) {
-	const supabase = createClient();
 	const [isInternational, setIsInternational] = useState(user.is_international);
 	const [profilePicture, setProfilePicture] = useState<string | null>(null);
-
+	// const ciao = CollegeCampuses.Ashtonbee
 	const form = useForm<z.infer<typeof updateUserSchema>>({
 		resolver: zodResolver(updateUserSchema),
 		defaultValues: {
@@ -61,7 +60,7 @@ export default function UserProfileUpdateForm({
 			schoolId: user.school_id ?? 0,
 			isInternational: user.is_international ?? false,
 			country: user.country_of_origin ?? "",
-			interests: user.interests ?? "",
+			interests: user.interests ?? [],
 		},
 	});
 
@@ -244,9 +243,9 @@ export default function UserProfileUpdateForm({
 											<SelectTrigger>
 												<SelectValue placeholder="Select a campus" />
 											</SelectTrigger>
-										</FormControl>
+										</FormControl>	
 										<SelectContent>
-											{Object.values(CollegeCampuses).map((campus) => (
+											{Object.keys(CollegeCampuses).map((campus) => (
 												<SelectItem key={campus} value={campus}>
 													{campus}
 												</SelectItem>
