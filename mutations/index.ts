@@ -12,7 +12,7 @@ export async function updateUser(
 		return;
 	}
 	//TODO: Invalidate next cache
-	console.log(data);
+
 	return supabase
 		.from("users")
 		.update(data)
@@ -20,11 +20,4 @@ export async function updateUser(
 		.select()
 		.single()
 		.throwOnError();
-
-	// id: user?.id as string,
-	// full_name: fullname,
-	// username,
-	// website,
-	// avatar_url,
-	// updated_at: new Date().toISOString(),
 }

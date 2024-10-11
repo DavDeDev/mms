@@ -36,6 +36,7 @@ import { updateUserSchema } from "@/mutations/schema";
 import type { Tables } from "@/types";
 import { CollegeCampuses, type UserSex } from "@/types/enums";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import type * as z from "zod";
@@ -384,7 +385,17 @@ export default function UserProfileUpdateForm({
 							className="w-full"
 							disabled={form.formState.isSubmitting}
 						>
-							{form.formState.isSubmitting ? "Saving..." : "Save Changes"}
+							{form.formState.isSubmitting ? (
+								<div className="flex gap-1">
+									<Loader2
+										className="animate-spin text-foreground-muted mt-0.5"
+										size={16}
+									/>
+									<span>Saving...</span>
+								</div>
+							) : (
+								"Save Changes"
+							)}
 						</Button>
 					</form>
 				</Form>
