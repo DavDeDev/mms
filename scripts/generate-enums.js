@@ -1,4 +1,4 @@
-import * as fs from "node:fs";
+const fs = require("fs")
 const ts = require("typescript");
 
 // Read the types.ts file
@@ -11,6 +11,14 @@ function transformEnumName(name) {
 		.split("_")
 		.map((part) => part.charAt(0).toUpperCase() + part.slice(1))
 		.join("");
+}
+
+// Function to create valid enum keys from values
+function sanitizeEnumKey(value) {
+	// Replace non-alphanumeric characters with underscores and ensure it starts with a letter
+	return value
+		.replace(/[^a-zA-Z0-9]/g, '_')  // Replace spaces, dots, etc. with underscores
+		.replace(/^[^a-zA-Z]+/, '');    // Ensure key starts with a letter
 }
 
 // Function to parse and extract enums from Database['public']['Enums']
@@ -68,7 +76,10 @@ function createEnumStrings(enums) {
 	return Object.entries(enums)
 		.map(([enumName, enumValues]) => {
 			const enumMembers = enumValues
-				.map((value) => `${value} = "${value}"`)
+				.map((value) => {
+					const sanitizedKey = sanitizeEnumKey(value);
+					return `${sanitizedKey} = "${value}"`;
+				})
 				.join(",\n  ");
 			return `export enum ${enumName} {\n  ${enumMembers}\n}`;
 		})
@@ -77,7 +88,6 @@ function createEnumStrings(enums) {
 
 // Extract enums
 const extractedEnums = extractEnums(fileContent);
-
 // Create enum strings
 const enumStrings = createEnumStrings(extractedEnums);
 
