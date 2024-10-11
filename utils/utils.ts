@@ -20,7 +20,7 @@ export function encodedRedirect(
  * @param miliseconds
  */
 export function artificialDelay(miliseconds: number) {
-	var currentTime = new Date().getTime();
+	const currentTime = new Date().getTime();
 
 	while (currentTime + miliseconds >= new Date().getTime()) {}
 }
