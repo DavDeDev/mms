@@ -6,6 +6,7 @@ export async function GET(request: Request) {
 	// by the SSR package. It exchanges an auth code for the user's session.
 	// https://supabase.com/docs/guides/auth/server-side/nextjs
 	const requestUrl = new URL(request.url);
+	console.log("REQUEST URL, ", requestUrl)
 	const code = requestUrl.searchParams.get("code");
 	const origin = requestUrl.origin;
 	const redirectTo = requestUrl.searchParams.get("redirect_to")?.toString();
@@ -20,5 +21,5 @@ export async function GET(request: Request) {
 	}
 
 	// URL to redirect to after sign up process completes
-	return NextResponse.redirect(`${origin}/protected`);
+	return NextResponse.redirect(`${origin}/123/profile`);
 }

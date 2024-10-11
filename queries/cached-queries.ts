@@ -41,7 +41,7 @@ export const getUserProfile = async () => {
 		["user_profile", userId],
 		{
 			tags: [`user_profile_${userId}`],
-			revalidate: 3,
+			revalidate: 36000,
 		},
 	)();
 };
