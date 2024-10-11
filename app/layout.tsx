@@ -4,6 +4,7 @@ import { ThemeProvider } from "next-themes";
 import "./globals.css";
 import { TailwindIndicator } from "@/components/tailwind-indicator";
 import { TopNavigator } from "@/components/top-nav";
+import { Toaster } from "@/components/ui/sonner";
 
 const defaultUrl = process.env.VERCEL_URL
 	? `https://${process.env.VERCEL_URL}`
@@ -37,6 +38,7 @@ export default function RootLayout({
 							<Footer />
 						</div>
 					</main>
+					<Toaster richColors position="top-right" />
 					<TailwindIndicator />
 				</ThemeProvider>
 			</body>

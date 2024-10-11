@@ -39,6 +39,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import type * as z from "zod";
 import InterestsInput from "./interests-input";
 
@@ -47,7 +48,7 @@ export default function UserProfileUpdateForm({
 }: { user: Tables<"users"> }) {
 	const [isInternational, setIsInternational] = useState(user.is_international);
 	const [profilePicture, setProfilePicture] = useState<string | null>(null);
-	// const ciao = CollegeCampuses.Ashtonbee
+
 	const form = useForm<z.infer<typeof updateUserSchema>>({
 		resolver: zodResolver(updateUserSchema),
 		defaultValues: {
@@ -66,8 +67,14 @@ export default function UserProfileUpdateForm({
 	});
 
 	const onSubmit = form.handleSubmit(
-		(values: z.infer<typeof updateUserSchema>) => {
-			return updateUserAction(values);
+		async (values: z.infer<typeof updateUserSchema>) => {
+			try {
+				await updateUserAction(values);
+				toast.success("Profile updated successfully");
+			} catch (error) {
+				console.error("Error updating user profile:", error);
+				toast.error("Failed to update profile. Please try again.");
+			}
 		},
 	);
 
@@ -104,7 +111,6 @@ export default function UserProfileUpdateForm({
 										alt="Profile picture"
 									/>
 									<AvatarFallback>
-										{" "}
 										{`${form.getValues("firstName")[0] ?? ""}${form.getValues("lastName")[0] ?? ""}`.toUpperCase()}
 									</AvatarFallback>
 								</Avatar>

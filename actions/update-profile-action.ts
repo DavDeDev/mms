@@ -10,11 +10,6 @@ const supabase = createClient();
 export const updateUserAction = async (
 	data: z.infer<typeof updateUserSchema>,
 ) => {
-	// var currentTime = new Date().getTime();
-
-	// while (currentTime + 1000 >= new Date().getTime()) {}
-
-	// throw error;
 	// Destructure data for clarity
 	const {
 		firstName,
