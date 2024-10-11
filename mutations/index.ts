@@ -1,6 +1,9 @@
 import type { Client, Tables } from "@/types";
 
-export async function updateUser(supabase: Client, dataa: Tables<"users">) {
+export async function updateUser(
+	supabase: Client,
+	data: Partial<Tables<"users">>,
+) {
 	const {
 		data: { session },
 	} = await supabase.auth.getSession();
@@ -9,10 +12,10 @@ export async function updateUser(supabase: Client, dataa: Tables<"users">) {
 		return;
 	}
 	//TODO: Invalidate next cache
-	console.log(dataa);
+	console.log(data);
 	return supabase
 		.from("users")
-		.update(dataa)
+		.update(data)
 		.eq("id", session.user.id)
 		.select()
 		.single()

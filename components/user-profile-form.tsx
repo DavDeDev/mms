@@ -34,12 +34,12 @@ import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { updateUserSchema } from "@/mutations/schema";
 import type { Tables } from "@/types";
-import { CollegeCampuses, UserSex } from "@/types/enums";
-import { createClient } from "@/utils/supabase/client";
+import { CollegeCampuses, type UserSex } from "@/types/enums";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import type * as z from "zod";
+import InterestsInput from "./interests-input";
 
 export default function UserProfileUpdateForm({
 	user,
@@ -243,9 +243,9 @@ export default function UserProfileUpdateForm({
 											<SelectTrigger>
 												<SelectValue placeholder="Select a campus" />
 											</SelectTrigger>
-										</FormControl>	
+										</FormControl>
 										<SelectContent>
-											{Object.keys(CollegeCampuses).map((campus) => (
+											{Object.values(CollegeCampuses).map((campus) => (
 												<SelectItem key={campus} value={campus}>
 													{campus}
 												</SelectItem>
@@ -353,11 +353,11 @@ export default function UserProfileUpdateForm({
 							name="interests"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Interests</FormLabel>
+									<FormLabel>Interests (max 5)</FormLabel>
 									<FormControl>
-										<Input
-											placeholder="e.g. Programming, Music, Sports"
-											{...field}
+										<InterestsInput
+											value={field.value}
+											onChange={field.onChange}
 										/>
 									</FormControl>
 									<FormMessage />

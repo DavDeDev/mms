@@ -1,4 +1,4 @@
-const fs = require("fs")
+const fs = require("node:fs");
 const ts = require("typescript");
 
 // Read the types.ts file
@@ -17,8 +17,8 @@ function transformEnumName(name) {
 function sanitizeEnumKey(value) {
 	// Replace non-alphanumeric characters with underscores and ensure it starts with a letter
 	return value
-		.replace(/[^a-zA-Z0-9]/g, '_')  // Replace spaces, dots, etc. with underscores
-		.replace(/^[^a-zA-Z]+/, '');    // Ensure key starts with a letter
+		.replace(/[^a-zA-Z0-9]/g, "_") // Replace spaces, dots, etc. with underscores
+		.replace(/^[^a-zA-Z]+/, ""); // Ensure key starts with a letter
 }
 
 // Function to parse and extract enums from Database['public']['Enums']
