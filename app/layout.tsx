@@ -1,9 +1,7 @@
-import { Footer } from "@/components/footer";
 import { GeistSans } from "geist/font/sans";
 import { ThemeProvider } from "next-themes";
 import "./globals.css";
 import { TailwindIndicator } from "@/components/tailwind-indicator";
-import { TopNavigator } from "@/components/top-nav";
 import { Toaster } from "@/components/ui/sonner";
 
 const defaultUrl = process.env.VERCEL_URL
@@ -30,7 +28,7 @@ export default function RootLayout({
 					enableSystem
 					disableTransitionOnChange
 				>
-						{children}
+					{children}
 					<Toaster richColors position="top-right" />
 					<TailwindIndicator />
 				</ThemeProvider>
