@@ -49,4 +49,5 @@ export const updateUserSchema = z.object({
 	isInternational: z.boolean().default(false),
 	country: z.string().optional(),
 	interests: z.array(z.string()).max(5),
+	avatarUrl: z.string().url().nullable(),
 });

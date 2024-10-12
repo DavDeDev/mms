@@ -228,6 +228,7 @@ export type Database = {
 			};
 			users: {
 				Row: {
+					avatar_url: string | null;
 					bio: string | null;
 					campus: Database["public"]["Enums"]["college_campuses"] | null;
 					country_of_origin: string | null;
@@ -245,6 +246,7 @@ export type Database = {
 					sex: Database["public"]["Enums"]["user_sex"] | null;
 				};
 				Insert: {
+					avatar_url?: string | null;
 					bio?: string | null;
 					campus?: Database["public"]["Enums"]["college_campuses"] | null;
 					country_of_origin?: string | null;
@@ -262,6 +264,7 @@ export type Database = {
 					sex?: Database["public"]["Enums"]["user_sex"] | null;
 				};
 				Update: {
+					avatar_url?: string | null;
 					bio?: string | null;
 					campus?: Database["public"]["Enums"]["college_campuses"] | null;
 					country_of_origin?: string | null;
