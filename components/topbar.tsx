@@ -45,7 +45,9 @@ export function Topbar() {
 					</Button>
 					<Button
 						asChild
-						className="hidden md:inline-flex ml-4 bg-brand hover:bg-brand/90 text-white"
+						variant="brand"
+						className="hidden md:inline-flex"
+						size="xs"
 					>
 						<Link href="/dashboard">Dashboard</Link>
 					</Button>
@@ -65,7 +67,8 @@ export function Topbar() {
 						))}
 						<Button
 							asChild
-							className="mt-2 bg-brand hover:bg-brand/90 text-white"
+							variant="brand"
+							className="mt-2 "
 							onClick={() => setIsOpen(false)}
 						>
 							<Link href="/dashboard">Dashboard</Link>

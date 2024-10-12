@@ -15,7 +15,7 @@ export function CTA() {
 							growth and success.
 						</p>
 					</div>
-					<Button asChild size="lg">
+					<Button asChild size="lg" variant="brand">
 						<Link href="/contact/sales">Request a Demo</Link>
 					</Button>
 				</div>

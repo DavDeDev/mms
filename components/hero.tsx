@@ -21,10 +21,12 @@ export function Hero() {
 						</p>
 					</div>
 					<div className="space-x-4">
-						<Button asChild>
+						<Button variant="brand" asChild>
+							<Link href="/dashboard">View your Cohorts</Link>
+						</Button>
+						<Button variant="outline" asChild>
 							<Link href="/contact/sales">Request a Demo</Link>
 						</Button>
-						<Button variant="outline">Learn More</Button>
 					</div>
 					{/* TODO: Insert Marquee */}
 				</div>
