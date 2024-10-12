@@ -5,8 +5,6 @@ import { redirect } from "next/navigation";
 export default async function UpdateProfilePage() {
 	const user = await getUserProfile();
 
-	console.log("🔴🔴", user);
-
 	if (!user?.data) {
 		return redirect("/sign-in");
 	}

@@ -71,7 +71,6 @@ export default function UserProfileUpdateForm({
 			try {
 				// Await the promise and destructure the response
 				const { success, data, error } = await updateUserAction(values);
-				console.log("DATAAAA", data);
 				// Handle success and error based on response
 				if (success) {
 					toast.success("Profile updated successfully");
