@@ -50,9 +50,11 @@ export const updateUserAction = async (
 	};
 
 	return updateUser(supabase, mappedData)
-		.then(() => ({
-			success: true,
-		}))
+		.then(() => {
+			return {
+				success: true,
+			};
+		})
 		.catch((err) => {
 			console.error("Error updating user:", err);
 			return {
