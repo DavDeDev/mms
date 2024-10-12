@@ -25,6 +25,7 @@ export async function getUserCohortsQuery(
 			start_date,
 			end_date,
       year,
+			avatar_url,
       cohort_members!inner (
         role,
         users!inner (
@@ -51,6 +52,7 @@ export async function getUserCohortsQuery(
 			start_date: cohort.start_date,
 			end_date: cohort.end_date,
 			year: cohort.year,
+			avatar_url: cohort.avatar_url,
 			mentor_count: cohort.cohort_members.filter((cm) => cm.role === "mentor")
 				.length,
 			mentee_count: cohort.cohort_members.filter((cm) => cm.role === "mentee")

@@ -50,6 +50,7 @@ export type Database = {
 			};
 			cohorts: {
 				Row: {
+					avatar_url: string | null;
 					created_at: string;
 					end_date: string;
 					id: number;
@@ -58,6 +59,7 @@ export type Database = {
 					year: number;
 				};
 				Insert: {
+					avatar_url?: string | null;
 					created_at?: string;
 					end_date: string;
 					id?: number;
@@ -66,6 +68,7 @@ export type Database = {
 					year: number;
 				};
 				Update: {
+					avatar_url?: string | null;
 					created_at?: string;
 					end_date?: string;
 					id?: number;

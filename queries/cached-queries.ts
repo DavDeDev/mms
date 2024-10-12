@@ -43,7 +43,7 @@ export const getUserProfile = async () => {
 		["user_profile", userId],
 		{
 			tags: [`user_profile_${userId}`],
-			revalidate: 36000,
+			revalidate: 3600,
 		},
 	)();
 };
@@ -65,7 +65,7 @@ export const getUserCohorts = async () => {
 		["cohorts", "user", data.id],
 		{
 			tags: [`cohorts_user_${data.id}`],
-			revalidate: 36000,
+			revalidate: 3600,
 		},
 	)();
 };

@@ -72,7 +72,7 @@ export function CohortCard({ cohort }: { cohort: Cohort }) {
 				<CardHeader className="flex flex-row items-center gap-4">
 					<Avatar className="w-16 h-16">
 						<AvatarImage
-							src={cohort.image?.toString()}
+							src={cohort.avatar_url?.toString()}
 							alt={`${cohort.semester} ${cohort.year} Cohort`}
 						/>
 						<AvatarFallback>
