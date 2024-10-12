@@ -21,8 +21,8 @@ export function Hero() {
 						</p>
 					</div>
 					<div className="space-x-4">
-						<Button variant="brand" asChild>
-							<Link href="/dashboard">View your Cohorts</Link>
+						<Button asChild>
+							<Link href="/profile">View your Cohorts</Link>
 						</Button>
 						<Button variant="outline" asChild>
 							<Link href="/contact/sales">Request a Demo</Link>

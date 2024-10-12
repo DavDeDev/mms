@@ -17,7 +17,7 @@ export function Topbar() {
 
 	return (
 		<header className="sticky mt-4 top-4 z-50 px-2 md:px-4 md:flex justify-center">
-			<div className="rounded-lg  shadow-lg border bg-background/80 backdrop-blur-sm ">
+			<div className="rounded-md border bg-background/80 backdrop-blur-sm ">
 				<div className="flex gap-4 h-16 items-center px-4">
 					<Link className="flex items-center justify-center" href="#">
 						<BookOpen className="h-6 w-6 mr-2 text-brand" />
@@ -43,12 +43,7 @@ export function Topbar() {
 						{isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
 						<span className="sr-only">Toggle menu</span>
 					</Button>
-					<Button
-						asChild
-						variant="brand"
-						className="hidden md:inline-flex"
-						size="xs"
-					>
+					<Button asChild className="hidden md:inline-flex" size="xs">
 						<Link href="/dashboard">Dashboard</Link>
 					</Button>
 				</div>
@@ -65,12 +60,7 @@ export function Topbar() {
 								{item.name}
 							</Link>
 						))}
-						<Button
-							asChild
-							variant="brand"
-							className="mt-2 "
-							onClick={() => setIsOpen(false)}
-						>
+						<Button asChild className="mt-2 " onClick={() => setIsOpen(false)}>
 							<Link href="/dashboard">Dashboard</Link>
 						</Button>
 					</nav>
