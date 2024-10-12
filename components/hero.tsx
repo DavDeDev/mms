@@ -1,44 +1,30 @@
-import NextLogo from "./next-logo";
-import SupabaseLogo from "./supabase-logo";
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
 
-export default function Header() {
-	return (
-		<div className="flex flex-col gap-16 items-center">
-			<div className="flex gap-8 justify-center items-center">
-				<a
-					href="https://supabase.com/?utm_source=create-next-app&utm_medium=template&utm_term=nextjs"
-					target="_blank"
-					rel="noreferrer"
-				>
-					<SupabaseLogo />
-				</a>
-				<span className="border-l rotate-45 h-6" />
-				<a href="https://nextjs.org/" target="_blank" rel="noreferrer">
-					<NextLogo />
-				</a>
-			</div>
-			<h1 className="sr-only">Supabase and Next.js Starter Template</h1>
-			<p className="text-3xl lg:text-4xl !leading-tight mx-auto max-w-xl text-center">
-				The fastest way to build apps with{" "}
-				<a
-					href="https://supabase.com/?utm_source=create-next-app&utm_medium=template&utm_term=nextjs"
-					target="_blank"
-					className="font-bold hover:underline"
-					rel="noreferrer"
-				>
-					Supabase
-				</a>{" "}
-				and{" "}
-				<a
-					href="https://nextjs.org/"
-					target="_blank"
-					className="font-bold hover:underline"
-					rel="noreferrer"
-				>
-					Next.js
-				</a>
-			</p>
-			<div className="w-full p-[1px] bg-gradient-to-r from-transparent via-foreground/10 to-transparent my-8" />
-		</div>
-	);
+export function Hero() {
+  return (
+    <section className="w-full py-6 md:py-12 lg:py-16 xl:py-24">
+      <div className="container px-4 md:px-6">
+        <div className="flex flex-col items-center space-y-4 text-center">
+          <Badge variant="secondary" className="mb-2">Beta</Badge>
+          <div className="space-y-2">
+            <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
+              Empower Your School's <br /><span className="text-brand">Mentorship Program</span>
+            </h1>
+            <p className="mx-auto max-w-[650px] text-gray-500 md:text-xl dark:text-gray-400">
+              MMS helps schools effortlessly manage and scale their mentorship programs, fostering growth and success for every student.
+            </p>
+          </div>
+          <div className="space-x-4">
+            <Button asChild>
+              <Link href="/contact/sales">Request a Demo</Link>
+            </Button>
+            <Button variant="outline">Learn More</Button>
+          </div>
+					{/* TODO: Insert Marquee */}
+        </div>
+      </div>
+    </section>
+  )
 }

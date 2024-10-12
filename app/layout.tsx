@@ -30,14 +30,7 @@ export default function RootLayout({
 					enableSystem
 					disableTransitionOnChange
 				>
-					<main className="min-h-screen flex flex-col items-center">
-						<div className="flex-1 w-full flex flex-col items-center">
-							<TopNavigator />
-							<div className="flex flex-col">{children}</div>
-
-							<Footer />
-						</div>
-					</main>
+						{children}
 					<Toaster richColors position="top-right" />
 					<TailwindIndicator />
 				</ThemeProvider>
