@@ -40,13 +40,13 @@ export function CohortCard({ cohort }: { cohort: Cohort }) {
 	const getSemesterColor = (semester: Cohort["semester"]) => {
 		switch (semester) {
 			case "fall":
-			  return "bg-orange-100 text-orange-800 hover:bg-orange-100/80";
-			case "fall":
+				return "bg-orange-100 text-orange-800 hover:bg-orange-100/80";
+			case "winter":
 				return "bg-blue-100 text-blue-800 hover:bg-blue-100";
 			case "summer":
 				return "bg-yellow-100 text-yellow-800 hover:bg-yellow-100";
 			default:
-				return ;
+				return;
 		}
 	};
 

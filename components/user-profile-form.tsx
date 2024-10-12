@@ -82,12 +82,11 @@ export default function UserProfileUpdateForm({
 				try {
 					const uid = user.id; // Ensure you have a unique identifier for the user
 					const fileExt = selectedFile.name.split(".").pop();
-					const filePath = `${uid}-${Math.random()}.${fileExt}`;
+					const filePath = `pfp/${uid}-${Math.random()}.${fileExt}`;
 
 					const { data, error } = await supabase.storage
 						.from("avatars")
-						.upload(filePath, selectedFile, { upsert: true });
-
+						.upload(filePath, selectedFile);
 					if (error) {
 						toast.error("Failed to upload avatar. Please try again.");
 						return;
