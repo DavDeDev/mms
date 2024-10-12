@@ -13,7 +13,7 @@ export async function updateUser(
 	}
 	//TODO: Invalidate next cache
 
-	return supabase
+	return await supabase
 		.from("users")
 		.update(data)
 		.eq("id", session.user.id)

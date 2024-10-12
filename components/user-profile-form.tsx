@@ -69,11 +69,20 @@ export default function UserProfileUpdateForm({
 	const onSubmit = form.handleSubmit(
 		async (values: z.infer<typeof updateUserSchema>) => {
 			try {
-				await updateUserAction(values);
-				toast.success("Profile updated successfully");
-			} catch (error) {
-				console.error("Error updating user profile:", error);
-				toast.error("Failed to update profile. Please try again.");
+				// Await the promise and destructure the response
+				const { success, data, error } = await updateUserAction(values);
+				console.log("DATAAAA", data);
+				// Handle success and error based on response
+				if (success) {
+					toast.success("Profile updated successfully");
+				} else {
+					console.error("Error updating user profile:", error);
+					toast.error(error || "Failed to update profile. Please try again.");
+				}
+			} catch (err) {
+				// Catch any unexpected promise rejections
+				console.error("Unexpected error:", err);
+				toast.error("An unexpected error occurred. Please try again.");
 			}
 		},
 	);

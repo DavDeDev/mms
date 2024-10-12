@@ -1,15 +1,24 @@
 "use server";
 
 import { updateUser } from "@/mutations";
-import type { updateUserSchema } from "@/mutations/schema";
-import type { Tables } from "@/types";
+import { updateUserSchema } from "@/mutations/schema";
+import type { ServerActionResponse, Tables } from "@/types";
 import { createClient } from "@/utils/supabase/server";
 import type { z } from "zod";
-const supabase = createClient();
 
 export const updateUserAction = async (
-	data: z.infer<typeof updateUserSchema>,
-) => {
+	formData: z.infer<typeof updateUserSchema>,
+): Promise<ServerActionResponse> => {
+	// TODO: add server-side validation
+	const { success, error, data } = updateUserSchema.safeParse(formData);
+	if (error) {
+		return {
+			success,
+			error: error.message,
+		};
+	}
+	const supabase = createClient();
+
 	// Destructure data for clarity
 	const {
 		firstName,
@@ -39,6 +48,16 @@ export const updateUserAction = async (
 		country_of_origin: country || null,
 		interests,
 	};
-	// Call update function with mapped data
-	return updateUser(supabase, mappedData);
+
+	return updateUser(supabase, mappedData)
+		.then(() => ({
+			success: true,
+		}))
+		.catch((err) => {
+			console.error("Error updating user:", err);
+			return {
+				success: false,
+				error: "Failed to update user. Try again later.",
+			};
+		});
 };
