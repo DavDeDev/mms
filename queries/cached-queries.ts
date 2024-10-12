@@ -3,7 +3,8 @@ import "server-only";
 import type { Client } from "@/types";
 import { createClient } from "@/utils/supabase/server";
 import { unstable_cache } from "next/cache";
-import { getUserProfileQuery } from "../queries";
+import { redirect } from "next/navigation";
+import { getUserCohortsQuery, getUserProfileQuery } from "../queries";
 
 export const getSession = unstable_cache(
 	async (supabase: Client) => {
@@ -26,12 +27,13 @@ export const getSession = unstable_cache(
 export const getUserProfile = async () => {
 	const supabase = createClient();
 	const {
-		data: { user },
-	} = await supabase.auth.getUser();
-	const userId = user?.id;
+		data: { session },
+	} = await supabase.auth.getSession();
+	const userId = session?.user?.id;
 
+	// if the session doesn't have a user Id it redirects to login page
 	if (!userId) {
-		return null;
+		redirect("/sign-in");
 	}
 
 	return unstable_cache(
@@ -41,6 +43,28 @@ export const getUserProfile = async () => {
 		["user_profile", userId],
 		{
 			tags: [`user_profile_${userId}`],
+			revalidate: 36000,
+		},
+	)();
+};
+
+export const getUserCohorts = async () => {
+	const supabase = createClient();
+	const { data } = await getUserProfile();
+
+	if (!data) {
+		return null;
+	}
+
+	return unstable_cache(
+		async () => {
+			return getUserCohortsQuery(supabase, {
+				userId: data.id,
+			});
+		},
+		["cohorts", "user", data.id],
+		{
+			tags: [`cohorts_user_${data.id}`],
 			revalidate: 36000,
 		},
 	)();

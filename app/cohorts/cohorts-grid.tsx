@@ -3,7 +3,6 @@ import type { Tables } from "@/types";
 export default async function CohortsGrid({
 	cohorts,
 }: { cohorts: Tables<"cohorts">[] }) {
-	console.log(cohorts);
 	return (
 		<div className="flex items-center gap-4">
 			<h1>Cohorts</h1>

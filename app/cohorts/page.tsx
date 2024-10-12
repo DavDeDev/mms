@@ -1,18 +1,14 @@
-import { getCohorts } from "@/queries";
-import { getUserProfile } from "@/queries/cached-queries";
-import { createClient } from "@/utils/supabase/server";
+import { getUserCohorts, getUserProfile } from "@/queries/cached-queries";
 import { redirect } from "next/navigation";
 import CohortsGrid from "./cohorts-grid";
 
 export default async function CohortsPage() {
-	const supabase = createClient();
 	const user = await getUserProfile();
 
 	if (!user?.data) {
 		return redirect("/sign-in");
 	}
-
-	const cohorts = await getCohorts(supabase, user.data.id);
+	const cohorts = await getUserCohorts();
 
 	if (!cohorts) {
 		// TODO: if it's admin redirects to create a cohort, if not admin redirects to home
