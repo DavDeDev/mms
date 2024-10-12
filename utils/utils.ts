@@ -14,3 +14,13 @@ export function encodedRedirect(
 ) {
 	return redirect(`${path}?${type}=${encodeURIComponent(message)}`);
 }
+
+/**
+ * DON'T USE IT IN PRODUCTION JUST FOR TESTING
+ * @param miliseconds
+ */
+export function artificialDelay(miliseconds: number) {
+	const currentTime = new Date().getTime();
+
+	while (currentTime + miliseconds >= new Date().getTime()) {}
+}

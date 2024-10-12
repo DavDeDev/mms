@@ -229,45 +229,54 @@ export type Database = {
 			users: {
 				Row: {
 					bio: string | null;
-					campus: string | null;
+					campus: Database["public"]["Enums"]["college_campuses"] | null;
 					country_of_origin: string | null;
 					created_at: string | null;
+					email: string | null;
 					first_name: string | null;
 					id: string;
 					interests: string[] | null;
-					is_internationall: boolean | null;
+					is_international: boolean | null;
 					last_name: string | null;
+					phone_number: string | null;
 					program_of_study: string | null;
 					role: string | null;
 					school_id: number | null;
+					sex: Database["public"]["Enums"]["user_sex"] | null;
 				};
 				Insert: {
 					bio?: string | null;
-					campus?: string | null;
+					campus?: Database["public"]["Enums"]["college_campuses"] | null;
 					country_of_origin?: string | null;
 					created_at?: string | null;
+					email?: string | null;
 					first_name?: string | null;
 					id: string;
 					interests?: string[] | null;
-					is_internationall?: boolean | null;
+					is_international?: boolean | null;
 					last_name?: string | null;
+					phone_number?: string | null;
 					program_of_study?: string | null;
 					role?: string | null;
 					school_id?: number | null;
+					sex?: Database["public"]["Enums"]["user_sex"] | null;
 				};
 				Update: {
 					bio?: string | null;
-					campus?: string | null;
+					campus?: Database["public"]["Enums"]["college_campuses"] | null;
 					country_of_origin?: string | null;
 					created_at?: string | null;
+					email?: string | null;
 					first_name?: string | null;
 					id?: string;
 					interests?: string[] | null;
-					is_internationall?: boolean | null;
+					is_international?: boolean | null;
 					last_name?: string | null;
+					phone_number?: string | null;
 					program_of_study?: string | null;
 					role?: string | null;
 					school_id?: number | null;
+					sex?: Database["public"]["Enums"]["user_sex"] | null;
 				};
 				Relationships: [
 					{
@@ -276,6 +285,13 @@ export type Database = {
 						isOneToOne: true;
 						referencedRelation: "users";
 						referencedColumns: ["id"];
+					},
+					{
+						foreignKeyName: "users_phone_number_fkey";
+						columns: ["phone_number"];
+						isOneToOne: false;
+						referencedRelation: "users";
+						referencedColumns: ["phone"];
 					},
 				];
 			};
@@ -308,6 +324,7 @@ export type Database = {
 				| "Story Arts Centre";
 			college_semesters: "fall" | "winter" | "summer";
 			match_status: "pending" | "confirmed" | "cancelled";
+			user_sex: "male" | "female" | "other";
 		};
 		CompositeTypes: {
 			[_ in never]: never;
