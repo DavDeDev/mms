@@ -35,6 +35,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { updateUserSchema } from "@/mutations/schema";
 import type { Tables } from "@/types";
 import { CollegeCampuses, type UserSex } from "@/types/enums";
+import { createClient } from "@/utils/supabase/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
@@ -46,8 +47,13 @@ import InterestsInput from "./interests-input";
 export default function UserProfileUpdateForm({
 	user,
 }: { user: Tables<"users"> }) {
+	console.log("USER", user);
+	const supabase = createClient();
 	const [isInternational, setIsInternational] = useState(user.is_international);
-	const [profilePicture, setProfilePicture] = useState<string | null>(null);
+	const [profilePicture, setProfilePicture] = useState<string | null>(
+		user.avatar_url,
+	);
+	const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
 	const form = useForm<z.infer<typeof updateUserSchema>>({
 		resolver: zodResolver(updateUserSchema),
@@ -63,23 +69,52 @@ export default function UserProfileUpdateForm({
 			isInternational: user.is_international ?? false,
 			country: user.country_of_origin ?? "",
 			interests: user.interests ?? [],
+			avatarUrl: user.avatar_url,
 		},
 	});
 
+	// TODO: improve error handling
 	const onSubmit = form.handleSubmit(
 		async (values: z.infer<typeof updateUserSchema>) => {
+			let avatarUrl = values.avatarUrl;
+
+			if (selectedFile) {
+				try {
+					const uid = user.id; // Ensure you have a unique identifier for the user
+					const fileExt = selectedFile.name.split(".").pop();
+					const filePath = `${uid}-${Math.random()}.${fileExt}`;
+
+					const { data, error } = await supabase.storage
+						.from("avatars")
+						.upload(filePath, selectedFile, { upsert: true });
+
+					if (error) {
+						toast.error("Failed to upload avatar. Please try again.");
+						return;
+					}
+
+					avatarUrl = supabase.storage.from("avatars").getPublicUrl(data.path)
+						.data.publicUrl;
+				} catch (uploadError) {
+					console.error("Error uploading avatar:", uploadError);
+					return;
+				}
+			}
+
 			try {
-				// Await the promise and destructure the response
-				const { success, data, error } = await updateUserAction(values);
-				// Handle success and error based on response
+				const updatedValues = { ...values, avatarUrl };
+				const { success, data, error } = await updateUserAction(updatedValues);
 				if (success) {
 					toast.success("Profile updated successfully");
+					if (avatarUrl) {
+						setProfilePicture(avatarUrl);
+						setSelectedFile(null);
+					}
 				} else {
 					console.error("Error updating user profile:", error);
 					toast.error(error || "Failed to update profile. Please try again.");
 				}
 			} catch (err) {
-				// Catch any unexpected promise rejections
 				console.error("Unexpected error:", err);
 				toast.error("An unexpected error occurred. Please try again.");
 			}
@@ -89,14 +124,20 @@ export default function UserProfileUpdateForm({
 	const handleProfilePictureChange = (
 		event: React.ChangeEvent<HTMLInputElement>,
 	) => {
-		const file = event.target.files?.[0];
-		if (file) {
-			const reader = new FileReader();
-			reader.onloadend = () => {
-				setProfilePicture(reader.result as string);
-			};
-			reader.readAsDataURL(file);
+		if (!event.target.files || event.target.files.length === 0) {
+			toast.error("You must select an image to upload.");
+			return;
 		}
+
+		const file = event.target.files[0];
+		setSelectedFile(file);
+
+		// Optional: Update the preview
+		const reader = new FileReader();
+		reader.onloadend = () => {
+			setProfilePicture(reader.result as string);
+		};
+		reader.readAsDataURL(file);
 	};
 
 	return (
@@ -115,7 +156,7 @@ export default function UserProfileUpdateForm({
 							<div className="flex items-center space-x-4">
 								<Avatar className="w-24 h-24">
 									<AvatarImage
-										src={profilePicture || "/placeholder.svg"}
+										src={profilePicture || undefined}
 										alt="Profile picture"
 									/>
 									<AvatarFallback>

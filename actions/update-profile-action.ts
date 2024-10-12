@@ -32,6 +32,7 @@ export const updateUserAction = async (
 		program,
 		country,
 		interests,
+		avatarUrl,
 	} = data;
 
 	// Using Partial<Tables<"users">> to indicate a subset of colums
@@ -47,7 +48,10 @@ export const updateUserAction = async (
 		program_of_study: program || null,
 		country_of_origin: country || null,
 		interests,
+		avatar_url: avatarUrl,
 	};
+
+	console.log("VATAAAAAR", avatarUrl);
 
 	return updateUser(supabase, mappedData)
 		.then(() => {
