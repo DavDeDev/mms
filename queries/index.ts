@@ -22,6 +22,8 @@ export async function getUserCohortsQuery(
 		.select(`
       id,
       semester,
+			start_date,
+			end_date,
       year,
       cohort_members!inner (
         role,
@@ -46,6 +48,8 @@ export async function getUserCohortsQuery(
 		return {
 			cohort_id: cohort.id,
 			semester: cohort.semester,
+			start_date: cohort.start_date,
+			end_date: cohort.end_date,
 			year: cohort.year,
 			mentor_count: cohort.cohort_members.filter((cm) => cm.role === "mentor")
 				.length,
@@ -53,7 +57,7 @@ export async function getUserCohortsQuery(
 				.length,
 			coordinator_name: cohortCoordinator
 				? `${cohortCoordinator.users.first_name} ${cohortCoordinator.users.last_name}`
-				: "",
+				: null,
 		};
 	});
 
