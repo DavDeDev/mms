@@ -1,9 +1,7 @@
-import { Footer } from "@/components/footer";
 import { GeistSans } from "geist/font/sans";
 import { ThemeProvider } from "next-themes";
 import "./globals.css";
 import { TailwindIndicator } from "@/components/tailwind-indicator";
-import { TopNavigator } from "@/components/top-nav";
 import { Toaster } from "@/components/ui/sonner";
 
 const defaultUrl = process.env.VERCEL_URL
@@ -12,8 +10,8 @@ const defaultUrl = process.env.VERCEL_URL
 
 export const metadata = {
 	metadataBase: new URL(defaultUrl),
-	title: "Next.js and Supabase Starter Kit",
-	description: "The fastest way to build apps with Next.js and Supabase",
+	title: "Mentoship Management System",
+	description: "Manage your Mentorhsip Program with ease.",
 };
 
 export default function RootLayout({
@@ -30,14 +28,7 @@ export default function RootLayout({
 					enableSystem
 					disableTransitionOnChange
 				>
-					<main className="min-h-screen flex flex-col items-center">
-						<div className="flex-1 w-full flex flex-col items-center">
-							<TopNavigator />
-							<div className="flex flex-col">{children}</div>
-
-							<Footer />
-						</div>
-					</main>
+					{children}
 					<Toaster richColors position="top-right" />
 					<TailwindIndicator />
 				</ThemeProvider>

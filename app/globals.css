@@ -10,6 +10,7 @@
 		--card-foreground: 0 0% 3.9%;
 		--popover: 0 0% 100%;
 		--popover-foreground: 0 0% 3.9%;
+		--brand: 24 95% 50%;
 		--primary: 0 0% 9%;
 		--primary-foreground: 0 0% 98%;
 		--secondary: 0 0% 96.1%;
@@ -38,6 +39,7 @@
 		--card-foreground: 0 0% 98%;
 		--popover: 0 0% 3.9%;
 		--popover-foreground: 0 0% 98%;
+		--brand: 24 95% 60%;
 		--primary: 0 0% 98%;
 		--primary-foreground: 0 0% 9%;
 		--secondary: 0 0% 14.9%;
