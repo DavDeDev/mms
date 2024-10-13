@@ -1,6 +1,7 @@
 import { GeistSans } from "geist/font/sans";
 import { ThemeProvider } from "next-themes";
 import "./globals.css";
+import { SignOutButton } from "@/components/signout-indicator";
 import { TailwindIndicator } from "@/components/tailwind-indicator";
 import { Toaster } from "@/components/ui/sonner";
 
@@ -31,6 +32,7 @@ export default function RootLayout({
 					{children}
 					<Toaster richColors position="top-right" />
 					<TailwindIndicator />
+					<SignOutButton />
 				</ThemeProvider>
 			</body>
 		</html>

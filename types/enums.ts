@@ -4,6 +4,11 @@ export enum AppPermission {
 	cohort_modify = "cohort.modify",
 }
 
+export enum AppRole {
+	admin = "admin",
+	user = "user",
+}
+
 export enum CohortRole {
 	admin = "admin",
 	mentor = "mentor",

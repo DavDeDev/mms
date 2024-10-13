@@ -1,28 +1,7 @@
 "use client";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import type { getUserCohortsQuery } from "@/queries";
-import {
-	ArchiveIcon,
-	BellIcon,
-	CalendarIcon,
-	GraduationCapIcon,
-	MoreVerticalIcon,
-	UserIcon,
-	UserPlusIcon,
-	UsersIcon,
-} from "lucide-react";
-import Link from "next/link";
-import { useState } from "react";
-import { Button } from "./ui/button";
 import {
 	Dialog,
 	DialogContent,
@@ -30,25 +9,39 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
-} from "./ui/dialog";
+} from "@/components/ui/dialog";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import type { getUserCohortsQuery } from "@/queries";
+import {
+	ArchiveIcon,
+	BellIcon,
+	CalendarIcon,
+	EditIcon,
+	GraduationCapIcon,
+	LogOutIcon,
+	MoreVerticalIcon,
+	ShareIcon,
+	StarIcon,
+	UserIcon,
+	UserPlusIcon,
+	UsersIcon,
+} from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
 
 type Cohort = Awaited<ReturnType<Awaited<typeof getUserCohortsQuery>>>[number];
 
-export function CohortCard({ cohort }: { cohort: Cohort }) {
+export function CohortCard({
+	cohort,
+	isListView = false,
+}: { cohort: Cohort; isListView?: boolean }) {
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
-
-	const getSemesterColor = (semester: Cohort["semester"]) => {
-		switch (semester) {
-			case "fall":
-				return "bg-orange-100 text-orange-800 hover:bg-orange-100/80";
-			case "winter":
-				return "bg-blue-100 text-blue-800 hover:bg-blue-100";
-			case "summer":
-				return "bg-yellow-100 text-yellow-800 hover:bg-yellow-100";
-			default:
-				return;
-		}
-	};
 
 	const formatDate = (dateString: string) => {
 		return new Date(dateString).toLocaleDateString("en-US", {
@@ -64,45 +57,117 @@ export function CohortCard({ cohort }: { cohort: Cohort }) {
 		setIsDialogOpen(false);
 	};
 
-	console.log(cohort);
+	const totalMembers = cohort.mentor_count + cohort.mentee_count;
+
+	const ContextMenu = () => (
+		<DropdownMenu>
+			<DropdownMenuTrigger asChild>
+				<Button variant="ghost" size="icon">
+					<MoreVerticalIcon className="w-4 h-4" />
+					<span className="sr-only">Open menu</span>
+				</Button>
+			</DropdownMenuTrigger>
+			<DropdownMenuContent align="end">
+				<DropdownMenuItem>
+					<EditIcon className="w-4 h-4 mr-2" />
+					Edit Cohort
+				</DropdownMenuItem>
+				<DropdownMenuItem>
+					<ShareIcon className="w-4 h-4 mr-2" />
+					Share Cohort
+				</DropdownMenuItem>
+				<DropdownMenuItem>
+					<StarIcon className="w-4 h-4 mr-2" />
+					Mark as Favorite
+				</DropdownMenuItem>
+				{!cohort.coordinator_name && (
+					<DropdownMenuItem>
+						<UserPlusIcon className="w-4 h-4 mr-2" />
+						Add Coordinator
+					</DropdownMenuItem>
+				)}
+				<DropdownMenuSeparator />
+				<DropdownMenuItem className="text-yellow-600">
+					<ArchiveIcon className="w-4 h-4 mr-2" />
+					Archive Cohort
+				</DropdownMenuItem>
+				<DropdownMenuItem
+					className="text-destructive"
+					onSelect={() => setIsDialogOpen(true)}
+				>
+					<LogOutIcon className="w-4 h-4 mr-2" />
+					Leave Team
+				</DropdownMenuItem>
+			</DropdownMenuContent>
+		</DropdownMenu>
+	);
+
+	if (isListView) {
+		return (
+			<div className="flex items-center justify-between py-4 border-b last:border-b-0">
+				<div className="flex items-center space-x-4">
+					<div className="w-20 h-16 rounded-lg overflow-hidden bg-gray-200 flex items-center justify-center">
+						{cohort.avatar_url ? (
+							<img
+								src={cohort.avatar_url}
+								alt={`${cohort.semester} ${cohort.year} Cohort`}
+								className="w-full h-full object-cover"
+							/>
+						) : (
+							<span className="text-2xl font-bold text-gray-500">
+								{cohort.semester === "summer" ? "S24" : "W23"}
+							</span>
+						)}
+					</div>
+					<div>
+						<h3 className="font-semibold">
+							{cohort.semester} {cohort.year}
+						</h3>
+						<p className="text-sm text-muted-foreground">
+							{totalMembers} members
+						</p>
+						<p className="text-sm text-muted-foreground">
+							{formatDate(cohort.start_date)} - {formatDate(cohort.end_date)}
+						</p>
+					</div>
+				</div>
+				<div className="flex items-center space-x-4">
+					<div>
+						<p className="text-sm font-medium">Coordinator</p>
+						<p className="text-sm">
+							{cohort.coordinator_name || "Not assigned"}
+						</p>
+					</div>
+					<ContextMenu />
+				</div>
+			</div>
+		);
+	}
 
 	return (
-		<Card className="w-full max-w-md mx-auto">
-			<Link href={`/cohort/${cohort.cohort_id}`} className="block">
-				<CardHeader className="flex flex-row items-center gap-4">
-					<Avatar className="w-16 h-16">
-						<AvatarImage
-							src={cohort.avatar_url?.toString()}
-							alt={`${cohort.semester} ${cohort.year} Cohort`}
-						/>
-						<AvatarFallback>
-							{cohort.semester.charAt(0).toUpperCase()}
-							{cohort.year.toString().slice(-2)}
-						</AvatarFallback>
-					</Avatar>
-					<div className="flex-grow">
-						<CardTitle className="text-2xl capitalize">
-							{cohort.semester} {cohort.year}
-						</CardTitle>
-						<div className="flex items-center mt-1 text-sm text-muted-foreground">
-							<CalendarIcon className="w-4 h-4 mr-1" />
-							<Badge
-								variant="muted"
-								className={getSemesterColor(cohort.semester)}
-							>
-								{formatDate(cohort.start_date)} - {formatDate(cohort.end_date)}
-							</Badge>
-						</div>
+		<Card className="w-full h-full flex flex-col">
+			<CardHeader className="p-0">
+				<div className="relative pb-[56.25%]">
+					<img
+						src={
+							cohort.avatar_url?.toString() ||
+							"/placeholder.svg?height=180&width=320"
+						}
+						alt={`${cohort.semester} ${cohort.year} Cohort`}
+						className="absolute inset-0 w-full h-full object-cover rounded-t-lg"
+					/>
+				</div>
+			</CardHeader>
+			<CardContent className="flex-grow flex flex-col p-4">
+				<Link href={`/cohort/${cohort.cohort_id}`} className="block mb-4">
+					<CardTitle className="text-2xl capitalize mb-2">
+						{cohort.semester} {cohort.year}
+					</CardTitle>
+					<div className="flex items-center text-sm text-muted-foreground">
+						<CalendarIcon className="w-4 h-4 mr-1" />
+						{formatDate(cohort.start_date)} - {formatDate(cohort.end_date)}
 					</div>
-					<div className="relative">
-						<BellIcon className="w-6 h-6 text-muted-foreground" />
-						<Badge className="absolute -top-2 -right-2 px-1 min-w-[1.25rem] h-5">
-							3
-						</Badge>
-					</div>
-				</CardHeader>
-			</Link>
-			<CardContent>
+				</Link>
 				<div className="grid grid-cols-2 gap-4 mb-4">
 					<div className="flex items-center">
 						<UsersIcon className="w-5 h-5 mr-2 text-muted-foreground" />
@@ -119,7 +184,7 @@ export function CohortCard({ cohort }: { cohort: Cohort }) {
 						</div>
 					</div>
 				</div>
-				<div className="flex items-center justify-between pt-4 border-t">
+				<div className="flex items-center justify-between mt-auto pt-4 border-t">
 					<div className="flex items-center">
 						<UserIcon className="w-5 h-5 mr-2 text-muted-foreground" />
 						<div>
@@ -129,29 +194,13 @@ export function CohortCard({ cohort }: { cohort: Cohort }) {
 							</p>
 						</div>
 					</div>
-					<DropdownMenu>
-						<DropdownMenuTrigger asChild>
-							<Button variant="ghost" size="icon">
-								<MoreVerticalIcon className="w-4 h-4" />
-								<span className="sr-only">Open menu</span>
-							</Button>
-						</DropdownMenuTrigger>
-						<DropdownMenuContent align="end">
-							<DropdownMenuItem onSelect={() => setIsDialogOpen(true)}>
-								Leave Team
-							</DropdownMenuItem>
-							<DropdownMenuItem>
-								<ArchiveIcon className="w-4 h-4 mr-2" />
-								Archive Cohort
-							</DropdownMenuItem>
-							{!cohort.coordinator_name && (
-								<DropdownMenuItem>
-									<UserPlusIcon className="w-4 h-4 mr-2" />
-									Add Coordinator
-								</DropdownMenuItem>
-							)}
-						</DropdownMenuContent>
-					</DropdownMenu>
+					<div className="flex items-center space-x-2">
+						<div className="relative">
+							<BellIcon className="w-6 h-6 text-muted-foreground" />
+							<div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full" />
+						</div>
+						<ContextMenu />
+					</div>
 				</div>
 			</CardContent>
 
@@ -170,7 +219,7 @@ export function CohortCard({ cohort }: { cohort: Cohort }) {
 							variant="secondary"
 							onClick={() => setIsDialogOpen(false)}
 						>
-							Close
+							Cancel
 						</Button>
 						<Button
 							type="button"

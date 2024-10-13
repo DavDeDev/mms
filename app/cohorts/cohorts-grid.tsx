@@ -1,53 +1,71 @@
-import type { Tables } from "@/types";
+"use client";
 
-export default async function CohortsGrid({
+import { CohortCard } from "@/components/cohort-card";
+import { Button } from "@/components/ui/button";
+import type { getUserCohortsQuery } from "@/queries";
+import type { Database } from "@/types";
+import { GridIcon, ListIcon, PlusIcon } from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
+
+type Cohorts = Awaited<ReturnType<Awaited<typeof getUserCohortsQuery>>>;
+
+export function CohortDisplay({
 	cohorts,
-}: { cohorts: Tables<"cohorts">[] }) {
+	userRole,
+}: {
+	cohorts: Cohorts;
+	userRole: Database["public"]["Enums"]["app_role"] | null;
+}) {
+	const [isGridView, setIsGridView] = useState(true);
+
 	return (
-		<div className="flex items-center gap-4">
-			<h1>Cohorts</h1>
-			<table className="min-w-full divide-y divide-gray-200">
-				<thead className="bg-gray-50">
-					<tr>
-						<th
-							scope="col"
-							className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-						>
-							Name
-						</th>
-						<th
-							scope="col"
-							className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-						>
-							Semester
-						</th>
-						<th
-							scope="col"
-							className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-						>
-							Year
-						</th>
-						<th
-							scope="col"
-							className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-						>
-							Duration
-						</th>
-					</tr>
-				</thead>
-				<tbody className="bg-white divide-y divide-gray-200">
+		<div>
+			<div className="flex justify-between mb-4">
+				{userRole === null && (
+					<Link href="/cohorts/create">
+						<Button>
+							<PlusIcon className="w-4 h-4 mr-2" />
+							Add Cohort
+						</Button>
+					</Link>
+				)}
+				<div className="flex">
+					<Button
+						variant="outline"
+						size="icon"
+						onClick={() => setIsGridView(true)}
+						className={isGridView ? "bg-primary text-primary-foreground" : ""}
+					>
+						<GridIcon className="h-4 w-4" />
+					</Button>
+					<Button
+						variant="outline"
+						size="icon"
+						onClick={() => setIsGridView(false)}
+						className={!isGridView ? "bg-primary text-primary-foreground" : ""}
+					>
+						<ListIcon className="h-4 w-4" />
+					</Button>
+				</div>
+			</div>
+			{isGridView ? (
+				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
 					{cohorts.map((cohort) => (
-						<tr key={cohort.id}>
-							<td className="px-6 py-4 whitespace-nowrap">{cohort.semester}</td>
-							<td className="px-6 py-4 whitespace-nowrap">{cohort.semester}</td>
-							<td className="px-6 py-4 whitespace-nowrap">
-								{cohort.start_date}
-							</td>
-							<td className="px-6 py-4 whitespace-nowrap">{cohort.end_date}</td>
-						</tr>
+						<CohortCard key={cohort.cohort_id} cohort={cohort} />
 					))}
-				</tbody>
-			</table>
+				</div>
+			) : (
+				<div className="space-y-2">
+					{cohorts.map((cohort) => (
+						<CohortCard
+							key={cohort.cohort_id}
+							cohort={cohort}
+							isListView={true}
+						/>
+					))}
+				</div>
+			)}
 		</div>
 	);
 }

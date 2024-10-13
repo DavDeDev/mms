@@ -244,7 +244,7 @@ export type Database = {
 					last_name: string | null;
 					phone_number: string | null;
 					program_of_study: string | null;
-					role: string | null;
+					role: Database["public"]["Enums"]["app_role"] | null;
 					school_id: number | null;
 					sex: Database["public"]["Enums"]["user_sex"] | null;
 				};
@@ -262,7 +262,7 @@ export type Database = {
 					last_name?: string | null;
 					phone_number?: string | null;
 					program_of_study?: string | null;
-					role?: string | null;
+					role?: Database["public"]["Enums"]["app_role"] | null;
 					school_id?: number | null;
 					sex?: Database["public"]["Enums"]["user_sex"] | null;
 				};
@@ -280,7 +280,7 @@ export type Database = {
 					last_name?: string | null;
 					phone_number?: string | null;
 					program_of_study?: string | null;
-					role?: string | null;
+					role?: Database["public"]["Enums"]["app_role"] | null;
 					school_id?: number | null;
 					sex?: Database["public"]["Enums"]["user_sex"] | null;
 				};
@@ -321,6 +321,7 @@ export type Database = {
 		};
 		Enums: {
 			app_permission: "cohorts.delete" | "cohorts.create" | "cohort.modify";
+			app_role: "admin" | "user";
 			cohort_role: "admin" | "mentor" | "mentee" | "coordinator";
 			college_campuses:
 				| "Progress"
