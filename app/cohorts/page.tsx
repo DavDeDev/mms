@@ -15,7 +15,6 @@ export default async function CohortsPage() {
 		return redirect("/sign-in");
 	}
 
-	// const program = cohorts[0].cohort_coordinator[0].user_profile?.student_id;
 	return (
 		<div className="container mx-auto py-8">
 			<h1 className="text-3xl font-bold mb-6">Cohorts</h1>

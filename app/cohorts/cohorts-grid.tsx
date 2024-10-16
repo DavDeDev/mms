@@ -18,12 +18,11 @@ export function CohortDisplay({
 	userRole: Database["public"]["Enums"]["app_role"] | null;
 }) {
 	const [isGridView, setIsGridView] = useState(true);
-
 	return (
 		<div>
 			<div className="flex justify-between mb-4">
-				{userRole === null && (
-					<Link href="/cohorts/create">
+				{userRole === "admin" && (
+					<Link href="/cohort/create">
 						<Button>
 							<PlusIcon className="w-4 h-4 mr-2" />
 							Add Cohort
