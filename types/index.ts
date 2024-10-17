@@ -3,7 +3,7 @@ import type { Database } from "../types/db";
 
 export type Client = SupabaseClient<Database>;
 
-export type ServerActionResponse<T = never> = {
+export type ServerActionResponse<T> = {
 	success: boolean;
 	data?: T;
 	error?: string;

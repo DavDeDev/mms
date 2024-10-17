@@ -12,7 +12,8 @@ export async function updateUser(
 	if (!session?.user) {
 		return;
 	}
-	//TODO: Invalidate next cache
+
+	// This doesn't return anything
 	return await supabase
 		.from("users")
 		.update(data)
