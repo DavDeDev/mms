@@ -1,8 +1,10 @@
 import { GeistSans } from "geist/font/sans";
 import { ThemeProvider } from "next-themes";
 import "./globals.css";
-import { SignOutButton } from "@/components/signout-indicator";
+import { signOutAction } from "@/actions/auth-actions";
 import { TailwindIndicator } from "@/components/tailwind-indicator";
+import { ThemeSwitcher } from "@/components/theme-switcher";
+import { Button } from "@/components/ui/button";
 import { Toaster } from "@/components/ui/sonner";
 
 const defaultUrl = process.env.VERCEL_URL
@@ -33,8 +35,23 @@ export default function RootLayout({
 					<Toaster richColors position="top-right" />
 					<TailwindIndicator />
 					<SignOutButton />
+					<div className="fixed top-1 right-1">
+						<ThemeSwitcher />
+					</div>
 				</ThemeProvider>
 			</body>
 		</html>
+	);
+}
+
+function SignOutButton() {
+	if (process.env.NODE_ENV === "production") return null;
+
+	return (
+		<form action={signOutAction} className="fixed bottom-1 right-1 z-50">
+			<Button type="submit" variant="destructive">
+				Sign out
+			</Button>
+		</form>
 	);
 }

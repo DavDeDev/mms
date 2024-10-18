@@ -46,7 +46,7 @@ import { cn } from "@/utils/cn";
 import { CalendarIcon, Edit2, Trash2, Upload } from "lucide-react";
 import { toast } from "sonner";
 
-const emailSchema = z.string().email("Invalid email address");
+const emailSchema = z.string().email("Please enter a valid email address.");
 
 export default function Page() {
 	const router = useRouter();
