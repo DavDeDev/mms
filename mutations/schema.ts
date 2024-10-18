@@ -1,4 +1,9 @@
-import { CollegeCampuses, UserSex } from "@/types/enums";
+import {
+	CohortRole,
+	CollegeCampuses,
+	CollegeSemesters,
+	UserSex,
+} from "@/types/enums";
 import { z } from "zod";
 
 const passwordSchema = z
@@ -50,4 +55,21 @@ export const updateUserSchema = z.object({
 	country: z.string().optional(),
 	interests: z.array(z.string()).max(5),
 	avatarUrl: z.string().url().nullable(),
+});
+
+export const createCohortSchema = z.object({
+	semester: z.nativeEnum(CollegeSemesters),
+	year: z.number().int().min(2023).max(2100),
+	dateRange: z.object({
+		from: z.date(),
+		to: z.date(),
+	}),
+	coordinator: z.string().email(),
+	members: z.array(
+		z.object({
+			email: z.string().email(),
+			role: z.nativeEnum(CohortRole),
+		}),
+	),
+	image: z.string().optional(),
 });

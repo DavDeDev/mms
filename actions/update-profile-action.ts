@@ -6,9 +6,10 @@ import type { ServerActionResponse, Tables } from "@/types";
 import { createClient } from "@/utils/supabase/server";
 import type { z } from "zod";
 
+// TODO: never, undefined, or void?
 export const updateUserAction = async (
 	formData: z.infer<typeof updateUserSchema>,
-): Promise<ServerActionResponse> => {
+): Promise<ServerActionResponse<never>> => {
 	// TODO: add server-side validation
 	const { success, error, data } = updateUserSchema.safeParse(formData);
 	if (error) {
@@ -18,7 +19,7 @@ export const updateUserAction = async (
 		};
 	}
 	const supabase = createClient();
-
+	// TODO: add preferred name and DOB
 	// Destructure data for clarity
 	const {
 		firstName,

@@ -50,6 +50,7 @@ export type Database = {
 			};
 			cohorts: {
 				Row: {
+					avatar_url: string | null;
 					created_at: string;
 					end_date: string;
 					id: number;
@@ -58,6 +59,7 @@ export type Database = {
 					year: number;
 				};
 				Insert: {
+					avatar_url?: string | null;
 					created_at?: string;
 					end_date: string;
 					id?: number;
@@ -66,6 +68,7 @@ export type Database = {
 					year: number;
 				};
 				Update: {
+					avatar_url?: string | null;
 					created_at?: string;
 					end_date?: string;
 					id?: number;
@@ -241,7 +244,7 @@ export type Database = {
 					last_name: string | null;
 					phone_number: string | null;
 					program_of_study: string | null;
-					role: string | null;
+					role: Database["public"]["Enums"]["app_role"] | null;
 					school_id: number | null;
 					sex: Database["public"]["Enums"]["user_sex"] | null;
 				};
@@ -259,7 +262,7 @@ export type Database = {
 					last_name?: string | null;
 					phone_number?: string | null;
 					program_of_study?: string | null;
-					role?: string | null;
+					role?: Database["public"]["Enums"]["app_role"] | null;
 					school_id?: number | null;
 					sex?: Database["public"]["Enums"]["user_sex"] | null;
 				};
@@ -277,7 +280,7 @@ export type Database = {
 					last_name?: string | null;
 					phone_number?: string | null;
 					program_of_study?: string | null;
-					role?: string | null;
+					role?: Database["public"]["Enums"]["app_role"] | null;
 					school_id?: number | null;
 					sex?: Database["public"]["Enums"]["user_sex"] | null;
 				};
@@ -318,6 +321,7 @@ export type Database = {
 		};
 		Enums: {
 			app_permission: "cohorts.delete" | "cohorts.create" | "cohort.modify";
+			app_role: "admin" | "user";
 			cohort_role: "admin" | "mentor" | "mentee" | "coordinator";
 			college_campuses:
 				| "Progress"
