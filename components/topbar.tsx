@@ -20,7 +20,7 @@ export function Topbar() {
 		<header className="sticky mt-4 top-4 z-50 px-2 md:px-4 md:flex justify-center">
 			<div className="rounded-md border bg-background/80 backdrop-blur-sm ">
 				<div className="flex gap-4 h-16 items-center px-4">
-					<Link className="flex items-center justify-center" href="#">
+					<Link className="flex items-center justify-center" href="/">
 						<BookOpen className="h-6 w-6 mr-2 text-brand" />
 						<span className="md:hidden">MMS</span>
 					</Link>
