@@ -94,14 +94,14 @@ export default function Page() {
 	const onSubmit = async (values: z.infer<typeof createCohortSchema>) => {
 		setIsLoading(true);
 		// Here you would typically send the form data to your API
-		console.log(values);
+		console.log("VALUES:  ",values);
 
 		// Simulating an API call
 		await new Promise((resolve) => setTimeout(resolve, 2000));
 
 		setIsLoading(false);
 		toast.success("Cohort created successfully");
-		router.push("/cohorts");
+		// router.push("/cohorts");
 	};
 
 	const addUser = () => {
@@ -152,7 +152,7 @@ export default function Page() {
 	};
 
 	return (
-		<div className="container mx-auto py-10">
+		<div className="container py-10">
 			<h1 className="text-3xl font-bold mb-6">Create New Cohort</h1>
 			<Form {...form}>
 				<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">

@@ -37,7 +37,7 @@ import type { Tables } from "@/types";
 import { CollegeCampuses, type UserSex } from "@/types/enums";
 import { createClient } from "@/utils/supabase/client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2 } from "lucide-react";
+import { Loader2, Upload } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -50,7 +50,7 @@ export default function UserProfileUpdateForm({
 	console.log("USER", user);
 	const supabase = createClient();
 	const [isInternational, setIsInternational] = useState(user.is_international);
-	const [profilePicture, setProfilePicture] = useState<string | null>(
+	const [imagePreview, setImagePreview] = useState<string | null>(
 		user.avatar_url,
 	);
 	const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -106,7 +106,7 @@ export default function UserProfileUpdateForm({
 				if (success) {
 					toast.success("Profile updated successfully");
 					if (avatarUrl) {
-						setProfilePicture(avatarUrl);
+						setImagePreview(avatarUrl);
 						setSelectedFile(null);
 					}
 				} else {
@@ -120,27 +120,27 @@ export default function UserProfileUpdateForm({
 		},
 	);
 
-	const handleProfilePictureChange = (
-		event: React.ChangeEvent<HTMLInputElement>,
-	) => {
-		if (!event.target.files || event.target.files.length === 0) {
-			toast.error("You must select an image to upload.");
-			return;
-		}
+	// const handleProfilePictureChange = (
+	// 	event: React.ChangeEvent<HTMLInputElement>,
+	// ) => {
+	// 	if (!event.target.files || event.target.files.length === 0) {
+	// 		toast.error("You must select an image to upload.");
+	// 		return;
+	// 	}
 
-		const file = event.target.files[0];
-		setSelectedFile(file);
+	// 	const file = event.target.files[0];
+	// 	setSelectedFile(file);
 
-		// Optional: Update the preview
-		const reader = new FileReader();
-		reader.onloadend = () => {
-			setProfilePicture(reader.result as string);
-		};
-		reader.readAsDataURL(file);
-	};
-
+	// 	// Optional: Update the preview
+	// 	const reader = new FileReader();
+	// 	reader.onloadend = () => {
+	// 		setProfilePicture(reader.result as string);
+	// 	};
+	// 	reader.readAsDataURL(file);
+	// };
+	//TODO: improve avatar ulr input
 	return (
-		<Card className="w-full rounded-none border-none">
+		<Card className="container">
 			<CardHeader>
 				<CardTitle>Update Your Profile</CardTitle>
 				<CardDescription>
@@ -150,7 +150,61 @@ export default function UserProfileUpdateForm({
 			<CardContent>
 				<Form {...form}>
 					<form onSubmit={onSubmit} className="space-y-6">
-						<div className="space-y-2">
+						<FormField
+							control={form.control}
+							name="avatarUrl"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Profile Picture</FormLabel>
+									<FormControl>
+										<div
+											className="w-full 	 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center cursor-pointer overflow-hidden"
+											onClick={() =>
+												document.getElementById("image-upload")?.click()
+											}
+										>
+											{imagePreview ? (
+												<img
+													src={imagePreview}
+													alt="Cohort preview"
+													className="w-full h-full object-cover"
+												/>
+											) : (
+												<div className="text-center">
+													<Upload className="mx-auto h-12 w-12 text-gray-400" />
+													<p className="mt-2 text-sm text-gray-500">
+														Click to upload image
+													</p>
+												</div>
+											)}
+											<Input
+												id="image-upload"
+												type="file"
+												accept="image/*"
+												className="hidden"
+												onChange={(e) => {
+													const file = e.target.files?.[0];
+													if (file) {
+														const reader = new FileReader();
+														reader.onloadend = () => {
+															const result = reader.result as string;
+															field.onChange(result);
+															setImagePreview(result);
+														};
+														reader.readAsDataURL(file);
+													}
+												}}
+											/>
+										</div>
+									</FormControl>
+									<FormDescription>
+										Upload a profile picture (optional).
+									</FormDescription>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						{/* <div className="space-y-2">
 							<Label>Profile Picture</Label>
 							<div className="flex items-center space-x-4">
 								<Avatar className="w-24 h-24">
@@ -169,7 +223,7 @@ export default function UserProfileUpdateForm({
 									onChange={handleProfilePictureChange}
 								/>
 							</div>
-						</div>
+						</div> */}
 
 						<Separator />
 

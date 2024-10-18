@@ -28,7 +28,7 @@ export const getUserProfile = async () => {
 	const supabase = createClient();
 	const {
 		data: { session },
-	} = await supabase.auth.getSession();
+	} = await getSession(supabase);
 	const userId = session?.user?.id;
 
 	// if the session doesn't have a user Id it redirects to login page
