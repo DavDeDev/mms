@@ -52,8 +52,6 @@ export const updateUserAction = async (
 		avatar_url: avatarUrl,
 	};
 
-	console.log("VATAAAAAR", avatarUrl);
-
 	return updateUser(supabase, mappedData)
 		.then(() => {
 			return {

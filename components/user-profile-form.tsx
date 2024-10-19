@@ -32,15 +32,21 @@ import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { updateUserSchema } from "@/mutations/schema";
 import type { Tables } from "@/types";
-import { CollegeCampuses, type UserSex } from "@/types/enums";
+import { CollegeCampuses, UserSex } from "@/types/enums";
 import { createClient } from "@/utils/supabase/client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2, Upload } from "lucide-react";
+import { Loader2, Upload, X } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import type * as z from "zod";
+import * as z from "zod";
 import InterestsInput from "./interests-input";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { Label } from "./ui/label";
+
+const clientUpdateUserSchema = updateUserSchema.extend({
+	avatarUrl: z.union([z.string().url().nullable(), z.instanceof(File)]),
+});
 
 export default function UserProfileUpdateForm({
 	user,
@@ -51,10 +57,9 @@ export default function UserProfileUpdateForm({
 	const [imagePreview, setImagePreview] = useState<string | null>(
 		user.avatar_url,
 	);
-	const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-	const form = useForm<z.infer<typeof updateUserSchema>>({
-		resolver: zodResolver(updateUserSchema),
+	const form = useForm<z.infer<typeof clientUpdateUserSchema>>({
+		resolver: zodResolver(clientUpdateUserSchema),
 		defaultValues: {
 			firstName: user.first_name ?? "",
 			lastName: user.last_name ?? "",
@@ -72,71 +77,51 @@ export default function UserProfileUpdateForm({
 	});
 
 	// TODO: improve error handling
-	const onSubmit = form.handleSubmit(
-		async (values: z.infer<typeof updateUserSchema>) => {
-			let avatarUrl = values.avatarUrl;
+	const onSubmit = async (values: z.infer<typeof clientUpdateUserSchema>) => {
+		try {
+			let avatarUrl: string | null; // Start with the existing avatar URL
 
-			if (selectedFile) {
-				try {
-					const uid = user.id; // Ensure you have a unique identifier for the user
-					const fileExt = selectedFile.name.split(".").pop();
-					const filePath = `pfp/${uid}-${Math.random()}.${fileExt}`;
+			if (values.avatarUrl instanceof File) {
+				const uid = user.id;
+				const fileExt = values.avatarUrl.name.split(".").pop();
+				const filePath = `pfp/${uid}-${Math.random()}.${fileExt}`;
 
-					const { data, error } = await supabase.storage
-						.from("avatars")
-						.upload(filePath, selectedFile);
-					if (error) {
-						toast.error("Failed to upload avatar. Please try again.");
-						return;
-					}
+				const { data, error } = await supabase.storage
+					.from("avatars")
+					.upload(filePath, values.avatarUrl);
 
-					avatarUrl = supabase.storage.from("avatars").getPublicUrl(data.path)
-						.data.publicUrl;
-				} catch (uploadError) {
-					console.error("Error uploading avatar:", uploadError);
+				if (error) {
+					toast.error("Failed to upload avatar. Please try again.");
 					return;
 				}
+
+				avatarUrl = supabase.storage.from("avatars").getPublicUrl(data.path)
+					.data.publicUrl;
+			} else {
+				avatarUrl = values.avatarUrl;
 			}
 
-			try {
-				const updatedValues = { ...values, avatarUrl };
-				const { success, data, error } = await updateUserAction(updatedValues);
-				if (success) {
-					toast.success("Profile updated successfully");
-					if (avatarUrl) {
-						setImagePreview(avatarUrl);
-						setSelectedFile(null);
-					}
-				} else {
-					console.error("Error updating user profile:", error);
-					toast.error(error || "Failed to update profile. Please try again.");
-				}
-			} catch (err) {
-				console.error("Unexpected error:", err);
-				toast.error("An unexpected error occurred. Please try again.");
+			const updatedValues = { ...values, avatarUrl };
+			const { success, error } = await updateUserAction(updatedValues);
+
+			if (success) {
+				toast.success("Profile updated successfully");
+				setImagePreview(avatarUrl);
+			} else {
+				console.error("Error updating user profile:", error);
+				toast.error(error || "Failed to update profile. Please try again.");
 			}
-		},
-	);
+		} catch (err) {
+			console.error("Unexpected error:", err);
+			toast.error("An unexpected error occurred. Please try again.");
+		}
+	};
 
-	// const handleProfilePictureChange = (
-	// 	event: React.ChangeEvent<HTMLInputElement>,
-	// ) => {
-	// 	if (!event.target.files || event.target.files.length === 0) {
-	// 		toast.error("You must select an image to upload.");
-	// 		return;
-	// 	}
+	const removeAvatar = () => {
+		form.setValue("avatarUrl", null);
+		setImagePreview(null);
+	};
 
-	// 	const file = event.target.files[0];
-	// 	setSelectedFile(file);
-
-	// 	// Optional: Update the preview
-	// 	const reader = new FileReader();
-	// 	reader.onloadend = () => {
-	// 		setProfilePicture(reader.result as string);
-	// 	};
-	// 	reader.readAsDataURL(file);
-	// };
-	//TODO: improve avatar ulr input
 	return (
 		<Card className="container">
 			<CardHeader>
@@ -147,175 +132,151 @@ export default function UserProfileUpdateForm({
 			</CardHeader>
 			<CardContent>
 				<Form {...form}>
-					<form onSubmit={onSubmit} className="space-y-6">
-						<FormField
-							control={form.control}
-							name="avatarUrl"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Profile Picture</FormLabel>
-									<FormControl>
-										<div
-											className="w-full 	 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center cursor-pointer overflow-hidden"
-											onClick={() =>
-												document.getElementById("image-upload")?.click()
-											}
-										>
-											{imagePreview ? (
-												<img
-													src={imagePreview}
-													alt="Cohort preview"
-													className="w-full h-full object-cover"
-												/>
-											) : (
-												<div className="text-center">
-													<Upload className="mx-auto h-12 w-12 text-gray-400" />
-													<p className="mt-2 text-sm text-gray-500">
-														Click to upload image
-													</p>
+					<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+						<div className="flex flex-col md:flex-row gap-6">
+							<div className="flex flex-col items-center space-y-2">
+								<FormField
+									control={form.control}
+									name="avatarUrl"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel className="sr-only">Profile Picture</FormLabel>
+											<FormControl>
+												<div className="flex flex-col items-center space-y-4">
+													<div className="relative">
+														<Label
+															htmlFor="avatar-upload"
+															className="cursor-pointer"
+														>
+															<Avatar className="w-64 h-64 border-2 border-border hover:border-primary transition-colors">
+																<AvatarImage
+																	src={imagePreview || undefined}
+																	alt="Profile picture"
+																/>
+																<AvatarFallback>
+																	<Upload className="h-8 w-8 text-muted-foreground" />
+																</AvatarFallback>
+															</Avatar>
+														</Label>
+														<Input
+															id="avatar-upload"
+															type="file"
+															accept="image/*"
+															className="hidden"
+															onChange={(e) => {
+																const file = e.target.files?.[0];
+																if (file) {
+																	field.onChange(file);
+																	const reader = new FileReader();
+																	reader.onloadend = () => {
+																		setImagePreview(reader.result as string);
+																	};
+																	reader.readAsDataURL(file);
+																}
+															}}
+														/>
+														{imagePreview && (
+															<Button
+																type="button"
+																size="icon"
+																className="absolute top-1 right-1 rounded-full h-8 w-8 border-2 "
+																onClick={removeAvatar}
+															>
+																<X className="h-4 w-4" />
+																<span className="sr-only">Remove avatar</span>
+															</Button>
+														)}
+													</div>
 												</div>
-											)}
-											<Input
-												id="image-upload"
-												type="file"
-												accept="image/*"
-												className="hidden"
-												onChange={(e) => {
-													const file = e.target.files?.[0];
-													if (file) {
-														const reader = new FileReader();
-														reader.onloadend = () => {
-															const result = reader.result as string;
-															field.onChange(result);
-															setImagePreview(result);
-														};
-														reader.readAsDataURL(file);
-													}
-												}}
-											/>
-										</div>
-									</FormControl>
-									<FormDescription>
-										Upload a profile picture (optional).
-									</FormDescription>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						{/* <div className="space-y-2">
-							<Label>Profile Picture</Label>
-							<div className="flex items-center space-x-4">
-								<Avatar className="w-24 h-24">
-									<AvatarImage
-										src={profilePicture || undefined}
-										alt="Profile picture"
-									/>
-									<AvatarFallback>
-										{`${form.getValues("firstName")[0] ?? ""}${form.getValues("lastName")[0] ?? ""}`.toUpperCase()}
-									</AvatarFallback>
-								</Avatar>
-								<Input
-									id="picture"
-									type="file"
-									accept="image/*"
-									onChange={handleProfilePictureChange}
+											</FormControl>
+											<FormDescription>
+												Click the avatar to upload a new profile picture.
+											</FormDescription>
+											<FormMessage />
+										</FormItem>
+									)}
 								/>
 							</div>
-						</div> */}
-
-						<Separator />
-
-						<div>
-							<h3 className="text-lg font-medium">Personal Information</h3>
-							<p className="text-sm text-muted-foreground">
-								Basic information about you.
-							</p>
+							<div className="flex-1 space-y-4">
+								<div className="grid grid-cols-2 gap-4">
+									<FormField
+										control={form.control}
+										name="firstName"
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel>First Name</FormLabel>
+												<FormControl>
+													<Input placeholder="John" {...field} />
+												</FormControl>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+									<FormField
+										control={form.control}
+										name="lastName"
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel>Last Name</FormLabel>
+												<FormControl>
+													<Input placeholder="Doe" {...field} />
+												</FormControl>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+								</div>
+								<FormField
+									control={form.control}
+									name="email"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Email</FormLabel>
+											<FormControl>
+												<Input
+													type="email"
+													placeholder="john@example.com"
+													{...field}
+													disabled
+												/>
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+								<FormField
+									control={form.control}
+									name="sex"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Sex</FormLabel>
+											<FormControl>
+												<RadioGroup
+													onValueChange={field.onChange}
+													defaultValue={field.value}
+													className="flex space-x-4"
+												>
+													{Object.values(UserSex).map((sex) => (
+														<FormItem
+															key={sex}
+															className="flex items-center space-x-2"
+														>
+															<FormControl>
+																<RadioGroupItem value={sex} />
+															</FormControl>
+															<FormLabel className="font-normal">
+																{sex}
+															</FormLabel>
+														</FormItem>
+													))}
+												</RadioGroup>
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+							</div>
 						</div>
-
-						<div className="grid grid-cols-2 gap-4">
-							<FormField
-								control={form.control}
-								name="firstName"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>First Name</FormLabel>
-										<FormControl>
-											<Input placeholder="John" {...field} />
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-							<FormField
-								control={form.control}
-								name="lastName"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Last Name</FormLabel>
-										<FormControl>
-											<Input placeholder="Doe" {...field} />
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-						</div>
-
-						<FormField
-							control={form.control}
-							name="email"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Email</FormLabel>
-									<FormControl>
-										<Input
-											type="email"
-											placeholder="john@example.com"
-											{...field}
-											disabled
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-
-						<FormField
-							control={form.control}
-							name="sex"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Sex</FormLabel>
-									<FormControl>
-										<RadioGroup
-											onValueChange={field.onChange}
-											defaultValue={field.value}
-											className="flex flex-col space-y-1"
-										>
-											<FormItem className="flex items-center space-x-3 space-y-0">
-												<FormControl>
-													<RadioGroupItem value="male" />
-												</FormControl>
-												<FormLabel className="font-normal">Male</FormLabel>
-											</FormItem>
-											<FormItem className="flex items-center space-x-3 space-y-0">
-												<FormControl>
-													<RadioGroupItem value="female" />
-												</FormControl>
-												<FormLabel className="font-normal">Female</FormLabel>
-											</FormItem>
-											<FormItem className="flex items-center space-x-3 space-y-0">
-												<FormControl>
-													<RadioGroupItem value="other" />
-												</FormControl>
-												<FormLabel className="font-normal">Other</FormLabel>
-											</FormItem>
-										</RadioGroup>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
 
 						<FormField
 							control={form.control}
