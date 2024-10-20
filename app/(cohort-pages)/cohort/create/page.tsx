@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
+import { createCohortAction } from "@/actions/create-cohort-action";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -43,19 +44,26 @@ import {
 import { createCohortSchema } from "@/mutations/schema";
 import { CohortRole, CollegeSemesters } from "@/types/enums";
 import { cn } from "@/utils/cn";
+import { createClient } from "@/utils/supabase/client";
 import { CalendarIcon, Edit2, Trash2, Upload } from "lucide-react";
 import { toast } from "sonner";
+import { v4 as uuidv4 } from "uuid";
 
 const emailSchema = z.string().email("Please enter a valid email address.");
-
+const clientCreateCohortSchema = createCohortSchema.extend({
+	avatarUrl: z
+		.union([z.string().url().nullable(), z.instanceof(File)])
+		.optional(),
+});
 export default function Page() {
 	const router = useRouter();
+	const supabase = createClient();
 	const [isLoading, setIsLoading] = useState(false);
 	const [imagePreview, setImagePreview] = useState<string | null>(null);
 	const currentYear = new Date().getFullYear();
 
-	const form = useForm<z.infer<typeof createCohortSchema>>({
-		resolver: zodResolver(createCohortSchema),
+	const form = useForm<z.infer<typeof clientCreateCohortSchema>>({
+		resolver: zodResolver(clientCreateCohortSchema),
 		defaultValues: {
 			semester: CollegeSemesters.fall,
 			year: currentYear,
@@ -65,7 +73,6 @@ export default function Page() {
 			},
 			coordinator: "",
 			members: [],
-			image: "",
 		},
 	});
 
@@ -91,20 +98,47 @@ export default function Page() {
 			return false;
 		}
 	};
-	const onSubmit = async (values: z.infer<typeof createCohortSchema>) => {
-		setIsLoading(true);
-		// Here you would typically send the form data to your API
-		console.log("VALUES:  ",values);
+	const onSubmit = async (values: z.infer<typeof clientCreateCohortSchema>) => {
+		let avatarUrl: string | null; // Start with the existing avatar URL
 
-		// Simulating an API call
-		await new Promise((resolve) => setTimeout(resolve, 2000));
+		if (values.avatarUrl instanceof File) {
+			const uid = uuidv4();
+			const fileExt = values.avatarUrl.name.split(".").pop();
+			const filePath = `cohort/${uid}-${Math.random()}.${fileExt}`;
 
-		setIsLoading(false);
-		toast.success("Cohort created successfully");
-		// router.push("/cohorts");
+			const { data, error } = await supabase.storage
+				.from("avatars")
+				.upload(filePath, values.avatarUrl);
+
+			if (error) {
+				toast.error("Failed to upload cohort image. Please try again.");
+				return;
+			}
+
+			avatarUrl = supabase.storage.from("avatars").getPublicUrl(data.path)
+				.data.publicUrl;
+		} else {
+			avatarUrl = values.avatarUrl ?? null;
+		}
+
+		const { success, error } = await createCohortAction({
+			...values,
+			avatarUrl,
+		});
+
+		// Handle the response from the server action
+		if (success) {
+			toast.success("Cohort created successfully!"); // Show success notification
+			// Optionally, redirect or update UI after successful cohort creation
+			// Example: router.push("/cohorts"); or update the cohort list view
+			// revalidatePath("/cohorts");
+			router.push("/cohorts");
+		} else {
+			toast.error(`Failed to create cohort: ${error}`); // Show error message
+		}
 	};
 
-	const addUser = () => {
+	const addMember = () => {
 		if (validateEmail(newMemberEmail) && newMemberRole) {
 			const newUser = { email: newMemberEmail, role: newMemberRole };
 			setMembers([...members, newUser]);
@@ -117,19 +151,19 @@ export default function Page() {
 		}
 	};
 
-	const removeUser = (index: number) => {
+	const removeMember = (index: number) => {
 		const updatedUsers = members.filter((_, i) => i !== index);
 		setMembers(updatedUsers);
 		form.setValue("members", updatedUsers);
 	};
 
-	const editUser = (index: number) => {
+	const editMember = (index: number) => {
 		setEditingIndex(index);
 		setNewMemberEmail(members[index].email);
 		setNewMemberRole(members[index].role);
 	};
 
-	const updateUser = () => {
+	const updateMember = () => {
 		if (
 			editingIndex !== null &&
 			validateEmail(newMemberEmail) &&
@@ -160,7 +194,7 @@ export default function Page() {
 						<div className="w-full md:w-1/3">
 							<FormField
 								control={form.control}
-								name="image"
+								name="avatarUrl"
 								render={({ field }) => (
 									<FormItem>
 										<FormLabel>Cohort Image</FormLabel>
@@ -196,7 +230,7 @@ export default function Page() {
 															const reader = new FileReader();
 															reader.onloadend = () => {
 																const result = reader.result as string;
-																field.onChange(result);
+																field.onChange(file);
 																setImagePreview(result);
 															};
 															reader.readAsDataURL(file);
@@ -378,7 +412,7 @@ export default function Page() {
 							</Select>
 							<Button
 								type="button"
-								onClick={editingIndex !== null ? updateUser : addUser}
+								onClick={editingIndex !== null ? updateMember : addMember}
 							>
 								{editingIndex !== null ? "Update" : "Add"}
 							</Button>
@@ -408,7 +442,7 @@ export default function Page() {
 														type="button"
 														variant="ghost"
 														size="sm"
-														onClick={() => editUser(index)}
+														onClick={() => editMember(index)}
 													>
 														<Edit2 className="h-4 w-4" />
 													</Button>
@@ -416,7 +450,7 @@ export default function Page() {
 														type="button"
 														variant="ghost"
 														size="sm"
-														onClick={() => removeUser(index)}
+														onClick={() => removeMember(index)}
 													>
 														<Trash2 className="h-4 w-4" />
 													</Button>

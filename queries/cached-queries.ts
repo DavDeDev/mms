@@ -65,7 +65,7 @@ export const getUserCohorts = async () => {
 		["cohorts", "user", data.id],
 		{
 			tags: [`cohorts_user_${data.id}`],
-			revalidate: 3,
+			revalidate: 3600,
 		},
 	)();
 };

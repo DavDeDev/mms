@@ -71,5 +71,5 @@ export const createCohortSchema = z.object({
 			role: z.nativeEnum(CohortRole),
 		}),
 	),
-	image: z.string().optional(),
+	avatarUrl: z.string().url().nullable(),
 });

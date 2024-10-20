@@ -65,3 +65,15 @@ export async function getUserCohortsQuery(
 
 	return processedData;
 }
+
+// Query function to find user by email
+export async function queryUserByEmail(supabase: Client, email: string) {
+	const { data, error } = await supabase
+		.from("users")
+		.select("id")
+		.eq("email", email)
+		.single();
+
+	if (error) throw error;
+	return data;
+}

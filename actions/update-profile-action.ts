@@ -1,6 +1,6 @@
 "use server";
 
-import { updateUser } from "@/mutations";
+import { updateUserProfile } from "@/mutations";
 import { updateUserSchema } from "@/mutations/schema";
 import type { ServerActionResponse, Tables } from "@/types";
 import { createClient } from "@/utils/supabase/server";
@@ -9,6 +9,8 @@ import type { z } from "zod";
 // TODO: never, undefined, or void?
 export const updateUserAction = async (
 	formData: z.infer<typeof updateUserSchema>,
+	// TODO: return the updatedProfile if possible
+	// ): Promise<ServerActionResponse<Tables<"users">>> => {
 ): Promise<ServerActionResponse<never>> => {
 	// TODO: add server-side validation
 	const { success, error, data } = updateUserSchema.safeParse(formData);
@@ -51,8 +53,13 @@ export const updateUserAction = async (
 		interests,
 		avatar_url: avatarUrl,
 	};
-
-	return updateUser(supabase, mappedData)
+	// TODO: return the updatedProfile if possible
+	await updateUserProfile(supabase, mappedData)
+		// .then((data) => {
+		// 	return {
+		// 		success: true,
+		// 		data
+		// 	};)
 		.then(() => {
 			return {
 				success: true,
@@ -65,4 +72,9 @@ export const updateUserAction = async (
 				error: "Failed to update user. Try again later.",
 			};
 		});
+
+	return {
+		success: false,
+		error: "Failed to update user. Try again later.",
+	};
 };

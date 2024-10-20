@@ -166,9 +166,11 @@ export default function UserProfileUpdateForm({
 															onChange={(e) => {
 																const file = e.target.files?.[0];
 																if (file) {
-																	field.onChange(file);
 																	const reader = new FileReader();
 																	reader.onloadend = () => {
+																		// Pass the file object to the react hook form
+																		field.onChange(file);
+																		// Use the encoded image as the preview
 																		setImagePreview(reader.result as string);
 																	};
 																	reader.readAsDataURL(file);
