@@ -40,7 +40,7 @@ export type Database = {
 						referencedColumns: ["id"];
 					},
 					{
-						foreignKeyName: "cohort_member_user_id_fkey1";
+						foreignKeyName: "cohort_members_user_id_fkey";
 						columns: ["user_id"];
 						isOneToOne: false;
 						referencedRelation: "users";
@@ -236,7 +236,7 @@ export type Database = {
 					campus: Database["public"]["Enums"]["college_campuses"] | null;
 					country_of_origin: string | null;
 					created_at: string | null;
-					email: string | null;
+					email: string;
 					first_name: string | null;
 					id: string;
 					interests: string[] | null;
@@ -244,7 +244,7 @@ export type Database = {
 					last_name: string | null;
 					phone_number: string | null;
 					program_of_study: string | null;
-					role: Database["public"]["Enums"]["app_role"] | null;
+					role: Database["public"]["Enums"]["app_role"];
 					school_id: number | null;
 					sex: Database["public"]["Enums"]["user_sex"] | null;
 				};
@@ -254,7 +254,7 @@ export type Database = {
 					campus?: Database["public"]["Enums"]["college_campuses"] | null;
 					country_of_origin?: string | null;
 					created_at?: string | null;
-					email?: string | null;
+					email: string;
 					first_name?: string | null;
 					id: string;
 					interests?: string[] | null;
@@ -262,7 +262,7 @@ export type Database = {
 					last_name?: string | null;
 					phone_number?: string | null;
 					program_of_study?: string | null;
-					role?: Database["public"]["Enums"]["app_role"] | null;
+					role?: Database["public"]["Enums"]["app_role"];
 					school_id?: number | null;
 					sex?: Database["public"]["Enums"]["user_sex"] | null;
 				};
@@ -272,7 +272,7 @@ export type Database = {
 					campus?: Database["public"]["Enums"]["college_campuses"] | null;
 					country_of_origin?: string | null;
 					created_at?: string | null;
-					email?: string | null;
+					email?: string;
 					first_name?: string | null;
 					id?: string;
 					interests?: string[] | null;
@@ -280,7 +280,7 @@ export type Database = {
 					last_name?: string | null;
 					phone_number?: string | null;
 					program_of_study?: string | null;
-					role?: Database["public"]["Enums"]["app_role"] | null;
+					role?: Database["public"]["Enums"]["app_role"];
 					school_id?: number | null;
 					sex?: Database["public"]["Enums"]["user_sex"] | null;
 				};

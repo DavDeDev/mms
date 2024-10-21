@@ -15,7 +15,7 @@ export function CohortDisplay({
 	userRole,
 }: {
 	cohorts: Cohorts;
-	userRole: Database["public"]["Enums"]["app_role"] | null;
+	userRole: Database["public"]["Enums"]["app_role"];
 }) {
 	const [isGridView, setIsGridView] = useState(true);
 	return (

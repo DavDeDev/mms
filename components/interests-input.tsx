@@ -60,11 +60,11 @@ export default function InterestsInput({
 	return (
 		<div className="w-full">
 			<div className="flex flex-wrap items-center gap-2 p-2 border rounded-md min-h-[42px]">
-				{/* TODO: Tooltip is not workink */}
 				<TooltipProvider>
 					{value.map((interest, index) => (
 						<Tooltip key={index}>
-							<TooltipTrigger asChild>
+							{/* READ: https://github.com/shadcn-ui/ui/issues/1701#issuecomment-1902565141 */}
+							<TooltipTrigger disabled>
 								<Badge variant="secondary" className="text-sm">
 									{trimInterest(interest)}
 									<Button

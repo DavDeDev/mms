@@ -2,7 +2,7 @@ import { getUserCohorts, getUserProfile } from "@/queries/cached-queries";
 import { redirect } from "next/navigation";
 import { CohortDisplay } from "./cohorts-grid";
 
-export default async function CohortsPage() {
+export default async function Page() {
 	const user = await getUserProfile();
 
 	if (!user?.data) {
@@ -11,7 +11,10 @@ export default async function CohortsPage() {
 	const cohorts = await getUserCohorts();
 
 	if (!cohorts) {
-		// TODO: if it's admin redirects to create a cohort, if not admin redirects to home
+		if (user.data.role === "admin") {
+			return redirect("/cohort/create");
+		}
+		//TODO: if the user is not admin, sends them to dashboard
 		return redirect("/sign-in");
 	}
 

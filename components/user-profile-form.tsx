@@ -97,7 +97,6 @@ export default function UserProfileUpdateForm({
 		}
 	};
 
-	// TODO: improve error handling
 	const onSubmit = async (values: z.infer<typeof clientUpdateUserSchema>) => {
 		try {
 			let avatarUrl: string | null;

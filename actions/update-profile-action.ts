@@ -43,7 +43,7 @@ export const updateUserAction = async (
 		campus,
 		school_id: schoolId,
 		is_international: isInternational,
-		email: email || null,
+		email,
 		bio: bio || null,
 		program_of_study: program,
 		country_of_origin: country || null,
