@@ -9,5 +9,9 @@ export default async function Page() {
 		return redirect("/sign-in");
 	}
 
-	return <CreateCohortForm userEmail={user.data.email} />;
+	return (
+		<div className="container">
+			<CreateCohortForm userEmail={user.data.email} />
+		</div>
+	);
 }
