@@ -4,10 +4,14 @@ import { addUserToCohort, createCohort } from "@/mutations";
 import { createCohortSchema } from "@/mutations/schema";
 import { queryUserByEmail } from "@/queries";
 import type { ServerActionResponse } from "@/types";
+import { ErrorBase } from "@/utils/ErrorBase";
 import { createAdminClient, createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
 import type { z } from "zod";
 
+type ErrorName = "UserInviteError" | "CohortCreationError";
+
+class CohortCreationError extends ErrorBase<ErrorName> {}
 /**
  * This action performs the following steps:
  * 1. Create a cohort
@@ -19,19 +23,19 @@ import type { z } from "zod";
  */
 export const createCohortAction = async (
 	formData: z.infer<typeof createCohortSchema>,
-): Promise<ServerActionResponse<never>> => {
+): Promise<ServerActionResponse> => {
 	// Validate form data
 	const { success, error, data } = createCohortSchema.safeParse(formData);
 	if (!success) {
 		return {
-			success: false,
+			success,
 			error: error.message,
 		};
 	}
 
 	const supabase = createClient();
 
-	// Create the cohort
+	// Create the cohort data object
 	const cohortData = {
 		avatar_url: data.avatarUrl,
 		created_at: new Date().toISOString(),
@@ -41,69 +45,78 @@ export const createCohortAction = async (
 		year: data.year,
 	};
 
-	let cohortId: number;
 	try {
+		// Create cohort and check for errors
 		const { data: cohort, error: createError } = await createCohort(
 			supabase,
 			cohortData,
 		);
-		if (createError) throw createError;
-		cohortId = cohort.id;
-	} catch (createError) {
-		console.error("Error creating cohort", createError);
-		return {
-			success: false,
-			error: createError as string,
-		};
-	}
+		if (createError || !cohort) {
+			throw new CohortCreationError({
+				name: "CohortCreationError",
+				message: `Failed to create cohort: ${createError.message}`,
+				cause: createError,
+			});
+		}
 
-	const supabaseAdmin = createAdminClient();
+		const cohortId = cohort.id;
+		const supabaseAdmin = createAdminClient();
 
-	// Iterate over the members and handle existing or new users
-	for (const member of data.members) {
-		try {
-			let userId: string | null = null;
+		// Process members in parallel with Promise.all
+		await Promise.all(
+			data.members.map(async (member) => {
+				let userId: string | null = null;
 
-			// Try to invite the user
-			const { data: inviteData, error: inviteError } =
-				await supabaseAdmin.inviteUserByEmail(member.email, {
-					redirectTo: "/welcome",
-				});
+				// Try inviting the user
+				const { data: inviteData, error: inviteError } =
+					await supabaseAdmin.inviteUserByEmail(member.email, {
+						data: { app_role: "user" },
+						redirectTo: "/welcome",
+					});
 
-			if (inviteError && inviteError.code === "email_exists") {
-				console.log(`User ${member.email} already exists. Fetching user id.`);
-				// If the user already exists, fetch their user id
-				const { id: existingUserId } = await queryUserByEmail(
-					supabase,
-					member.email,
-				);
-				userId = existingUserId;
-			} else if (inviteData) {
-				console.log(`Invitation sent to ${member.email}, fetching user id.`);
-				// After successful invitation, get the user's id from the response
-				const { id: invitedUserId } = await queryUserByEmail(
-					supabase,
-					member.email,
-				);
-				userId = invitedUserId;
-			}
-			if (userId) {
-				// Add the user to the cohort
-				await addUserToCohort(supabase, userId, member.role, cohortId);
-			}
-		} catch (err) {
-			console.error(`Error processing user ${member.email}:`, err);
+				// If user already exists, fetch their ID
+				if (inviteError?.code === "email_exists") {
+					const { id: existingUserId } = await queryUserByEmail(supabase, {
+						email: member.email,
+					});
+					userId = existingUserId;
+				} else if (inviteError) {
+					throw new CohortCreationError({
+						name: "UserInviteError",
+						message: `Failed to invite user to the application: ${inviteError.message}`,
+						cause: inviteError,
+					});
+				} else if (inviteData) {
+					// If invitation was successful, store their ID
+					userId = inviteData.user.id;
+				}
+
+				// Add the user to the cohort if we have a valid user ID
+				if (userId) {
+					await addUserToCohort(supabase, userId, member.role, cohortId);
+				}
+			}),
+		);
+
+		// Revalidate cache after creating cohort and adding members
+		revalidatePath("/cohorts");
+
+		return { success: true };
+	} catch (error) {
+		if (error instanceof CohortCreationError) {
+			console.error("Cohort creation error:", error);
 			return {
 				success: false,
-				error: `Failed to invite/add user ${member.email}: ${err}`,
+				error: error.message,
 			};
 		}
+		console.error(
+			"Unknown error creating cohort or processing members:",
+			error,
+		);
+		return {
+			success: false,
+			error: "Failed to create cohort. Try again later.",
+		};
 	}
-	// Revalidate cache
-	// revalidateTag(`cohort_${cohortId}`);
-	revalidatePath("/cohorts");
-
-	return {
-		success: true,
-	};
 };

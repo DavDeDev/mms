@@ -3,35 +3,34 @@ import { revalidateTag } from "next/cache";
 
 export async function updateUserProfile(
 	supabase: Client,
-	// TODO investigate: Table<"users"> should already consider nullable Columns so there should be no need for Partial<>
 	data: Partial<Tables<"users">>,
-) {
+): Promise<Tables<"users">> {
+	// Get the user session
 	const {
 		data: { session },
 	} = await supabase.auth.getSession();
 
 	if (!session?.user) {
-		return;
+		throw new Error("User not authenticated");
 	}
 
-	// This doesn't return anything
-	// use data as result
-
+	// Update the user profile in the database
 	const { error, data: updatedUser } = await supabase
 		.from("users")
 		.update(data)
 		.eq("id", session.user.id)
 		.select("*")
 		.single()
-		.throwOnError();
-	// .then(() => revalidateTag(`user_profile_${session.user.id}`));
+		.throwOnError(); // This will throw if there's an error
+
+	// Although the error is thrown by .thrownOnError(), it doesn't Type Check the returned Data, so we need to check it manually. READ: https://github.com/supabase/postgrest-js/issues/563
 	if (error) {
 		throw error;
 	}
-	// revalidate cache
-	if (updatedUser) {
-		revalidateTag(`user_profile_${session.user.id}`);
-	}
+
+	// Revalidate cache if user is updated
+	revalidateTag(`user_profile_${session.user.id}`);
+
 	return updatedUser;
 }
 
@@ -39,13 +38,7 @@ export async function createCohort(
 	supabase: Client,
 	data: Omit<Tables<"cohorts">, "id">,
 ) {
-	console.log("data inside mutation: ", data);
-	return await supabase
-		.from("cohorts")
-		.insert([data])
-		.select("id")
-		.single()
-		.throwOnError();
+	return await supabase.from("cohorts").insert([data]).select("id").single();
 }
 
 export async function addUserToCohort(

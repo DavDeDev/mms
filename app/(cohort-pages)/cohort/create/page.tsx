@@ -45,7 +45,7 @@ import { createCohortSchema } from "@/mutations/schema";
 import { CohortRole, CollegeSemesters } from "@/types/enums";
 import { cn } from "@/utils/cn";
 import { createClient } from "@/utils/supabase/client";
-import { CalendarIcon, Edit2, Trash2, Upload } from "lucide-react";
+import { CalendarIcon, Edit2, Loader2, Trash2, Upload } from "lucide-react";
 import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
 
@@ -58,7 +58,6 @@ const clientCreateCohortSchema = createCohortSchema.extend({
 export default function Page() {
 	const router = useRouter();
 	const supabase = createClient();
-	const [isLoading, setIsLoading] = useState(false);
 	const [imagePreview, setImagePreview] = useState<string | null>(null);
 	const currentYear = new Date().getFullYear();
 
@@ -121,19 +120,21 @@ export default function Page() {
 			avatarUrl = values.avatarUrl ?? null;
 		}
 
-		const { success, error } = await createCohortAction({
+		const response = await createCohortAction({
 			...values,
 			avatarUrl,
 		});
 
 		// Handle the response from the server action
-		if (success) {
+		if (response.success) {
+			// Access properties safely when success is true
+			const { data } = response; // Assuming data might be useful here
 			toast.success("Cohort created successfully!"); // Show success notification
 			// Optionally, redirect or update UI after successful cohort creation
-			// Example: router.push("/cohorts"); or update the cohort list view
-			// revalidatePath("/cohorts");
-			router.push("/cohorts");
+			router.push("/cohorts"); // Redirect to the cohorts page
 		} else {
+			// Access properties safely when success is false
+			const { error } = response; // Access the error message
 			toast.error(`Failed to create cohort: ${error}`); // Show error message
 		}
 	};
@@ -462,8 +463,18 @@ export default function Page() {
 							</Table>
 						</ScrollArea>
 					</div>
-					<Button type="submit" disabled={isLoading}>
-						{isLoading ? "Creating..." : "Create Cohort"}
+					<Button type="submit" disabled={form.formState.isSubmitting}>
+						{form.formState.isSubmitting ? (
+							<div className="flex gap-1">
+								<Loader2
+									className="animate-spin text-foreground-muted mt-0.5"
+									size={16}
+								/>
+								<span>Creating...</span>
+							</div>
+						) : (
+							"Create Cohort"
+						)}
 					</Button>
 				</form>
 			</Form>

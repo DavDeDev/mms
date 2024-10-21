@@ -38,6 +38,7 @@ export async function getUserCohortsQuery(
 		.eq("cohort_members.users.id", params.userId)
 		.throwOnError();
 
+	// Although the error is thrown by .thrownOnError(), it doesn't Type Check the returned Data, so we need to check it manually. READ: https://github.com/supabase/postgrest-js/issues/563
 	if (error) {
 		console.error("Error fetching cohorts:", error);
 		throw error;
@@ -66,12 +67,19 @@ export async function getUserCohortsQuery(
 	return processedData;
 }
 
+type queryUserByEmailParams = {
+	email: string;
+};
+
 // Query function to find user by email
-export async function queryUserByEmail(supabase: Client, email: string) {
+export async function queryUserByEmail(
+	supabase: Client,
+	params: queryUserByEmailParams,
+) {
 	const { data, error } = await supabase
 		.from("users")
 		.select("id")
-		.eq("email", email)
+		.eq("email", params.email)
 		.single();
 
 	if (error) throw error;

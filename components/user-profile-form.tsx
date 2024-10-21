@@ -51,7 +51,6 @@ const clientUpdateUserSchema = updateUserSchema.extend({
 export default function UserProfileUpdateForm({
 	user,
 }: { user: Tables<"users"> }) {
-	console.log("USER", user);
 	const supabase = createClient();
 	const [isInternational, setIsInternational] = useState(user.is_international);
 	const [imagePreview, setImagePreview] = useState<string | null>(
@@ -76,44 +75,51 @@ export default function UserProfileUpdateForm({
 		},
 	});
 
+	const handleAvatarUpload = async (file: File): Promise<string | null> => {
+		try {
+			const uid = user.id;
+			const fileExt = file.name.split(".").pop();
+			const filePath = `pfp/${uid}-${Date.now()}.${fileExt}`;
+			const { data, error } = await supabase.storage
+				.from("avatars")
+				.upload(filePath, file);
+
+			if (error) {
+				throw new Error("Avatar upload failed");
+			}
+
+			const publicUrl = supabase.storage.from("avatars").getPublicUrl(data.path)
+				.data.publicUrl;
+			return publicUrl;
+		} catch (error) {
+			toast.error("Failed to upload avatar. Please try again.");
+			return null;
+		}
+	};
+
 	// TODO: improve error handling
 	const onSubmit = async (values: z.infer<typeof clientUpdateUserSchema>) => {
 		try {
-			let avatarUrl: string | null; // Start with the existing avatar URL
+			let avatarUrl: string | null;
 
 			if (values.avatarUrl instanceof File) {
-				const uid = user.id;
-				const fileExt = values.avatarUrl.name.split(".").pop();
-				const filePath = `pfp/${uid}-${Math.random()}.${fileExt}`;
-
-				const { data, error } = await supabase.storage
-					.from("avatars")
-					.upload(filePath, values.avatarUrl);
-
-				if (error) {
-					toast.error("Failed to upload avatar. Please try again.");
-					return;
-				}
-
-				avatarUrl = supabase.storage.from("avatars").getPublicUrl(data.path)
-					.data.publicUrl;
+				avatarUrl = await handleAvatarUpload(values.avatarUrl);
 			} else {
 				avatarUrl = values.avatarUrl;
 			}
 
 			const updatedValues = { ...values, avatarUrl };
-			const { success, error } = await updateUserAction(updatedValues);
+			const res = await updateUserAction(updatedValues);
 
-			if (success) {
+			if (res.success) {
 				toast.success("Profile updated successfully");
 				setImagePreview(avatarUrl);
 			} else {
-				console.error("Error updating user profile:", error);
-				toast.error(error || "Failed to update profile. Please try again.");
+				throw new Error(res.error);
 			}
-		} catch (err) {
-			console.error("Unexpected error:", err);
-			toast.error("An unexpected error occurred. Please try again.");
+		} catch (error) {
+			console.error("Error updating user profile:", error);
+			toast.error("Failed to update profile. Please try again.");
 		}
 	};
 
@@ -171,7 +177,9 @@ export default function UserProfileUpdateForm({
 																		// Pass the file object to the react hook form
 																		field.onChange(file);
 																		// Use the encoded image as the preview
-																		setImagePreview(reader.result as string);
+																		if (typeof reader.result === "string") {
+																			setImagePreview(reader.result);
+																		}
 																	};
 																	reader.readAsDataURL(file);
 																}
