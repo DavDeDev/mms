@@ -1,22 +1,18 @@
-"use client"
+"use client";
 
-import CreateCohortForm from "@/app/(cohort-pages)/cohort/create/create-cohort-form"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog"
-import { useRouter } from "next/navigation"
+import CreateCohortForm from "@/app/(cohort-pages)/cohort/create/create-cohort-form";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { useRouter } from "next/navigation";
 
-export default function CreateCohortModal({ userEmail }: { userEmail: string }) {
-  const router = useRouter()
-  return (
-    <Dialog open onOpenChange={() => router.back()}>
-      <DialogContent className="w-4/5">
-          <CreateCohortForm userEmail={userEmail} />
-      </DialogContent>
-    </Dialog>
-  )
+export default function CreateCohortModal({
+	userEmail,
+}: { userEmail: string }) {
+	const router = useRouter();
+	return (
+		<Dialog open onOpenChange={() => router.back()}>
+			<DialogContent className="w-4/5">
+				<CreateCohortForm userEmail={userEmail} />
+			</DialogContent>
+		</Dialog>
+	);
 }

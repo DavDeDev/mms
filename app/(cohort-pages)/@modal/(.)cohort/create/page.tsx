@@ -1,8 +1,6 @@
-import CreateCohortForm from "@/app/(cohort-pages)/cohort/create/create-cohort-form";
 import { getUserProfile } from "@/queries/cached-queries";
 import { redirect } from "next/navigation";
 import CreateCohortModal from "./create-cohort-modal";
-
 
 export default async function Page() {
 	const user = await getUserProfile();
@@ -12,8 +10,8 @@ export default async function Page() {
 	}
 
 	return (
-    <div className="container">
-      <CreateCohortModal userEmail={user.data.email} />
-    </div>
-  );
+		<div className="container">
+			<CreateCohortModal userEmail={user.data.email} />
+		</div>
+	);
 }
