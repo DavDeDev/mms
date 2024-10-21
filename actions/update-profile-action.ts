@@ -1,6 +1,6 @@
 "use server";
 
-import { updateUser } from "@/mutations";
+import { updateUserProfile } from "@/mutations";
 import { updateUserSchema } from "@/mutations/schema";
 import type { ServerActionResponse, Tables } from "@/types";
 import { createClient } from "@/utils/supabase/server";
@@ -8,18 +8,19 @@ import type { z } from "zod";
 
 export const updateUserAction = async (
 	formData: z.infer<typeof updateUserSchema>,
-): Promise<ServerActionResponse> => {
-	// TODO: add server-side validation
+): Promise<ServerActionResponse<{ id: string }>> => {
+	// Validate formData using safeParse
 	const { success, error, data } = updateUserSchema.safeParse(formData);
-	if (error) {
+	if (!success) {
 		return {
 			success,
 			error: error.message,
 		};
 	}
+
 	const supabase = createClient();
 
-	// Destructure data for clarity
+	// Map form data to match the database schema
 	const {
 		firstName,
 		lastName,
@@ -35,7 +36,6 @@ export const updateUserAction = async (
 		avatarUrl,
 	} = data;
 
-	// Using Partial<Tables<"users">> to indicate a subset of colums
 	const mappedData: Partial<Tables<"users">> = {
 		first_name: firstName,
 		last_name: lastName,
@@ -43,27 +43,27 @@ export const updateUserAction = async (
 		campus,
 		school_id: schoolId,
 		is_international: isInternational,
-		email: email || null,
+		email,
 		bio: bio || null,
-		program_of_study: program || null,
+		program_of_study: program,
 		country_of_origin: country || null,
 		interests,
-		avatar_url: avatarUrl,
+		avatar_url: avatarUrl || null,
 	};
 
-	console.log("VATAAAAAR", avatarUrl);
+	try {
+		// Attempt to update user profile
+		const updatedProfile = await updateUserProfile(supabase, mappedData);
 
-	return updateUser(supabase, mappedData)
-		.then(() => {
-			return {
-				success: true,
-			};
-		})
-		.catch((err) => {
-			console.error("Error updating user:", err);
-			return {
-				success: false,
-				error: "Failed to update user. Try again later.",
-			};
-		});
+		return {
+			success: true,
+			data: { id: updatedProfile.id },
+		};
+	} catch (error) {
+		console.error("Error updating user:", error);
+		return {
+			success: false,
+			error: "Failed to update user. Try again later.",
+		};
+	}
 };

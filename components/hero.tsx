@@ -22,7 +22,7 @@ export function Hero() {
 					</div>
 					<div className="space-x-4">
 						<Button asChild>
-							<Link href="/profile">View your Cohorts</Link>
+							<Link href="/cohorts">View your Cohorts</Link>
 						</Button>
 						<Button variant="outline" asChild>
 							<Link href="/contact/sales">Request a Demo</Link>

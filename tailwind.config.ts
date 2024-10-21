@@ -12,7 +12,13 @@ const config = {
 	theme: {
 		container: {
 			center: true,
-			padding: "2rem",
+			padding: {
+				DEFAULT: "1rem",
+				sm: "2rem",
+				lg: "4rem",
+				xl: "5rem",
+				"2xl": "6rem",
+			},
 			screens: {
 				"2xl": "1400px",
 			},
@@ -26,6 +32,7 @@ const config = {
 				foreground: "hsl(var(--foreground))",
 				brand: {
 					DEFAULT: "hsl(var(--brand))",
+					foreground: "hsl(0 0 100)",
 				},
 				primary: {
 					DEFAULT: "hsl(var(--primary))",

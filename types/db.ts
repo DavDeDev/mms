@@ -40,7 +40,7 @@ export type Database = {
 						referencedColumns: ["id"];
 					},
 					{
-						foreignKeyName: "cohort_member_user_id_fkey1";
+						foreignKeyName: "cohort_members_user_id_fkey";
 						columns: ["user_id"];
 						isOneToOne: false;
 						referencedRelation: "users";
@@ -50,6 +50,7 @@ export type Database = {
 			};
 			cohorts: {
 				Row: {
+					avatar_url: string | null;
 					created_at: string;
 					end_date: string;
 					id: number;
@@ -58,6 +59,7 @@ export type Database = {
 					year: number;
 				};
 				Insert: {
+					avatar_url?: string | null;
 					created_at?: string;
 					end_date: string;
 					id?: number;
@@ -66,6 +68,7 @@ export type Database = {
 					year: number;
 				};
 				Update: {
+					avatar_url?: string | null;
 					created_at?: string;
 					end_date?: string;
 					id?: number;
@@ -233,7 +236,7 @@ export type Database = {
 					campus: Database["public"]["Enums"]["college_campuses"] | null;
 					country_of_origin: string | null;
 					created_at: string | null;
-					email: string | null;
+					email: string;
 					first_name: string | null;
 					id: string;
 					interests: string[] | null;
@@ -241,7 +244,7 @@ export type Database = {
 					last_name: string | null;
 					phone_number: string | null;
 					program_of_study: string | null;
-					role: string | null;
+					role: Database["public"]["Enums"]["app_role"];
 					school_id: number | null;
 					sex: Database["public"]["Enums"]["user_sex"] | null;
 				};
@@ -251,7 +254,7 @@ export type Database = {
 					campus?: Database["public"]["Enums"]["college_campuses"] | null;
 					country_of_origin?: string | null;
 					created_at?: string | null;
-					email?: string | null;
+					email: string;
 					first_name?: string | null;
 					id: string;
 					interests?: string[] | null;
@@ -259,7 +262,7 @@ export type Database = {
 					last_name?: string | null;
 					phone_number?: string | null;
 					program_of_study?: string | null;
-					role?: string | null;
+					role?: Database["public"]["Enums"]["app_role"];
 					school_id?: number | null;
 					sex?: Database["public"]["Enums"]["user_sex"] | null;
 				};
@@ -269,7 +272,7 @@ export type Database = {
 					campus?: Database["public"]["Enums"]["college_campuses"] | null;
 					country_of_origin?: string | null;
 					created_at?: string | null;
-					email?: string | null;
+					email?: string;
 					first_name?: string | null;
 					id?: string;
 					interests?: string[] | null;
@@ -277,26 +280,11 @@ export type Database = {
 					last_name?: string | null;
 					phone_number?: string | null;
 					program_of_study?: string | null;
-					role?: string | null;
+					role?: Database["public"]["Enums"]["app_role"];
 					school_id?: number | null;
 					sex?: Database["public"]["Enums"]["user_sex"] | null;
 				};
-				Relationships: [
-					{
-						foreignKeyName: "users_id_fkey";
-						columns: ["id"];
-						isOneToOne: true;
-						referencedRelation: "users";
-						referencedColumns: ["id"];
-					},
-					{
-						foreignKeyName: "users_phone_number_fkey";
-						columns: ["phone_number"];
-						isOneToOne: false;
-						referencedRelation: "users";
-						referencedColumns: ["phone"];
-					},
-				];
+				Relationships: [];
 			};
 		};
 		Views: {
@@ -318,6 +306,7 @@ export type Database = {
 		};
 		Enums: {
 			app_permission: "cohorts.delete" | "cohorts.create" | "cohort.modify";
+			app_role: "admin" | "user";
 			cohort_role: "admin" | "mentor" | "mentee" | "coordinator";
 			college_campuses:
 				| "Progress"
@@ -415,4 +404,19 @@ export type Enums<
 	? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
 	: PublicEnumNameOrOptions extends keyof PublicSchema["Enums"]
 		? PublicSchema["Enums"][PublicEnumNameOrOptions]
+		: never;
+
+export type CompositeTypes<
+	PublicCompositeTypeNameOrOptions extends
+		| keyof PublicSchema["CompositeTypes"]
+		| { schema: keyof Database },
+	CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+		schema: keyof Database;
+	}
+		? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+		: never = never,
+> = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
+	? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+	: PublicCompositeTypeNameOrOptions extends keyof PublicSchema["CompositeTypes"]
+		? PublicSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
 		: never;
