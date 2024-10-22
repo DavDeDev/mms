@@ -10,7 +10,7 @@ export default function CreateCohortModal({
 	const router = useRouter();
 	return (
 		<Dialog open onOpenChange={() => router.back()}>
-			<DialogContent className="w-4/5">
+			<DialogContent className="container">
 				<CreateCohortForm userEmail={userEmail} />
 			</DialogContent>
 		</Dialog>
