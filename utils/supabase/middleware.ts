@@ -3,7 +3,7 @@ import { type NextRequest, NextResponse } from "next/server";
 
 export const updateSession = async (request: NextRequest) => {
 	// Create an unmodified response
-	let response = await NextResponse.next({
+	let response = NextResponse.next({
 		request: {
 			headers: request.headers,
 		},
@@ -14,11 +14,10 @@ export const updateSession = async (request: NextRequest) => {
 		process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
 		{
 			cookies: {
-				async getAll() {
-					await request.cookies.getAll();
-					return await request.cookies.getAll();
+				getAll() {
+					return request.cookies.getAll();
 				},
-				async setAll(cookiesToSet) {
+				setAll(cookiesToSet) {
 					cookiesToSet.forEach(({ name, value }) =>
 						request.cookies.set(name, value),
 					);
