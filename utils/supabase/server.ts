@@ -6,7 +6,7 @@ import { createClient as createAuthClient } from "@supabase/supabase-js";
 
 export const createClient = async () => {
 	// Access cookies for session management
-	const cookieStore = await cookies(); // no need for 'await' here
+	const cookieStore = await cookies(); 
 
 	return createServerClient(
 		process.env.NEXT_PUBLIC_SUPABASE_URL!,

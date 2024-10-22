@@ -33,7 +33,7 @@ export const createCohortAction = async (
 		};
 	}
 
-	const supabase = createClient();
+	const supabase = await createClient();
 
 	// Create the cohort data object
 	const cohortData = {
