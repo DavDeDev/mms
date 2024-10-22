@@ -2,9 +2,8 @@ import { createServerClient } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
 
 export const updateSession = async (request: NextRequest) => {
-	// This `try/catch` block is only here for the interactive tutorial.
-	// Feel free to remove once you have Supabase connected.		// Create an unmodified response
-	let response = NextResponse.next({
+	// Create an unmodified response
+	let response = await NextResponse.next({
 		request: {
 			headers: request.headers,
 		},
@@ -15,10 +14,11 @@ export const updateSession = async (request: NextRequest) => {
 		process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
 		{
 			cookies: {
-				getAll() {
-					return request.cookies.getAll();
+				async getAll() {
+					await request.cookies.getAll();
+					return await request.cookies.getAll();
 				},
-				setAll(cookiesToSet) {
+				async setAll(cookiesToSet) {
 					cookiesToSet.forEach(({ name, value }) =>
 						request.cookies.set(name, value),
 					);

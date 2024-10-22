@@ -25,7 +25,7 @@ export const getSession = unstable_cache(
 // });
 
 export const getUserProfile = async () => {
-	const supabase = createClient();
+	const supabase = await createClient();
 	const {
 		data: { session },
 	} = await getSession(supabase);
@@ -49,7 +49,7 @@ export const getUserProfile = async () => {
 };
 
 export const getUserCohorts = async () => {
-	const supabase = createClient();
+	const supabase = await createClient();
 	const { data } = await getUserProfile();
 
 	if (!data) {
