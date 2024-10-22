@@ -192,7 +192,7 @@ export default function CreateCohortForm({
 	};
 
 	return (
-		<>
+		<div className="">
 			<h1 className="text-3xl font-bold mb-6">Create New Cohort</h1>
 			<Form {...form}>
 				<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -479,6 +479,6 @@ export default function CreateCohortForm({
 					</Button>
 				</form>
 			</Form>
-		</>
+		</div>
 	);
 }

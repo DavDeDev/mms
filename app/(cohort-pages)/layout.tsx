@@ -1,5 +1,5 @@
 const CohortsPageLayout = ({
-	children,
+	children, 		
 	create_cohort_modal,
 }: {
 	children: React.ReactNode;
