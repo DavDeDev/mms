@@ -1,11 +1,11 @@
 import type { Database } from "@/types";
 import { createServerClient } from "@supabase/ssr";
 import { createClient as createAuthClient } from "@supabase/supabase-js";
-import { cookies } from "next/headers";
+import { cookies, type UnsafeUnwrappedCookies } from "next/headers";
 import "server-only";
 
 export const createClient = () => {
-	const cookieStore = cookies();
+	const cookieStore = (cookies() as unknown as UnsafeUnwrappedCookies);
 
 	return createServerClient(
 		process.env.NEXT_PUBLIC_SUPABASE_URL!,
