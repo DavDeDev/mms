@@ -18,7 +18,7 @@ export const updateUserAction = async (
 		};
 	}
 
-	const supabase = createClient();
+	const supabase = await createClient();
 
 	// Map form data to match the database schema
 	const {

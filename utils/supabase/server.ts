@@ -1,11 +1,12 @@
 import type { Database } from "@/types";
 import { createServerClient } from "@supabase/ssr";
-import { createClient as createAuthClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 import "server-only";
+import { createClient as createAuthClient } from "@supabase/supabase-js";
 
-export const createClient = () => {
-	const cookieStore = cookies();
+export const createClient = async () => {
+	// Access cookies for session management
+	const cookieStore = await cookies(); 
 
 	return createServerClient(
 		process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -13,17 +14,18 @@ export const createClient = () => {
 		{
 			cookies: {
 				getAll() {
+					// Get all cookies as an array
 					return cookieStore.getAll();
 				},
 				setAll(cookiesToSet) {
 					try {
+						// Set cookies one by one
 						cookiesToSet.forEach(({ name, value, options }) => {
 							cookieStore.set(name, value, options);
 						});
 					} catch (error) {
-						// The `set` method was called from a Server Component.
-						// This can be ignored if you have middleware refreshing
-						// user sessions.
+						// Handle this gracefully in server-only environments
+						console.warn("Cookies cannot be set from a Server Component.");
 					}
 				},
 			},
