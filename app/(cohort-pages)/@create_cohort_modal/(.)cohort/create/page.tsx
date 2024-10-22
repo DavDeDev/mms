@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { getUserProfile } from "@/queries/cached-queries";
 import { redirect } from "next/navigation";
 import CreateCohortModal from "./create-cohort-modal";
