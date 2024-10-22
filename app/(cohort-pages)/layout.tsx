@@ -1,14 +1,14 @@
 const CohortsPageLayout = ({
 	children,
-	modal,
+	create_cohort_modal,
 }: {
 	children: React.ReactNode;
-	modal: React.ReactNode;
+	create_cohort_modal: React.ReactNode;
 }) => {
 	return (
 		<>
 			{children}
-			{modal}
+			{create_cohort_modal}
 		</>
 	);
 };
