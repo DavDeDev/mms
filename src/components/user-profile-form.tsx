@@ -1,6 +1,11 @@
 "use client";
 
 import { updateUserAction } from "@/actions/update-profile-action";
+import { updateUserSchema } from "@/mutations/schema";
+import type { Tables } from "@/types";
+import { CollegeCampuses, UserSex } from "@/types/enums";
+import { createClient } from "@/utils/supabase/client";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "components/ui/button";
 import {
 	Card,
@@ -30,11 +35,6 @@ import {
 } from "components/ui/select";
 import { Separator } from "components/ui/separator";
 import { Textarea } from "components/ui/textarea";
-import { updateUserSchema } from "@/mutations/schema";
-import type { Tables } from "@/types";
-import { CollegeCampuses, UserSex } from "@/types/enums";
-import { createClient } from "@/utils/supabase/client";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, Upload, X } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";

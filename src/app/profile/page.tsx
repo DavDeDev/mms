@@ -1,5 +1,5 @@
-import UserProfileUpdateForm from "components/user-profile-form";
 import { getUserProfile } from "@/queries/cached-queries";
+import UserProfileUpdateForm from "components/user-profile-form";
 import { redirect } from "next/navigation";
 
 export default async function UpdateProfilePage() {

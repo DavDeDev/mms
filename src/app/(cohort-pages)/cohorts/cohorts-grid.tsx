@@ -1,9 +1,9 @@
 "use client";
 
-import { CohortCard } from "components/cohort-card";
-import { Button } from "components/ui/button";
 import type { getUserCohortsQuery } from "@/queries";
 import type { Database } from "@/types";
+import { CohortCard } from "components/cohort-card";
+import { Button } from "components/ui/button";
 import { GridIcon, ListIcon, PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";

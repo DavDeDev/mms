@@ -1,5 +1,6 @@
 "use client";
 
+import type { getUserCohortsQuery } from "@/queries";
 import { Button } from "components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "components/ui/card";
 import {
@@ -17,7 +18,6 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "components/ui/dropdown-menu";
-import type { getUserCohortsQuery } from "@/queries";
 import {
 	ArchiveIcon,
 	BellIcon,
