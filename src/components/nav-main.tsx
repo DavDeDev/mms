@@ -1,6 +1,14 @@
 "use client";
 
-import { ChevronRight, type LucideIcon } from "lucide-react";
+import {
+	BookOpen,
+	Briefcase,
+	ChevronRight,
+	Home,
+	Settings,
+	UserCheck,
+	Users,
+} from "lucide-react";
 
 import {
 	Collapsible,
@@ -18,25 +26,54 @@ import {
 	SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 
-export function NavMain({
-	items,
-}: {
-	items: {
-		title: string;
-		url: string;
-		icon?: LucideIcon;
-		isActive?: boolean;
-		items?: {
-			title: string;
-			url: string;
-		}[];
-	}[];
-}) {
+const navMain = [
+	{
+		title: "Dashboard",
+		url: "/dashboard",
+		icon: Home,
+		isActive: true,
+	},
+	{
+		title: "Mentees",
+		url: "/mentees",
+		icon: Users,
+		items: [
+			{ title: "All Mentees", url: "/mentees" },
+			{ title: "Add Mentee", url: "/mentees/add" },
+		],
+	},
+	{
+		title: "Mentors",
+		url: "/mentors",
+		icon: UserCheck,
+		items: [
+			{ title: "All Mentors", url: "/mentors" },
+			{ title: "Add Mentor", url: "/mentors/add" },
+		],
+	},
+	{
+		title: "Programs",
+		url: "/programs",
+		icon: Briefcase,
+	},
+	{
+		title: "Resources",
+		url: "/resources",
+		icon: BookOpen,
+	},
+	{
+		title: "Settings",
+		url: "/settings",
+		icon: Settings,
+	},
+];
+
+export function NavMain() {
 	return (
 		<SidebarGroup>
 			<SidebarGroupLabel>Platform</SidebarGroupLabel>
 			<SidebarMenu>
-				{items.map((item) => (
+				{navMain.map((item) => (
 					<Collapsible
 						key={item.title}
 						asChild
