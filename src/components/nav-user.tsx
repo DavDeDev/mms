@@ -6,10 +6,11 @@ import {
 	ChevronsUpDown,
 	CreditCard,
 	LogOut,
-	Sparkles,
 } from "lucide-react";
 
+import { signOutAction } from "@/actions/auth-actions";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -26,11 +27,24 @@ import {
 	useSidebar,
 } from "@/components/ui/sidebar";
 import type { getUserProfile } from "@/queries/cached-queries";
+import Link from "next/link";
 
 type User = Awaited<ReturnType<Awaited<typeof getUserProfile>>>;
 
 export function NavUser(user: User) {
 	const { isMobile } = useSidebar();
+
+	const getInitials = (name: string) => {
+		return name
+			.split(" ")
+			.map((n) => n[0])
+			.join("")
+			.toUpperCase();
+	};
+
+	const fullName = `${user.first_name || ""} ${user.last_name || ""}`.trim();
+	const initials = getInitials(fullName || user.email || "Unknown User");
+
 	return (
 		<SidebarMenu>
 			<SidebarMenuItem>
@@ -43,14 +57,15 @@ export function NavUser(user: User) {
 							<Avatar className="h-8 w-8 rounded-lg">
 								<AvatarImage
 									src={user.avatar_url || ""}
-									alt={`${user.first_name || ""} ${user.last_name || ""}`}
+									alt={fullName || "User avatar"}
 								/>
-								<AvatarFallback className="rounded-lg">CN</AvatarFallback>
+								<AvatarFallback className="rounded-lg">
+									{initials}
+								</AvatarFallback>
 							</Avatar>
 							<div className="grid flex-1 text-left text-sm leading-tight">
 								<span className="truncate font-semibold">
-									{`${user.first_name || ""} ${user.last_name || ""}`.trim() ||
-										"Unknown User"}
+									{fullName || "Unknown User"}
 								</span>
 								<span className="truncate text-xs">{user.email}</span>
 							</div>
@@ -68,14 +83,15 @@ export function NavUser(user: User) {
 								<Avatar className="h-8 w-8 rounded-lg">
 									<AvatarImage
 										src={user.avatar_url || ""}
-										alt={`${user.first_name || ""} ${user.last_name || ""}`}
+										alt={fullName || "User avatar"}
 									/>
-									<AvatarFallback className="rounded-lg">CN</AvatarFallback>
+									<AvatarFallback className="rounded-lg">
+										{initials}
+									</AvatarFallback>
 								</Avatar>
 								<div className="grid flex-1 text-left text-sm leading-tight">
 									<span className="truncate font-semibold">
-										{`${user.first_name || ""} ${user.last_name || ""}`.trim() ||
-											"Unknown User"}
+										{fullName || "Unknown User"}
 									</span>
 									<span className="truncate text-xs">{user.email}</span>
 								</div>
@@ -83,31 +99,30 @@ export function NavUser(user: User) {
 						</DropdownMenuLabel>
 						<DropdownMenuSeparator />
 						<DropdownMenuGroup>
-							<DropdownMenuItem>
-								<Sparkles />
-								Upgrade to Pro
-							</DropdownMenuItem>
-						</DropdownMenuGroup>
-						<DropdownMenuSeparator />
-						<DropdownMenuGroup>
-							<DropdownMenuItem>
-								<BadgeCheck />
-								Account
+							<DropdownMenuItem asChild>
+								<Link href="/dashboard/profile">
+									<BadgeCheck className="mr-2" />
+									Account
+								</Link>
 							</DropdownMenuItem>
 							<DropdownMenuItem>
-								<CreditCard />
+								<CreditCard className="mr-2" />
 								Billing
 							</DropdownMenuItem>
 							<DropdownMenuItem>
-								<Bell />
+								<Bell className="mr-2" />
 								Notifications
 							</DropdownMenuItem>
 						</DropdownMenuGroup>
 						<DropdownMenuSeparator />
-						<DropdownMenuItem>
-							<LogOut />
-							Log out
-						</DropdownMenuItem>
+						<form action={signOutAction}>
+							<DropdownMenuItem asChild>
+								<Button variant="ghost" className="w-full justify-start">
+									<LogOut className="mr-2" />
+									Log out
+								</Button>
+							</DropdownMenuItem>
+						</form>
 					</DropdownMenuContent>
 				</DropdownMenu>
 			</SidebarMenuItem>
