@@ -31,28 +31,32 @@ export const getUserProfile = async () => {
 		["user_profile", userId],
 		{
 			tags: [`user_profile_${userId}`],
-			revalidate: 3600,
+			revalidate: 3,
 		},
 	)();
 };
 
 export const getUserCohorts = async () => {
-	const supabase = await createClient();
-	const { data } = await getUserProfile();
+	const {
+		data: { session },
+	} = await getSession();
+	const userId = session?.user?.id;
 
-	if (!data) {
-		return null;
+	// if the session doesn't have a user Id it redirects to login page
+	if (!userId) {
+		redirect("/sign-in");
 	}
 
+	const supabase = await createClient();
 	return unstable_cache(
 		async () => {
 			return getUserCohortsQuery(supabase, {
-				userId: data.id,
+				userId: userId,
 			});
 		},
-		["cohorts", "user", data.id],
+		["cohorts", "user", userId],
 		{
-			tags: [`cohorts_user_${data.id}`],
+			tags: [`cohorts_user_${userId}`],
 			revalidate: 3600,
 		},
 	)();

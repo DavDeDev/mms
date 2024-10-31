@@ -1,12 +1,18 @@
 import type { Client } from "../types";
 
 export async function getUserProfileQuery(supabase: Client, userId: string) {
-	return supabase
+	const { data, error } = await supabase
 		.from("users")
 		.select("*")
 		.eq("id", userId)
 		.single()
 		.throwOnError();
+
+	if (error) {
+		console.error("Error fetching user profile:", error);
+		throw error;
+	}
+	return data;
 }
 
 export type getUserCohortsParams = {
