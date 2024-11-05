@@ -40,9 +40,9 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
-import InterestsInput from "./interests-input";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { Label } from "./ui/label";
+import InterestsInput from "../interests-input";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Label } from "../ui/label";
 
 const clientUpdateUserSchema = updateUserSchema.extend({
 	avatarUrl: z.union([z.string().url().nullable(), z.instanceof(File)]),

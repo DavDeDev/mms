@@ -26,7 +26,7 @@ export default async function DashboardLayout(props: {
 
 	const cohortId = Number.parseInt(params.cohort_id);
 
-	if (isNaN(cohortId)) {
+	if (Number.isNaN(cohortId)) {
 		redirect("/dashboard");
 	}
 

@@ -1,6 +1,6 @@
 "use client";
 
-import CreateCohortForm from "@/app/(cohort-pages)/cohort/create/create-cohort-form";
+import CreateCohortForm from "@/components/forms/create-cohort-form";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { Dialog, DialogContent } from "components/ui/dialog";
 import { useRouter } from "next/navigation";

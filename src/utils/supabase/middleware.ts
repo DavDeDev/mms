@@ -47,8 +47,10 @@ export const updateSession = async (request: NextRequest) => {
 		if (request.nextUrl.pathname.split("/")[2] === "cohort") {
 			// Check if the cohortId is a number
 			const cohortId = request.nextUrl.pathname.split("/")[3];
-			if (!cohortId || isNaN(Number.parseInt(cohortId))) {
-				return NextResponse.redirect(new URL("/dashboard/cohorts", request.url));
+			if (!cohortId || Number.isNaN(Number.parseInt(cohortId))) {
+				return NextResponse.redirect(
+					new URL("/dashboard/cohorts", request.url),
+				);
 			}
 		}
 
