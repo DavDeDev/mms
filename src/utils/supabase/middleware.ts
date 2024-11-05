@@ -39,13 +39,8 @@ export const updateSession = async (request: NextRequest) => {
 		data: { user },
 	} = await supabase.auth.getUser();
 
-	// protected routes
-	if (request.nextUrl.pathname.startsWith("/cohorts") && !user) {
-		return NextResponse.redirect(new URL("/sign-in", request.url));
-	}
-
 	// Check for dashboard access
-	if (request.nextUrl.pathname.startsWith("/dashboard/")) {
+	if (request.nextUrl.pathname.startsWith("/dashboard")) {
 		if (!user) {
 			return NextResponse.redirect(new URL("/sign-in", request.url));
 		}
@@ -53,7 +48,7 @@ export const updateSession = async (request: NextRequest) => {
 			// Check if the cohortId is a number
 			const cohortId = request.nextUrl.pathname.split("/")[3];
 			if (!cohortId || isNaN(Number.parseInt(cohortId))) {
-				return NextResponse.redirect(new URL("/cohorts", request.url));
+				return NextResponse.redirect(new URL("/dashboard/cohorts", request.url));
 			}
 		}
 
