@@ -14,21 +14,21 @@ export type Database = {
 					cohort_id: number;
 					id: number;
 					joined_at: string | null;
-					role: Database["public"]["Enums"]["cohort_role"] | null;
+					role: Database["public"]["Enums"]["cohort_role"];
 					user_id: string;
 				};
 				Insert: {
 					cohort_id: number;
 					id?: number;
 					joined_at?: string | null;
-					role?: Database["public"]["Enums"]["cohort_role"] | null;
+					role: Database["public"]["Enums"]["cohort_role"];
 					user_id: string;
 				};
 				Update: {
 					cohort_id?: number;
 					id?: number;
 					joined_at?: string | null;
-					role?: Database["public"]["Enums"]["cohort_role"] | null;
+					role?: Database["public"]["Enums"]["cohort_role"];
 					user_id?: string;
 				};
 				Relationships: [

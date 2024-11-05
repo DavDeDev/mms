@@ -159,7 +159,7 @@ export function CohortCard({
 				</div>
 			</CardHeader>
 			<CardContent className="flex-grow flex flex-col p-4">
-				<Link href={`/cohort/${cohort.cohort_id}`} className="block mb-4">
+				<Link href={`/dashboard/${cohort.cohort_id}`} className="block mb-4">
 					<CardTitle className="text-2xl capitalize mb-2">
 						{cohort.semester} {cohort.year}
 					</CardTitle>

@@ -34,16 +34,28 @@ export const updateSession = async (request: NextRequest) => {
 
 	// This will refresh session if expired - required for Server Components
 	// https://supabase.com/docs/guides/auth/server-side/nextjs
-	const user = await supabase.auth.getUser();
+	// This will refresh session if expired - required for Server Components
+  const { data: { user } } = await supabase.auth.getUser();
 
-	// protected routes
-	if (request.nextUrl.pathname.startsWith("/cohorts") && user.error) {
-		return NextResponse.redirect(new URL("/sign-in", request.url));
-	}
+  // protected routes
+  if (request.nextUrl.pathname.startsWith("/cohorts") && !user) {
+    return NextResponse.redirect(new URL("/sign-in", request.url));
+  }
 
-	// if (request.nextUrl.pathname === "/" && !user.error) {
-	// 	return NextResponse.redirect(new URL("/cohorts", request.url));
-	// }
+  // Check for dashboard access
+  if (request.nextUrl.pathname.startsWith('/dashboard/')) {
+    if (!user) {
+      return NextResponse.redirect(new URL('/sign-in', request.url));
+    }
+
+    const cohortId = request.nextUrl.pathname.split('/')[2];
+    if (!cohortId || isNaN(parseInt(cohortId))) {
+      return NextResponse.redirect(new URL('/cohorts', request.url));
+    }
+
+    // Set a custom header to indicate that the middleware check has passed
+    response.headers.set('x-middleware-cache', 'no-cache');
+  }
 
 	return response;
 };

@@ -21,21 +21,32 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { SidebarMenuButton, useSidebar } from "@/components/ui/sidebar";
 import type { getUserCohortsQuery } from "@/queries";
+import { useParams } from "next/navigation";
 
 type Cohort = Awaited<ReturnType<Awaited<typeof getUserCohortsQuery>>>[number];
 
+import { useRouter } from "next/navigation";
+
 export default function CohortSwitcher({ cohorts }: { cohorts: Cohort[] }) {
 	const { isMobile } = useSidebar();
+	const router = useRouter();
+	const params = useParams<{ cohort_id: string }>();
 	const [activeCohort, setActiveCohort] = React.useState<Cohort | null>(
-		cohorts?.length > 0 ? cohorts[0] : null,
+		cohorts?.find(
+			(cohort) => cohort.cohort_id === Number.parseInt(params.cohort_id),
+		) || (cohorts?.length > 0 ? cohorts[0] : null),
 	);
-
 	if (!cohorts?.length) {
 		return null;
 	}
 
 	const formatSemester = (semester: string) => {
 		return semester.charAt(0).toUpperCase() + semester.slice(1);
+	};
+
+	const handleCohortChange = (cohort: Cohort) => {
+		setActiveCohort(cohort);
+		router.push(`/dashboard/${cohort.cohort_id}`);
 	};
 
 	return (
@@ -73,7 +84,7 @@ export default function CohortSwitcher({ cohorts }: { cohorts: Cohort[] }) {
 				{cohorts.map((cohort) => (
 					<DropdownMenuItem
 						key={cohort.cohort_id}
-						onClick={() => setActiveCohort(cohort)}
+						onClick={() => handleCohortChange(cohort)}
 						className="gap-2 p-2"
 					>
 						<Avatar className="size-6">

@@ -49,10 +49,17 @@ export async function getUserCohortsQuery(
 		console.error("Error fetching cohorts:", error);
 		throw error;
 	}
-	const processedData = data.map((cohort) => {
+	const processedData = data.flatMap((cohort) => {
 		const cohortCoordinator = cohort.cohort_members.find(
 			(cm) => cm.role === "coordinator",
 		);
+		const userRole = cohort.cohort_members.find(
+			(cm) => cm.users.id === params.userId,
+		)?.role;
+
+		// Skip this cohort if userRole is undefined
+		if (!userRole) return [];
+
 		return {
 			cohort_id: cohort.id,
 			semester: cohort.semester,
@@ -67,6 +74,7 @@ export async function getUserCohortsQuery(
 			coordinator_name: cohortCoordinator
 				? `${cohortCoordinator.users.first_name} ${cohortCoordinator.users.last_name}`
 				: null,
+			user_role: userRole,
 		};
 	});
 

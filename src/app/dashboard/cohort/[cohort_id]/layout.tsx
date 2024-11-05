@@ -1,3 +1,4 @@
+import { checkUserAccess } from "@/actions/auth-actions";
 import { AppSidebar } from "@/components/app-sidebar";
 import {
 	Breadcrumb,
@@ -13,12 +14,30 @@ import {
 	SidebarProvider,
 	SidebarTrigger,
 } from "@/components/ui/sidebar";
+import { redirect } from "next/navigation";
 
-export default function DashboardLayout({
-	children,
+export default async function DashboardLayout({
+  children,
+  params
 }: {
-	children: React.ReactNode;
+  children: React.ReactNode;
+  params: { cohort_id: string };
 }) {
+  const cohortId = parseInt(params.cohort_id);
+  
+  if (isNaN(cohortId)) {
+    redirect('/dashboard');
+  }
+
+  const result = await checkUserAccess(cohortId);
+
+  if (!result.hasAccess) {
+    redirect(result.redirectPath);
+  }
+
+  // At this point, TypeScript knows that result.userRole is defined
+  const userRole = result.userRole;
+	console.log("❤️❤️❤️❤️❤️", userRole);
 	return (
 		<SidebarProvider>
 			<AppSidebar />
@@ -31,7 +50,7 @@ export default function DashboardLayout({
 							<BreadcrumbList>
 								<BreadcrumbItem className="hidden md:block">
 									<BreadcrumbLink href="#">
-										Building Your Application
+										Building Your Applicationnn ❤️ {userRole}
 									</BreadcrumbLink>
 								</BreadcrumbItem>
 								<BreadcrumbSeparator className="hidden md:block" />
