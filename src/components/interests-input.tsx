@@ -1,22 +1,19 @@
-"use client";
-
-import { Badge } from "components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
 	Tooltip,
 	TooltipContent,
 	TooltipProvider,
 	TooltipTrigger,
-} from "components/ui/tooltip";
+} from "@/components/ui/tooltip";
 import { X } from "lucide-react";
-import React, { type KeyboardEvent, useRef, useEffect } from "react";
-import { Button } from "./ui/button";
+import React, { useRef, useEffect, type KeyboardEvent } from "react";
 
 const MAX_INTERESTS = 5;
-const MAX_INTEREST_LENGTH = 20;
+const MAX_INTEREST_LENGTH = 30;
 
 interface InterestsInputProps {
 	value: string[];
-	onChange: (value: string[]) => void;
+	onChange: (interests: string[]) => void;
 }
 
 export default function InterestsInput({
@@ -24,26 +21,52 @@ export default function InterestsInput({
 	onChange,
 }: InterestsInputProps) {
 	const [inputValue, setInputValue] = React.useState("");
+	const [highlightedIndex, setHighlightedIndex] = React.useState<number | null>(
+		null,
+	);
+	const [error, setError] = React.useState<string | null>(null);
 	const inputRef = useRef<HTMLInputElement>(null);
 
 	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setInputValue(e.target.value);
+		setHighlightedIndex(null);
+		setError(null);
 	};
 
 	const handleInputKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
 		if (e.key === "Enter" && inputValue.trim()) {
 			e.preventDefault();
-			if (value.length < MAX_INTERESTS && !value.includes(inputValue.trim())) {
+			if (inputValue.length > MAX_INTEREST_LENGTH) {
+				setError(`Interest must be ${MAX_INTEREST_LENGTH} characters or less`);
+			} else if (
+				value.length < MAX_INTERESTS &&
+				!value.includes(inputValue.trim())
+			) {
 				onChange([...value, inputValue.trim()]);
 				setInputValue("");
+				setError(null);
+			} else if (value.length >= MAX_INTERESTS) {
+				setError(`Maximum ${MAX_INTERESTS} interests allowed`);
+			} else {
+				setError("This interest already exists");
 			}
 		} else if (e.key === "Backspace" && !inputValue && value.length > 0) {
-			removeInterest(value[value.length - 1]);
+			e.preventDefault();
+			if (highlightedIndex === null) {
+				setHighlightedIndex(value.length - 1);
+			} else {
+				removeInterest(value[highlightedIndex]);
+				setHighlightedIndex(null);
+			}
+		} else {
+			setHighlightedIndex(null);
 		}
 	};
 
 	const removeInterest = (interestToRemove: string) => {
 		onChange(value.filter((interest) => interest !== interestToRemove));
+		setHighlightedIndex(null);
+		setError(null);
 	};
 
 	useEffect(() => {
@@ -63,19 +86,23 @@ export default function InterestsInput({
 				<TooltipProvider>
 					{value.map((interest, index) => (
 						<Tooltip key={index}>
-							{/* READ: https://github.com/shadcn-ui/ui/issues/1701#issuecomment-1902565141 */}
-							<TooltipTrigger disabled>
-								<Badge variant="secondary" className="text-sm">
-									{trimInterest(interest)}
+							<TooltipTrigger asChild>
+								<div
+									className={`flex items-center h-8 bg-secondary text-secondary-foreground rounded-md ${
+										index === highlightedIndex ? "ring-2 ring-primary" : ""
+									}`}
+								>
+									<span className="px-2 text-sm">{trimInterest(interest)}</span>
 									<Button
+										type="button"
 										onClick={() => removeInterest(interest)}
-										className="ml-1 p-0 h-0"
+										className="h-full px-2 hover:bg-destructive hover:text-destructive-foreground rounded-none rounded-r-md transition-colors"
 										aria-label={`Remove ${interest}`}
-										variant="link"
+										variant="secondary"
 									>
 										<X size={12} />
 									</Button>
-								</Badge>
+								</div>
 							</TooltipTrigger>
 							<TooltipContent>
 								<p>{interest}</p>
@@ -91,10 +118,12 @@ export default function InterestsInput({
 						value={inputValue}
 						onChange={handleInputChange}
 						onKeyDown={handleInputKeyDown}
-						className="flex-grow outline-none bg-transparent text-sm min-w-[120px]"
+						className="flex-grow h-8 outline-none bg-transparent text-sm min-w-[120px] leading-normal"
+						maxLength={MAX_INTEREST_LENGTH}
 					/>
 				)}
 			</div>
+			{error && <p className="text-destructive text-sm mt-1">{error}</p>}
 		</div>
 	);
 }

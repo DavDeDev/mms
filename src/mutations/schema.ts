@@ -42,6 +42,8 @@ export const loginUserSchema = z.object({
 	password: passwordSchema,
 });
 
+const MAX_INTEREST_LENGTH = 30;
+
 export const updateUserSchema = z.object({
 	firstName: z.string().min(1, "First name is required"),
 	lastName: z.string().min(1, "Last name is required"),
@@ -53,7 +55,16 @@ export const updateUserSchema = z.object({
 	schoolId: z.coerce.number(),
 	isInternational: z.boolean().default(false),
 	country: z.string().optional(),
-	interests: z.array(z.string()).max(5),
+	interests: z
+		.array(
+			z
+				.string()
+				.max(
+					MAX_INTEREST_LENGTH,
+					`Interest must be ${MAX_INTEREST_LENGTH} characters or less`,
+				),
+		)
+		.max(5, "Maximum 5 interests allowed"),
 	avatarUrl: z.string().url().nullable(),
 });
 
