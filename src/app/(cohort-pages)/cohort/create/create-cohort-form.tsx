@@ -256,7 +256,7 @@ export default function CreateCohortForm({
 								render={({ field }) => (
 									<FormItem>
 										<FormLabel>Date Range</FormLabel>
-										<Popover>
+										<Popover modal>
 											<PopoverTrigger asChild>
 												<FormControl>
 													<Button
