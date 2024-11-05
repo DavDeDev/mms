@@ -153,7 +153,7 @@ export default function UserProfileUpdateForm({
 															htmlFor="avatar-upload"
 															className="cursor-pointer"
 														>
-															<Avatar className="w-64 h-64 border-2 border-border hover:border-primary transition-colors">
+															<Avatar className="w-64 h-64 border-2 border-border hover:border-primary transition-colors ">
 																<AvatarImage
 																	src={imagePreview || undefined}
 																	alt="Profile picture"

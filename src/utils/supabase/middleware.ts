@@ -50,7 +50,8 @@ export const updateSession = async (request: NextRequest) => {
 			return NextResponse.redirect(new URL("/sign-in", request.url));
 		}
 
-		const cohortId = request.nextUrl.pathname.split("/")[2];
+		// Check if the cohortId is a number
+		const cohortId = request.nextUrl.pathname.split("/")[3];
 		if (!cohortId || isNaN(Number.parseInt(cohortId))) {
 			return NextResponse.redirect(new URL("/cohorts", request.url));
 		}

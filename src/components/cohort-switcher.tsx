@@ -21,13 +21,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { SidebarMenuButton, useSidebar } from "@/components/ui/sidebar";
 import type { getUserCohortsQuery } from "@/queries";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 type Cohort = Awaited<ReturnType<Awaited<typeof getUserCohortsQuery>>>[number];
 
-import { useRouter } from "next/navigation";
-
-export default function CohortSwitcher({ cohorts }: { cohorts: Cohort[] }) {
+export default function Component({ cohorts = [] }: { cohorts: Cohort[] }) {
 	const { isMobile } = useSidebar();
 	const router = useRouter();
 	const params = useParams<{ cohort_id: string }>();
@@ -36,6 +34,7 @@ export default function CohortSwitcher({ cohorts }: { cohorts: Cohort[] }) {
 			(cohort) => cohort.cohort_id === Number.parseInt(params.cohort_id),
 		) || (cohorts?.length > 0 ? cohorts[0] : null),
 	);
+
 	if (!cohorts?.length) {
 		return null;
 	}
@@ -46,7 +45,7 @@ export default function CohortSwitcher({ cohorts }: { cohorts: Cohort[] }) {
 
 	const handleCohortChange = (cohort: Cohort) => {
 		setActiveCohort(cohort);
-		router.push(`/dashboard/${cohort.cohort_id}`);
+		router.push(`/dashboard/cohort/${cohort.cohort_id}`);
 	};
 
 	return (
@@ -56,9 +55,19 @@ export default function CohortSwitcher({ cohorts }: { cohorts: Cohort[] }) {
 					size="lg"
 					className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
 				>
-					<div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-						<GraduationCap className="size-4" />
-					</div>
+					<Avatar className="size-8 rounded-lg">
+						{activeCohort?.avatar_url ? (
+							<AvatarImage
+								src={activeCohort.avatar_url}
+								alt={`${activeCohort.semester} ${activeCohort.year}`}
+							/>
+						) : (
+							<AvatarFallback className="rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+								{formatSemester(activeCohort?.semester || "").charAt(0)}
+								{activeCohort?.year.toString().slice(-2)}
+							</AvatarFallback>
+						)}
+					</Avatar>
 					<div className="grid flex-1 text-left text-sm leading-tight">
 						<span className="truncate font-semibold">
 							{formatSemester(activeCohort?.semester || "")}{" "}
@@ -87,14 +96,14 @@ export default function CohortSwitcher({ cohorts }: { cohorts: Cohort[] }) {
 						onClick={() => handleCohortChange(cohort)}
 						className="gap-2 p-2"
 					>
-						<Avatar className="size-6">
+						<Avatar className="size-6 rounded-sm border">
 							{cohort.avatar_url ? (
 								<AvatarImage
 									src={cohort.avatar_url}
 									alt={`${cohort.semester} ${cohort.year}`}
 								/>
 							) : (
-								<AvatarFallback className="bg-primary/10">
+								<AvatarFallback className="bg-primary/10 rounded-sm">
 									{formatSemester(cohort.semester).charAt(0)}
 									{cohort.year.toString().slice(-2)}
 								</AvatarFallback>

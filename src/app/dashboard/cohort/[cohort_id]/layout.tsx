@@ -36,9 +36,7 @@ export default async function DashboardLayout(props: {
 		redirect(result.redirectPath);
 	}
 
-	// At this point, TypeScript knows that result.userRole is defined
 	const userRole = result.userRole;
-	console.log("❤️❤️❤️❤️❤️", userRole);
 	return (
 		<SidebarProvider>
 			<AppSidebar />
@@ -51,7 +49,7 @@ export default async function DashboardLayout(props: {
 							<BreadcrumbList>
 								<BreadcrumbItem className="hidden md:block">
 									<BreadcrumbLink href="#">
-										Building Your Applicationnn ❤️ {userRole}
+										Building Your Application
 									</BreadcrumbLink>
 								</BreadcrumbItem>
 								<BreadcrumbSeparator className="hidden md:block" />
