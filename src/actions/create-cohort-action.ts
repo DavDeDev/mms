@@ -99,7 +99,7 @@ export const createCohortAction = async (
 		);
 
 		// Revalidate cache after creating cohort and adding members
-		revalidatePath("/cohorts");
+		revalidatePath("/dashboard/cohorts");
 
 		return { success: true };
 	} catch (error) {

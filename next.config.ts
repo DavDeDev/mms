@@ -9,6 +9,11 @@ const nextConfig: NextConfig = {
 				destination: "/dashboard/cohorts",
 				permanent: true,
 			},
+			{
+				source: "/cohorts",
+				destination: "/dashboard/cohorts",
+				permanent: true,
+			},
 		];
 	},
 };

@@ -132,7 +132,7 @@ export default function CreateCohortForm({
 			const { data } = response; // Assuming data might be useful here
 			toast.success("Cohort created successfully!"); // Show success notification
 			// Optionally, redirect or update UI after successful cohort creation
-			router.push("/cohorts"); // Redirect to the cohorts page
+			router.push("/dashboard/cohorts"); // Redirect to the cohorts page
 		} else {
 			// Access properties safely when success is false
 			const { error } = response; // Access the error message
