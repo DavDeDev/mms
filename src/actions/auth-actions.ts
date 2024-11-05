@@ -5,9 +5,9 @@ import { encodedRedirect } from "@/utils/utils";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
-import { getUserCohorts } from '@/queries/cached-queries';
-import { cache } from 'react';
-import { Enums } from "@/types";
+import { getUserCohorts } from "@/queries/cached-queries";
+import type { Enums } from "@/types";
+import { cache } from "react";
 
 export const signUpAction = async (formData: FormData) => {
 	const email = formData.get("email")?.toString();
@@ -137,25 +137,29 @@ export const signOutAction = async () => {
 	await supabase.auth.signOut();
 	return redirect("/sign-in");
 };
-type AccessCheckResult = {
-	hasAccess: true;
-  userRole: Enums<'cohort_role'>;
-} | {
-	hasAccess: false;
-	redirectPath: string;
-};
-export const checkUserAccess = cache(async (cohortId: number) : Promise<AccessCheckResult> => {
-  const cohorts = await getUserCohorts();
+type AccessCheckResult =
+	| {
+			hasAccess: true;
+			userRole: Enums<"cohort_role">;
+	  }
+	| {
+			hasAccess: false;
+			redirectPath: string;
+	  };
+export const checkUserAccess = cache(
+	async (cohortId: number): Promise<AccessCheckResult> => {
+		const cohorts = await getUserCohorts();
 
-	// TODO: handle case where user is not enrolled in any cohorts and tries to access dashboard route
-  if (!cohorts) {
-    return { hasAccess: false, redirectPath: '/cohorts' };
-  }
+		// TODO: handle case where user is not enrolled in any cohorts and tries to access dashboard route
+		if (!cohorts) {
+			return { hasAccess: false, redirectPath: "/cohorts" };
+		}
 
-  const cohort = cohorts.find(c => c.cohort_id === cohortId);
-  if (cohort) {
-    return { hasAccess: true, userRole: cohort.user_role };
-  }
+		const cohort = cohorts.find((c) => c.cohort_id === cohortId);
+		if (cohort) {
+			return { hasAccess: true, userRole: cohort.user_role };
+		}
 
-  return { hasAccess: false, redirectPath: '/cohorts' };
-});
+		return { hasAccess: false, redirectPath: "/cohorts" };
+	},
+);

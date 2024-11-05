@@ -16,26 +16,27 @@ import {
 } from "@/components/ui/sidebar";
 import { redirect } from "next/navigation";
 
-export default async function DashboardLayout({
-  children,
-  params
-}: {
-  children: React.ReactNode;
-  params: { cohort_id: string };
+export default async function DashboardLayout(props: {
+	children: React.ReactNode;
+	params: Promise<{ cohort_id: string }>;
 }) {
-  const cohortId = parseInt(params.cohort_id);
-  
-  if (isNaN(cohortId)) {
-    redirect('/dashboard');
-  }
+	const params = await props.params;
 
-  const result = await checkUserAccess(cohortId);
+	const { children } = props;
 
-  if (!result.hasAccess) {
-    redirect(result.redirectPath);
-  }
+	const cohortId = Number.parseInt(params.cohort_id);
 
-  const userRole = result.userRole;
+	if (isNaN(cohortId)) {
+		redirect("/dashboard");
+	}
+
+	const result = await checkUserAccess(cohortId);
+
+	if (!result.hasAccess) {
+		redirect(result.redirectPath);
+	}
+
+	const userRole = result.userRole;
 	return (
 		<SidebarProvider>
 			<AppSidebar />
