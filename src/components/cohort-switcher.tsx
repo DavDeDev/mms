@@ -2,7 +2,7 @@
 
 import { format } from "date-fns";
 import {
-	Calendar,
+	AlignJustifyIcon,
 	ChevronRight,
 	ChevronsUpDown,
 	GraduationCap,
@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { SidebarMenuButton, useSidebar } from "@/components/ui/sidebar";
 import type { getUserCohortsQuery } from "@/queries";
+import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 
 type Cohort = Awaited<ReturnType<Awaited<typeof getUserCohortsQuery>>>[number];
@@ -132,11 +133,14 @@ export default function Component({ cohorts = [] }: { cohorts: Cohort[] }) {
 					</DropdownMenuItem>
 				))}
 				<DropdownMenuSeparator />
-				<DropdownMenuItem className="gap-2 p-2">
-					<Calendar className="size-4 text-muted-foreground" />
-					<span className="font-medium text-muted-foreground">
-						View Calendar
-					</span>
+
+				<DropdownMenuItem>
+					<Link href="/dashboard/cohorts" className="flex items-center">
+						<AlignJustifyIcon className="mr-2" />
+						<span className="font-medium text-muted-foreground">
+							Manage Your Cohorts
+						</span>
+					</Link>
 				</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>
