@@ -49,11 +49,12 @@ export const updateSession = async (request: NextRequest) => {
 		if (!user) {
 			return NextResponse.redirect(new URL("/sign-in", request.url));
 		}
-
-		// Check if the cohortId is a number
-		const cohortId = request.nextUrl.pathname.split("/")[3];
-		if (!cohortId || isNaN(Number.parseInt(cohortId))) {
-			return NextResponse.redirect(new URL("/cohorts", request.url));
+		if (request.nextUrl.pathname.split("/")[2] === "cohort") {
+			// Check if the cohortId is a number
+			const cohortId = request.nextUrl.pathname.split("/")[3];
+			if (!cohortId || isNaN(Number.parseInt(cohortId))) {
+				return NextResponse.redirect(new URL("/cohorts", request.url));
+			}
 		}
 
 		// Set a custom header to indicate that the middleware check has passed
