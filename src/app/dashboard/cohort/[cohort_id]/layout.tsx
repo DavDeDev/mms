@@ -14,9 +14,10 @@ import {
 	SidebarProvider,
 	SidebarTrigger,
 } from "@/components/ui/sidebar";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-export default async function DashboardLayout(props: {
+export default async function CohortDashboardLayout(props: {
 	children: React.ReactNode;
 	params: Promise<{ cohort_id: string }>;
 }) {
@@ -36,9 +37,12 @@ export default async function DashboardLayout(props: {
 		redirect(result.redirectPath);
 	}
 
+	const cookieStore = await cookies();
+	const defaultOpen = cookieStore.get("sidebar:state")?.value === "true";
+
 	const userRole = result.userRole;
 	return (
-		<SidebarProvider>
+		<SidebarProvider defaultOpen={defaultOpen}>
 			<CohortDashboardSidebar />
 			<SidebarInset>
 				<header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
