@@ -13,7 +13,7 @@ import CohortSwitcher from "./cohort-switcher";
 import { NavMain } from "./nav-main";
 import { NavUser } from "./nav-user";
 
-export async function AppSidebar({
+export async function CohortDashboardSidebar({
 	children,
 	...props
 }: React.ComponentProps<typeof Sidebar>) {
