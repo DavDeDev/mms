@@ -1,5 +1,6 @@
+import CreateCohortForm from "@/components/forms/create-cohort-form";
 import { getUserProfile } from "@/queries/cached-queries";
-import CreateCohortForm from "../../../../../components/forms/create-cohort-form";
+
 
 export default async function Page() {
 	const user = await getUserProfile();
