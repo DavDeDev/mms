@@ -22,7 +22,7 @@ export function CohortDisplay({
 		<div>
 			<div className="flex justify-between mb-4">
 				{userRole === "admin" && (
-					<Link href="/cohort/create">
+					<Link href="/dashboard/cohort/create">
 						<Button>
 							<PlusIcon className="w-4 h-4 mr-2" />
 							Add Cohort
