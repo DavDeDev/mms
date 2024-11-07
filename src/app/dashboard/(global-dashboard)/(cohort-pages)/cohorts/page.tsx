@@ -9,7 +9,7 @@ export default async function Page() {
 
 	if (!cohorts) {
 		if (user.role === "admin") {
-			return redirect("/cohort/create");
+			return redirect("/dashboard/cohort/create");
 		}
 		//TODO: if the user is not admin, sends them to dashboard
 		return redirect("/sign-in");
