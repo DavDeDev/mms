@@ -44,7 +44,10 @@ export const updateSession = async (request: NextRequest) => {
 		if (!user) {
 			return NextResponse.redirect(new URL("/sign-in", request.url));
 		}
-		if (request.nextUrl.pathname.split("/")[2] === "cohort" && request.nextUrl.pathname.split("/")[3] !== "create") {
+		if (
+			request.nextUrl.pathname.split("/")[2] === "cohort" &&
+			request.nextUrl.pathname.split("/")[3] !== "create"
+		) {
 			// Check if the cohortId is a number
 			const cohortId = request.nextUrl.pathname.split("/")[3];
 			if (!cohortId || Number.isNaN(Number.parseInt(cohortId))) {

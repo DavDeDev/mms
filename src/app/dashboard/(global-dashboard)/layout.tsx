@@ -6,10 +6,10 @@ export default function RootLayout({
 }: {
 	children: React.ReactNode;
 }) {
-	return(
-    <SidebarProvider>
-      <GlobalDashboardSidebar/>
-      {children}
-      </SidebarProvider>
-  );
+	return (
+		<SidebarProvider>
+			<GlobalDashboardSidebar />
+			{children}
+		</SidebarProvider>
+	);
 }

@@ -10,14 +10,10 @@ import {
 	SidebarHeader,
 	SidebarMenu,
 	SidebarMenuButton,
-	SidebarMenuItem,
 	SidebarRail,
 	SidebarSeparator,
 } from "@/components/ui/sidebar";
-import { getUserCohorts, getUserProfile } from "@/queries/cached-queries";
-import CohortSwitcher from "./cohort-switcher";
-import { NavMain } from "./nav-main";
-import { NavUser } from "./nav-user";
+import { getUserProfile } from "@/queries/cached-queries";
 
 export async function GlobalDashboardSidebar({
 	children,
@@ -37,14 +33,11 @@ export async function GlobalDashboardSidebar({
 				<AccountNav />
 				{/* <NavProjects projects={data.projects} /> */}
 			</SidebarContent>
-			<SidebarFooter>
-				{/* <NavUser {...user} /> */}
-			</SidebarFooter>
+			<SidebarFooter>{/* <NavUser {...user} /> */}</SidebarFooter>
 			<SidebarRail />
 		</Sidebar>
 	);
 }
-
 
 function CohortsNav() {
 	return (
@@ -55,13 +48,12 @@ function CohortsNav() {
 				<SidebarMenuButton asChild>
 					<a href="/dashboard/cohorts">All Cohorts</a>
 				</SidebarMenuButton>
-
 			</SidebarMenu>
 		</SidebarGroup>
-	)
+	);
 }
 
-function AccountNav(){
+function AccountNav() {
 	return (
 		<SidebarGroup>
 			<SidebarGroupLabel>Account</SidebarGroupLabel>
@@ -71,5 +63,5 @@ function AccountNav(){
 				</SidebarMenuButton>
 			</SidebarMenu>
 		</SidebarGroup>
-	)
+	);
 }
