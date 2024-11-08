@@ -1,5 +1,5 @@
 import { GlobalDashboardSidebar } from "@/components/global-dashboard-sidebar";
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
 export default function RootLayout({
 	children,
@@ -9,7 +9,7 @@ export default function RootLayout({
 	return (
 		<SidebarProvider>
 			<GlobalDashboardSidebar />
-			{children}
+			<SidebarInset>{children}</SidebarInset>
 		</SidebarProvider>
 	);
 }
