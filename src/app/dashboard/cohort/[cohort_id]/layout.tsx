@@ -1,5 +1,6 @@
 import { checkUserAccess } from "@/actions/auth-actions";
 import { CohortDashboardSidebar } from "@/components/cohort-dashboard-sidebar";
+import { UserCohortRole } from "@/components/development/user-cohort-role-indicator";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -53,7 +54,7 @@ export default async function CohortDashboardLayout(props: {
 							<BreadcrumbList>
 								<BreadcrumbItem className="hidden md:block">
 									<BreadcrumbLink href="#">
-										Building Your Application
+										Building Your Application {userRole}
 									</BreadcrumbLink>
 								</BreadcrumbItem>
 								<BreadcrumbSeparator className="hidden md:block" />
@@ -66,6 +67,7 @@ export default async function CohortDashboardLayout(props: {
 				</header>
 				{children}
 			</SidebarInset>
+			<UserCohortRole userRole={userRole} />
 		</SidebarProvider>
 	);
 }

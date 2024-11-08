@@ -2,7 +2,7 @@ import { GeistSans } from "geist/font/sans";
 import { ThemeProvider } from "next-themes";
 import "./globals.css";
 import { signOutAction } from "@/actions/auth-actions";
-import { TailwindIndicator } from "components/tailwind-indicator";
+import { TailwindIndicator } from "@/components/development/tailwind-indicator";
 import { ThemeSwitcher } from "components/theme-switcher";
 import { Button } from "components/ui/button";
 import { Toaster } from "components/ui/sonner";
