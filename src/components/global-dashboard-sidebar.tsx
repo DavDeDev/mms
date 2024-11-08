@@ -21,7 +21,7 @@ export async function GlobalDashboardSidebar({
 }: React.ComponentProps<typeof Sidebar>) {
 	const user = await getUserProfile();
 	return (
-		<Sidebar collapsible="icon" {...props}>
+		<Sidebar className="h-screen" collapsible="none" {...props}>
 			<SidebarHeader>
 				{/* TODO: Insert a LOGO */}
 				LOGO
