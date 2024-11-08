@@ -22,18 +22,19 @@ import {
 import { SidebarMenuButton, useSidebar } from "@/components/ui/sidebar";
 import type { getUserCohortsQuery } from "@/queries";
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 type Cohort = Awaited<ReturnType<Awaited<typeof getUserCohortsQuery>>>[number];
 
-export default function Component({ cohorts = [] }: { cohorts: Cohort[] }) {
+export default function CohortSwitcher({
+	cohorts = [],
+	activeCohortId,
+}: { cohorts: Cohort[]; activeCohortId: number }) {
 	const { isMobile } = useSidebar();
 	const router = useRouter();
-	const params = useParams<{ cohort_id: string }>();
 	const [activeCohort, setActiveCohort] = React.useState<Cohort | null>(
-		cohorts?.find(
-			(cohort) => cohort.cohort_id === Number.parseInt(params.cohort_id),
-		) || (cohorts?.length > 0 ? cohorts[0] : null),
+		cohorts?.find((cohort) => cohort.cohort_id === activeCohortId) ||
+			(cohorts?.length > 0 ? cohorts[0] : null),
 	);
 
 	if (!cohorts?.length) {
