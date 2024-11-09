@@ -99,3 +99,36 @@ export async function queryUserByEmail(
 	if (error) throw error;
 	return data;
 }
+
+interface GetCohortMembersParams {
+	cohortId: number;
+	limit: number;
+	page: number;
+}
+
+export async function getCohortMembersQuery(
+	supabase: Client,
+	params: GetCohortMembersParams,
+) {
+	const { data, error } = await supabase
+		.from("cohort_members")
+		.select(`
+			role,
+			member:users!inner (
+				id,
+				first_name,
+				last_name,
+				email,
+				avatar_url
+			)
+		`)
+		.eq("cohort_id", params.cohortId)
+		.limit(params.limit)
+		.range(params.page * params.limit, (params.page + 1) * params.limit - 1)
+		.throwOnError();
+	if (error) {
+		console.error("Error fetching cohort members:", error);
+		throw error;
+	}
+	return data;
+}

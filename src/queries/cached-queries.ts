@@ -3,7 +3,11 @@ import { createClient } from "@/utils/supabase/server";
 import { unstable_cache } from "next/cache";
 import { redirect } from "next/navigation";
 import { cache } from "react";
-import { getUserCohortsQuery, getUserProfileQuery } from "../queries";
+import {
+	getCohortMembersQuery,
+	getUserCohortsQuery,
+	getUserProfileQuery,
+} from "../queries";
 
 // FIXME: Investigate cache implementation
 export const getSession = cache(async () => {
@@ -58,6 +62,29 @@ export const getUserCohorts = async () => {
 		{
 			tags: [`cohorts_user_${userId}`],
 			revalidate: 3600,
+		},
+	)();
+};
+
+// Function to pull all the members of a cohort with a limit and pagination
+export const getCohortMembers = async (
+	cohortId: number,
+	limit: number,
+	page: number,
+) => {
+	const supabase = await createClient();
+	return unstable_cache(
+		async () => {
+			return getCohortMembersQuery(supabase, {
+				cohortId,
+				limit,
+				page,
+			});
+		},
+		["cohort_members", cohortId.toString(), limit.toString(), page.toString()],
+		{
+			tags: [`cohort_members_${cohortId}`],
+			revalidate: 1,
 		},
 	)();
 };
