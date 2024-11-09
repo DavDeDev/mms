@@ -202,10 +202,18 @@ export default function CreateCohortForm({
 										<FormLabel>Cohort Image</FormLabel>
 										<FormControl>
 											<div
-												className="w-full h-64 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center cursor-pointer overflow-hidden"
+												className="w-full h-64 rounded-lg border-2 border-dashed flex items-center justify-center cursor-pointer overflow-hidden"
 												onClick={() =>
 													document.getElementById("image-upload")?.click()
 												}
+												onKeyDown={(e) => {
+													if (e.key === "Enter" || e.key === " ") {
+														e.preventDefault(); // Prevents any scrolling that might happen when pressing space
+														document.getElementById("image-upload")?.click();
+													}
+												}}
+												tabIndex={0} // Makes the div focusable
+												role="button" // Sets the role to button for better accessibility
 											>
 												{imagePreview ? (
 													<img
