@@ -2,6 +2,7 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { DataTableColumnHeader } from "@/components/ui/data-table-column-header";
 import type { getCohortMembers } from "@/queries/cached-queries";
 import { getCohortRoleColors } from "@/utils/utils";
 import type { ColumnDef } from "@tanstack/react-table";
@@ -39,7 +40,10 @@ export const columns: ColumnDef<CohortMember>[] = [
 		},
 	},
 	{
-		header: "Role",
+		accessorKey: "email",
+		header: ({ column }) => (
+			<DataTableColumnHeader column={column} title="Email" />
+		),
 		cell: ({ row }) => {
 			return (
 				<Badge
