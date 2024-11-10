@@ -40,9 +40,9 @@ export const columns: ColumnDef<CohortMember>[] = [
 		},
 	},
 	{
-		accessorKey: "email",
+		accessorKey: "role",
 		header: ({ column }) => (
-			<DataTableColumnHeader column={column} title="Email" />
+			<DataTableColumnHeader column={column} title="Role" />
 		),
 		cell: ({ row }) => {
 			return (
