@@ -10,5 +10,4 @@ declare module "@tanstack/react-table" {
 		}[];
 		searchBarPlaceholder?: string;
 	}
-
 }
