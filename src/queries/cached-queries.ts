@@ -69,8 +69,8 @@ export const getUserCohorts = async () => {
 // Function to pull all the members of a cohort with a limit and pagination
 export const getCohortMembers = async (
 	cohortId: number,
-	limit: number,
-	page: number,
+	limit = 25,
+	page = 0,
 ) => {
 	const supabase = await createClient();
 	return unstable_cache(

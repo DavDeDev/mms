@@ -16,22 +16,28 @@ import {
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-export default async function CohortDashboardLayout(props: {
+export default async function CohortDashboardLayout({
+	children,
+	params,
+}: {
 	children: React.ReactNode;
 	params: Promise<{ cohort_id: string }>;
 }) {
-	const params = await props.params;
+	let cohortId: number;
 
-	const { children } = props;
+  try {
+    cohortId = parseInt((await params).cohort_id, 10);
+    if (isNaN(cohortId) || cohortId.toString() !== (await params).cohort_id) {
+      throw new Error("Invalid cohort_id");
+    }
+  } catch (error) {
+    console.log("Invalid cohort_id, redirecting to dashboard");
+    redirect("/dashboard");
+  }
 
-	const cohortId = Number.parseInt(params.cohort_id);
+  const cookieStore = await cookies();
+  const defaultOpen = cookieStore.get("sidebar:state")?.value === "true";
 
-	if (Number.isNaN(cohortId)) {
-		redirect("/dashboard");
-	}
-
-	const cookieStore = await cookies();
-	const defaultOpen = cookieStore.get("sidebar:state")?.value === "true";
 
 	return (
 		<SidebarProvider defaultOpen={defaultOpen}>
