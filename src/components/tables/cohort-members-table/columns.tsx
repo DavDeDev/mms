@@ -6,7 +6,8 @@ import { DataTableColumnHeader } from "@/components/ui/data-table-column-header"
 import type { getCohortMembers } from "@/queries/cached-queries";
 import { CohortRole } from "@/types/enums";
 import { getCohortRoleColors } from "@/utils/utils";
-import type { ColumnDef } from "@tanstack/react-table";
+import { compareItems, rankItem } from "@tanstack/match-sorter-utils";
+import { type ColumnDef, sortingFns } from "@tanstack/react-table";
 import { User } from "lucide-react";
 
 export type CohortMember = Awaited<ReturnType<typeof getCohortMembers>>[number];
@@ -56,6 +57,44 @@ export const columns: ColumnDef<CohortMember>[] = [
 					</div>
 				</div>
 			);
+		},
+		filterFn: (row, columnId, value, addMeta) => {
+			// Retrieve member information directly
+			const member = row.original.member;
+			const role = row.original.role;
+
+			// Combine all searchable fields into a single string for flexible matching or add it as metadata
+			const searchableText = [
+				member.first_name,
+				member.last_name,
+				member.email,
+				role,
+			]
+				.filter(Boolean)
+				.join(" ");
+
+			const searchValue = value.toLowerCase();
+
+			const itemRank = rankItem(searchableText, searchValue);
+
+			addMeta({ itemRank });
+
+			// Return whether the item matches the search
+			return itemRank.passed;
+		},
+		sortingFn: (rowA, rowB, columnId) => {
+			let dir = 0;
+
+			// Only sort by rank if the column has ranking information
+			if (rowA.columnFiltersMeta[columnId]) {
+				dir = compareItems(
+					rowA.columnFiltersMeta[columnId]?.itemRank!,
+					rowB.columnFiltersMeta[columnId]?.itemRank!,
+				);
+			}
+
+			// Provide an alphanumeric fallback for when the item ranks are equal
+			return dir === 0 ? sortingFns.alphanumeric(rowA, rowB, columnId) : dir;
 		},
 	},
 	{

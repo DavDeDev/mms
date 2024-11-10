@@ -3,6 +3,7 @@
 import {
 	type ColumnDef,
 	type ColumnFiltersState,
+	type FilterFn,
 	type SortingState,
 	type VisibilityState,
 	flexRender,
@@ -25,8 +26,20 @@ import {
 	TableRow,
 } from "./table";
 
+import { rankItem } from "@tanstack/match-sorter-utils";
 import { DataTablePagination } from "./data-table-pagination";
 import { DataTableToolbar } from "./data-table-toolbar";
+
+const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
+	// Rank the item
+	const itemRank = rankItem(row.getValue(columnId), value);
+
+	// Store the itemRank info
+	addMeta({ itemRank });
+
+	// Return if the item should be filtered in/out
+	return itemRank.passed;
+};
 
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
@@ -54,6 +67,10 @@ export function DataTable<TData, TValue>({
 			rowSelection,
 			columnFilters,
 		},
+		// filterFns: {
+		//   fuzzy: fuzzyFilter,
+		// },
+		// globalFilterFn: fuzzyFilter,
 		enableRowSelection: true,
 		onRowSelectionChange: setRowSelection,
 		onSortingChange: setSorting,
