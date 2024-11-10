@@ -38,7 +38,7 @@ export async function CohortDashboardSidebar({
 				<CohortSwitcher cohorts={cohorts} activeCohortId={cohortId} />
 			</SidebarHeader>
 			<SidebarContent>
-				<NavMain />
+				<NavMain cohortId={cohortId} />
 				{/* <NavProjects projects={data.projects} /> */}
 			</SidebarContent>
 			<SidebarFooter>

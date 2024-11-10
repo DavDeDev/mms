@@ -1,12 +1,9 @@
-"use client";
-
 import {
 	BookOpen,
 	Briefcase,
 	ChevronRight,
 	Home,
 	Settings,
-	UserCheck,
 	Users,
 } from "lucide-react";
 
@@ -34,23 +31,15 @@ const navMain = [
 		isActive: true,
 	},
 	{
-		title: "Mentees",
-		url: "/mentees",
+		title: "Members",
+		url: "/members",
 		icon: Users,
 		items: [
-			{ title: "All Mentees", url: "/mentees" },
+			{ title: "All Members", url: "/members" },
 			{ title: "Add Mentee", url: "/mentees/add" },
 		],
 	},
-	{
-		title: "Mentors",
-		url: "/mentors",
-		icon: UserCheck,
-		items: [
-			{ title: "All Mentors", url: "/mentors" },
-			{ title: "Add Mentor", url: "/mentors/add" },
-		],
-	},
+
 	{
 		title: "Programs",
 		url: "/programs",
@@ -68,7 +57,8 @@ const navMain = [
 	},
 ];
 
-export function NavMain() {
+export function NavMain({ cohortId }: { cohortId: number }) {
+	const basePath = `/dashboard/cohort/${cohortId}/`;
 	return (
 		<SidebarGroup>
 			<SidebarGroupLabel>Platform</SidebarGroupLabel>
@@ -93,7 +83,8 @@ export function NavMain() {
 									{item.items?.map((subItem) => (
 										<SidebarMenuSubItem key={subItem.title}>
 											<SidebarMenuSubButton asChild>
-												<a href={subItem.url}>
+												<a href={`${basePath}${subItem.url}`}>
+													{" "}
 													<span>{subItem.title}</span>
 												</a>
 											</SidebarMenuSubButton>

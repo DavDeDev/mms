@@ -25,19 +25,18 @@ export default async function CohortDashboardLayout({
 }) {
 	let cohortId: number;
 
-  try {
-    cohortId = parseInt((await params).cohort_id, 10);
-    if (isNaN(cohortId) || cohortId.toString() !== (await params).cohort_id) {
-      throw new Error("Invalid cohort_id");
-    }
-  } catch (error) {
-    console.log("Invalid cohort_id, redirecting to dashboard");
-    redirect("/dashboard");
-  }
+	try {
+		cohortId = Number.parseInt((await params).cohort_id, 10);
+		if (isNaN(cohortId) || cohortId.toString() !== (await params).cohort_id) {
+			throw new Error("Invalid cohort_id");
+		}
+	} catch (error) {
+		console.log("Invalid cohort_id, redirecting to dashboard");
+		redirect("/dashboard");
+	}
 
-  const cookieStore = await cookies();
-  const defaultOpen = cookieStore.get("sidebar:state")?.value === "true";
-
+	const cookieStore = await cookies();
+	const defaultOpen = cookieStore.get("sidebar:state")?.value === "true";
 
 	return (
 		<SidebarProvider defaultOpen={defaultOpen}>
