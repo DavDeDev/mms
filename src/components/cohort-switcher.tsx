@@ -22,7 +22,7 @@ import {
 import { SidebarMenuButton, useSidebar } from "@/components/ui/sidebar";
 import type { getUserCohortsQuery } from "@/queries";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 type Cohort = Awaited<ReturnType<Awaited<typeof getUserCohortsQuery>>>[number];
 
@@ -32,6 +32,7 @@ export default function CohortSwitcher({
 }: { cohorts: Cohort[]; activeCohortId: number }) {
 	const { isMobile } = useSidebar();
 	const router = useRouter();
+	const pathname = usePathname();
 	const [activeCohort, setActiveCohort] = React.useState<Cohort | null>(
 		cohorts?.find((cohort) => cohort.cohort_id === activeCohortId) ||
 			(cohorts?.length > 0 ? cohorts[0] : null),
@@ -47,7 +48,11 @@ export default function CohortSwitcher({
 
 	const handleCohortChange = (cohort: Cohort) => {
 		setActiveCohort(cohort);
-		router.push(`/dashboard/cohort/${cohort.cohort_id}`);
+		const newPath = pathname.replace(
+			/\/cohort\/\d+/,
+			`/cohort/${cohort.cohort_id}`,
+		);
+		router.replace(newPath);
 	};
 
 	return (
