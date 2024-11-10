@@ -1,10 +1,11 @@
 import { cn } from "@/utils/cn";
 import type { Column } from "@tanstack/react-table";
-import { Check, Command, PlusCircle } from "lucide-react";
+import { Check, PlusCircle } from "lucide-react";
 import type * as React from "react";
 import { Badge } from "./badge";
 import { Button } from "./button";
 import {
+	Command,
 	CommandEmpty,
 	CommandGroup,
 	CommandInput,

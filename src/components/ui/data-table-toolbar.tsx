@@ -1,13 +1,26 @@
 "use client";
 
-import type { Table } from "@tanstack/react-table";
+import { capitalizeWords } from "@/utils/utils";
+import type { Column, Table } from "@tanstack/react-table";
 import { X } from "lucide-react";
 import { Button } from "./button";
+import { DataTableFacetedFilter } from "./data-table-faceted-filter";
 import { DataTableViewOptions } from "./data-table-view-options";
+import { Input } from "./input";
 
 interface DataTableToolbarProps<TData> {
 	table: Table<TData>;
 }
+
+const getHeaderValue = <TData,>(column: Column<TData, unknown>): string => {
+	const header = column.columnDef.header;
+
+	if (typeof header === "string") {
+		return header;
+	}
+
+	return capitalizeWords(column.id);
+};
 
 export function DataTableToolbar<TData>({
 	table,
@@ -17,29 +30,42 @@ export function DataTableToolbar<TData>({
 	return (
 		<div className="flex items-center justify-between">
 			<div className="flex flex-1 items-center space-x-2">
-				{/* TODO: This depends on the columns that are present in the table, hence is not a generic component */}
-				{/* <Input
-          placeholder="Filter tasks..."
-          value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("title")?.setFilterValue(event.target.value)
-          }
-          className="h-8 w-[150px] lg:w-[250px]"
-        /> */}
-				{/* {table.getColumn("status") && (
-          <DataTableFacetedFilter
-            column={table.getColumn("role")}
-            title="Status"
-            options={statuses}
-          />
-        )}
-        {table.getColumn("priority") && (
-          <DataTableFacetedFilter
-            column={table.getColumn("priority")}
-            title="Priority"
-            options={priorities}
-          />
-        )} */}
+				{table
+					.getAllColumns()
+					.filter((column) => column.getIsVisible())
+					.map((column) => {
+						const meta = column.columnDef.meta;
+
+						// Render a search bar if `searchBarPlaceholder` is defined
+						if (meta?.searchBarPlaceholder) {
+							return (
+								<Input
+									key={column.id}
+									placeholder={meta.searchBarPlaceholder}
+									value={(column.getFilterValue() as string) ?? ""}
+									onChange={(event) =>
+										column.setFilterValue(event.target.value)
+									}
+									className="h-8 w-[150px] lg:w-[250px]"
+								/>
+							);
+						}
+
+						// Render a dropdown filter if `filterOptions` is defined
+						if (meta?.filterOptions) {
+							return (
+								<DataTableFacetedFilter
+									key={column.id}
+									column={column}
+									title={getHeaderValue(column)}
+									options={meta.filterOptions}
+								/>
+							);
+						}
+
+						return null; // Skip if no meta is defined for filtering
+					})}
+
 				{isFiltered && (
 					<Button
 						variant="ghost"

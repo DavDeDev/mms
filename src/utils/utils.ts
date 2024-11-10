@@ -42,3 +42,10 @@ export const getCohortRoleColors = (role: CohortRole) => {
 			return "bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-100 border-gray-300 dark:border-gray-600";
 	}
 };
+
+export function capitalizeWords(input: string): string {
+	return input
+		.split(" ") // Split the string into an array of words
+		.map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize the first letter of each word
+		.join(" "); // Join the words back into a single string
+}
