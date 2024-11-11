@@ -119,7 +119,9 @@ export async function getCohortMembersQuery(
 				first_name,
 				last_name,
 				email,
-				avatar_url
+				avatar_url,
+				school_id,
+				campus
 			)
 		`)
 		.eq("cohort_id", params.cohortId)

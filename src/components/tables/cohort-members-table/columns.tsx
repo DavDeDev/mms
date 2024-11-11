@@ -118,4 +118,14 @@ export const columns: ColumnDef<CohortMember>[] = [
 			return value.includes(row.getValue(id));
 		},
 	},
+	{
+		id: "school id",
+		accessorKey: "member.school_id",
+		header: "School ID",
+	},
+	{
+		id: "campus",
+		accessorKey: "member.campus",
+		header: "Campus",
+	},
 ];
