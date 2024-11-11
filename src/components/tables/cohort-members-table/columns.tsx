@@ -2,14 +2,23 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import CopyTextComponent from "@/components/ui/copy-text";
 import { DataTableColumnHeader } from "@/components/ui/data-table-column-header";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuLabel,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import type { getCohortMembers } from "@/queries/cached-queries";
 import { CohortRole } from "@/types/enums";
 import { getCohortRoleColors } from "@/utils/utils";
 import { compareItems, rankItem } from "@tanstack/match-sorter-utils";
 import { type ColumnDef, sortingFns } from "@tanstack/react-table";
-import { User } from "lucide-react";
+import { MoreHorizontal, User } from "lucide-react";
 
 export type CohortMember = Awaited<ReturnType<typeof getCohortMembers>>[number];
 
@@ -128,5 +137,36 @@ export const columns: ColumnDef<CohortMember>[] = [
 		id: "campus",
 		accessorKey: "member.campus",
 		header: "Campus",
+	},
+	{
+		id: "actions",
+		cell: ({ row }) => {
+			const { member } = row.original;
+
+			return (
+				<DropdownMenu>
+					<DropdownMenuTrigger asChild>
+						<Button variant="ghost" className="h-8 w-8 p-0">
+							<span className="sr-only">Open menu</span>
+							<MoreHorizontal className="h-4 w-4" />
+						</Button>
+					</DropdownMenuTrigger>
+					<DropdownMenuContent align="end">
+						<DropdownMenuLabel>Actions</DropdownMenuLabel>
+						<DropdownMenuItem
+							onClick={() =>
+								navigator.clipboard.writeText(
+									member.school_id?.toString() ?? "",
+								)
+							}
+						>
+							Copy Student ID
+						</DropdownMenuItem>
+						<DropdownMenuSeparator />
+						<DropdownMenuItem>Don't know</DropdownMenuItem>
+					</DropdownMenuContent>
+				</DropdownMenu>
+			);
+		},
 	},
 ];
