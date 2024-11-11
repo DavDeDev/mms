@@ -11,7 +11,9 @@ export default async function Page() {
 		if (user.role === "admin") {
 			return redirect("/dashboard/cohort/create");
 		}
-		//TODO: if the user is not admin, sends them to dashboard
+		if (user.role === "user") {
+			return redirect("/dashboard/profile");
+		}
 		return redirect("/sign-in");
 	}
 
