@@ -1,4 +1,3 @@
-import { checkUserAccess } from "@/actions/auth-actions";
 import { CohortDashboardSidebar } from "@/components/cohort-dashboard-sidebar";
 import {
 	Breadcrumb,
@@ -17,33 +16,31 @@ import {
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-export default async function CohortDashboardLayout(props: {
+export default async function CohortDashboardLayout({
+	children,
+	params,
+}: {
 	children: React.ReactNode;
 	params: Promise<{ cohort_id: string }>;
 }) {
-	const params = await props.params;
+	let cohortId: number;
 
-	const { children } = props;
-
-	const cohortId = Number.parseInt(params.cohort_id);
-
-	if (Number.isNaN(cohortId)) {
+	try {
+		cohortId = Number.parseInt((await params).cohort_id, 10);
+		if (isNaN(cohortId) || cohortId.toString() !== (await params).cohort_id) {
+			throw new Error("Invalid cohort_id");
+		}
+	} catch (error) {
+		console.log("Invalid cohort_id, redirecting to dashboard");
 		redirect("/dashboard");
-	}
-
-	const result = await checkUserAccess(cohortId);
-
-	if (!result.hasAccess) {
-		redirect(result.redirectPath);
 	}
 
 	const cookieStore = await cookies();
 	const defaultOpen = cookieStore.get("sidebar:state")?.value === "true";
 
-	const userRole = result.userRole;
 	return (
 		<SidebarProvider defaultOpen={defaultOpen}>
-			<CohortDashboardSidebar />
+			<CohortDashboardSidebar cohortId={cohortId} />
 			<SidebarInset>
 				<header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
 					<div className="flex items-center gap-2 px-4">

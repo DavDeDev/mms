@@ -144,7 +144,7 @@ export const signOutAction = async () => {
 type AccessCheckResult =
 	| {
 			hasAccess: true;
-			userRole: Enums<"cohort_role">;
+			userCohortRole: Enums<"cohort_role">;
 	  }
 	| {
 			hasAccess: false;
@@ -158,10 +158,11 @@ export const checkUserAccess = cache(
 		if (!cohorts) {
 			return { hasAccess: false, redirectPath: "/cohorts" };
 		}
-
+		console;
 		const cohort = cohorts.find((c) => c.cohort_id === cohortId);
+
 		if (cohort) {
-			return { hasAccess: true, userRole: cohort.user_role };
+			return { hasAccess: true, userCohortRole: cohort.user_role };
 		}
 
 		return { hasAccess: false, redirectPath: "/cohorts" };

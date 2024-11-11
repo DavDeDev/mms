@@ -1,12 +1,6 @@
 "use client";
 
-import {
-	BadgeCheck,
-	Bell,
-	ChevronsUpDown,
-	CreditCard,
-	LogOut,
-} from "lucide-react";
+import { BadgeCheck, Bell, ChevronsUpDown, LogOut } from "lucide-react";
 
 import { signOutAction } from "@/actions/auth-actions";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -27,9 +21,14 @@ import {
 	useSidebar,
 } from "@/components/ui/sidebar";
 import type { getUserProfile } from "@/queries/cached-queries";
+import type { Enums } from "@/types";
+import { getCohortRoleColors } from "@/utils/utils";
 import Link from "next/link";
+import { Badge } from "./ui/badge";
 
-type User = Awaited<ReturnType<Awaited<typeof getUserProfile>>>;
+type User = Awaited<ReturnType<Awaited<typeof getUserProfile>>> & {
+	cohort_role: Enums<"cohort_role">;
+};
 
 export function NavUser(user: User) {
 	const { isMobile } = useSidebar();
@@ -45,6 +44,8 @@ export function NavUser(user: User) {
 	const fullName = `${user.first_name || ""} ${user.last_name || ""}`.trim();
 	const initials = getInitials(fullName || user.email || "Unknown User");
 
+	const cohortRoleColor = getCohortRoleColors(user.cohort_role);
+
 	return (
 		<SidebarMenu>
 			<SidebarMenuItem>
@@ -52,7 +53,7 @@ export function NavUser(user: User) {
 					<DropdownMenuTrigger asChild>
 						<SidebarMenuButton
 							size="lg"
-							className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+							className={`data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground ${cohortRoleColor}`}
 						>
 							<Avatar className="h-8 w-8 rounded-lg">
 								<AvatarImage
@@ -69,7 +70,13 @@ export function NavUser(user: User) {
 								</span>
 								<span className="truncate text-xs">{user.email}</span>
 							</div>
-							<ChevronsUpDown className="ml-auto size-4" />
+							<Badge
+								variant="outline"
+								className={`ml-auto capitalize ${cohortRoleColor}`}
+							>
+								{user.cohort_role}
+							</Badge>
+							<ChevronsUpDown className="ml-2 size-4" />
 						</SidebarMenuButton>
 					</DropdownMenuTrigger>
 					<DropdownMenuContent
@@ -95,6 +102,12 @@ export function NavUser(user: User) {
 									</span>
 									<span className="truncate text-xs">{user.email}</span>
 								</div>
+								<Badge
+									variant="outline"
+									className={`capitalize ${cohortRoleColor}`}
+								>
+									{user.cohort_role}
+								</Badge>
 							</div>
 						</DropdownMenuLabel>
 						<DropdownMenuSeparator />
@@ -104,10 +117,6 @@ export function NavUser(user: User) {
 									<BadgeCheck className="mr-2" />
 									Account
 								</Link>
-							</DropdownMenuItem>
-							<DropdownMenuItem>
-								<CreditCard className="mr-2" />
-								Billing
 							</DropdownMenuItem>
 							<DropdownMenuItem>
 								<Bell className="mr-2" />

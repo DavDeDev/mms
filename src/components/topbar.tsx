@@ -47,11 +47,7 @@ export function Topbar() {
 					<Button asChild className="hidden md:inline-flex" size="xs">
 						<Link href="/dashboard">Dashboard</Link>
 					</Button>
-					<form action={signOutAction}>
-						<Button type="submit" variant={"outline"}>
-							Sign out
-						</Button>
-					</form>
+				
 				</div>
 				{/* TODO: This shifts content down when opened */}
 				{isOpen && (
@@ -69,11 +65,7 @@ export function Topbar() {
 						<Button asChild className="mt-2 " onClick={() => setIsOpen(false)}>
 							<Link href="/dashboard">Dashboard</Link>
 						</Button>
-						<form action={signOutAction}>
-							<Button type="submit" variant={"outline"}>
-								Sign out
-							</Button>
-						</form>
+					
 					</nav>
 				)}
 			</div>
