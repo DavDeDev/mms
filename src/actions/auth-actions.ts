@@ -141,6 +141,9 @@ export const signOutAction = async () => {
 	await supabase.auth.signOut();
 	return redirect("/sign-in");
 };
+
+// TODO: refactor this, I don't like it
+
 type AccessCheckResult =
 	| {
 			hasAccess: true;
@@ -150,17 +153,20 @@ type AccessCheckResult =
 			hasAccess: false;
 			redirectPath: string;
 	  };
+
 export const checkUserAccess = cache(
 	async (cohortId: number): Promise<AccessCheckResult> => {
+		console.log("❤️❤️❤️❤️❤️❤️", cohortId);
 		const cohorts = await getUserCohorts();
-
+		console.log("cohorts", cohorts);
 		// TODO: handle case where user is not enrolled in any cohorts and tries to access dashboard route
 		if (!cohorts) {
 			return { hasAccess: false, redirectPath: "/cohorts" };
 		}
-		console;
+
 		const cohort = cohorts.find((c) => c.cohort_id === cohortId);
 
+		console.log("Inside checkUserAccess", cohort);
 		if (cohort) {
 			return { hasAccess: true, userCohortRole: cohort.user_role };
 		}

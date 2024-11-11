@@ -1,6 +1,5 @@
 import type * as React from "react";
 
-import { checkUserAccess } from "@/actions/auth-actions";
 // import { TeamSwitcher } from "@/components/nav-cohort";
 import {
 	Sidebar,
@@ -9,8 +8,11 @@ import {
 	SidebarHeader,
 	SidebarRail,
 } from "@/components/ui/sidebar";
-import { getUserCohorts, getUserProfile } from "@/queries/cached-queries";
-import { redirect } from "next/navigation";
+import {
+	getUserCohortRole,
+	getUserCohorts,
+	getUserProfile,
+} from "@/queries/cached-queries";
 import CohortSwitcher from "./cohort-switcher";
 import { NavMain } from "./nav-main";
 import { NavUser } from "./nav-user";
@@ -22,14 +24,11 @@ export async function CohortDashboardSidebar({
 }: { cohortId: number } & React.ComponentProps<typeof Sidebar>) {
 	const cohorts = await getUserCohorts();
 	const user = await getUserProfile();
-	const cohortRole = await checkUserAccess(cohortId);
-	if (!cohortRole.hasAccess) {
-		redirect(cohortRole.redirectPath);
-	}
+	const { cohortRole } = await getUserCohortRole(cohortId);
 
 	const userWithCohortRole = {
 		...user,
-		cohort_role: cohortRole.userCohortRole,
+		cohort_role: cohortRole,
 	};
 
 	return (

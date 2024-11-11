@@ -61,7 +61,7 @@ export default async function CohortDashboardLayout({
 						</Breadcrumb>
 					</div>
 				</header>
-				{children}
+				<div className="container">{children}</div>
 			</SidebarInset>
 		</SidebarProvider>
 	);

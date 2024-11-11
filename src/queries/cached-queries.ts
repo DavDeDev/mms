@@ -5,6 +5,8 @@ import { redirect } from "next/navigation";
 import { cache } from "react";
 import {
 	getCohortMembersQuery,
+	getCohortMentorsQuery,
+	getUserCohortRoleQuery,
 	getUserCohortsQuery,
 	getUserProfileQuery,
 } from "../queries";
@@ -16,7 +18,7 @@ export const getSession = cache(async () => {
 	return supabase.auth.getSession();
 });
 
-export const getUserProfile = async () => {
+export const getUserId = async () => {
 	const {
 		data: { session },
 	} = await getSession();
@@ -26,6 +28,12 @@ export const getUserProfile = async () => {
 	if (!userId) {
 		redirect("/sign-in");
 	}
+
+	return userId;
+};
+
+export const getUserProfile = async () => {
+	const userId = await getUserId();
 
 	const supabase = await createClient();
 	return unstable_cache(
@@ -41,16 +49,7 @@ export const getUserProfile = async () => {
 };
 
 export const getUserCohorts = async () => {
-	const {
-		data: { session },
-	} = await getSession();
-	const userId = session?.user?.id;
-
-	// if the session doesn't have a user Id it redirects to login page
-	if (!userId) {
-		redirect("/sign-in");
-	}
-
+	const userId = await getUserId();
 	const supabase = await createClient();
 	return unstable_cache(
 		async () => {
@@ -62,6 +61,22 @@ export const getUserCohorts = async () => {
 		{
 			tags: [`cohorts_user_${userId}`],
 			revalidate: 3600,
+		},
+	)();
+};
+
+// function to get user cohort role
+export const getUserCohortRole = async (cohortId: number) => {
+	const userId = await getUserId();
+	const supabase = await createClient();
+	return unstable_cache(
+		async () => {
+			return getUserCohortRoleQuery(supabase, cohortId, userId);
+		},
+		["user_cohort_role", userId, cohortId.toString()],
+		{
+			tags: [`user_cohort_role_${userId}_${cohortId}`],
+			revalidate: 1,
 		},
 	)();
 };
@@ -84,6 +99,23 @@ export const getCohortMembers = async (
 		["cohort_members", cohortId.toString(), limit.toString(), page.toString()],
 		{
 			tags: [`cohort_members_${cohortId}`],
+			revalidate: 1,
+		},
+	)();
+};
+
+/**
+ * Function to pull all the mentors in a cohort
+ */
+export const getCohortMentors = async (cohortId: number) => {
+	const supabase = await createClient();
+	return unstable_cache(
+		async () => {
+			return getCohortMentorsQuery(supabase, cohortId);
+		},
+		["cohort_mentors", cohortId.toString()],
+		{
+			tags: [`cohort_mentors_${cohortId}`],
 			revalidate: 1,
 		},
 	)();
