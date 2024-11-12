@@ -60,7 +60,7 @@ const navMain = [
 		icon: Users,
 		items: [
 			{ title: "Matchings", url: "/matching" },
-			{ title: "Add Mentee", url: "/mentees/add" },
+			{ title: "Availability", url: "/availability" },
 		],
 	},
 ];
