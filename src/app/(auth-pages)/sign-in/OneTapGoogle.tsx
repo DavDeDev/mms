@@ -13,11 +13,11 @@ const OneTapComponent = () => {
 	// generate nonce to use for google id token sign-in
 	const generateNonce = async (): Promise<string[]> => {
 		const nonce = btoa(
+			// @ts-ignore
 			String.fromCharCode(...crypto.getRandomValues(new Uint8Array(32))),
 		);
 		const encoder = new TextEncoder();
 		const encodedNonce = encoder.encode(nonce);
-		// @ts-ignore
 		const hashBuffer = await crypto.subtle.digest("SHA-256", encodedNonce);
 		const hashArray = Array.from(new Uint8Array(hashBuffer));
 		const hashedNonce = hashArray
@@ -68,7 +68,7 @@ const OneTapComponent = () => {
 							console.log("Successfully logged in with Google One Tap");
 
 							// redirect to protected page
-							router.push("/");
+							router.push("/dashboard");
 						} catch (error) {
 							console.error("Error logging in with Google One Tap", error);
 						}
