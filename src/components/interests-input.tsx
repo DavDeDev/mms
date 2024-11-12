@@ -6,7 +6,7 @@ import {
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { X } from "lucide-react";
-import React, { useRef, useEffect, type KeyboardEvent } from "react";
+import React, { useRef, type KeyboardEvent } from "react";
 
 const MAX_INTERESTS = 5;
 const MAX_INTEREST_LENGTH = 30;
@@ -68,12 +68,6 @@ export default function InterestsInput({
 		setHighlightedIndex(null);
 		setError(null);
 	};
-
-	useEffect(() => {
-		if (inputRef.current) {
-			inputRef.current.focus();
-		}
-	}, []);
 
 	const trimInterest = (interest: string) => {
 		if (interest.length <= MAX_INTEREST_LENGTH) return interest;
