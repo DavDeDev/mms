@@ -28,4 +28,48 @@ const Separator = React.forwardRef<
 );
 Separator.displayName = SeparatorPrimitive.Root.displayName;
 
-export { Separator };
+interface SeparatorWithTextProps extends React.HTMLAttributes<HTMLDivElement> {
+	orientation?: "horizontal" | "vertical";
+	text?: string;
+}
+
+const SeparatorWithText = ({
+	orientation = "horizontal",
+	text,
+	className,
+	...props
+}: SeparatorWithTextProps) => {
+	const isVertical = orientation === "vertical";
+
+	return (
+		<div
+			className={cn(
+				"flex items-center",
+				isVertical ? "flex-col h-full" : "w-full",
+				className,
+			)}
+			{...props}
+		>
+			<Separator
+				orientation={orientation}
+				className={cn(isVertical ? "h-full" : "flex-grow", "shrink")}
+			/>
+			{text && (
+				<span
+					className={cn(
+						"px-2 text-sm text-muted-foreground",
+						isVertical && "py-2 writing-mode-vertical",
+					)}
+				>
+					{text}
+				</span>
+			)}
+			<Separator
+				orientation={orientation}
+				className={cn(isVertical ? "h-full" : "flex-grow", "shrink")}
+			/>
+		</div>
+	);
+};
+
+export { Separator, SeparatorWithText };

@@ -3,7 +3,6 @@ import { ThemeProvider } from "next-themes";
 import "./globals.css";
 import { signOutAction } from "@/actions/auth-actions";
 import { TailwindIndicator } from "@/components/development/tailwind-indicator";
-import { ThemeSwitcher } from "components/theme-switcher";
 import { Button } from "components/ui/button";
 import { Toaster } from "components/ui/sonner";
 
@@ -35,9 +34,6 @@ export default function RootLayout({
 					<Toaster richColors position="top-right" />
 					<TailwindIndicator />
 					<SignOutButton />
-					<div className="fixed top-1 right-1">
-						<ThemeSwitcher />
-					</div>
 				</ThemeProvider>
 			</body>
 		</html>

@@ -1,14 +1,39 @@
+"use clientg";
 import { signInAction } from "@/actions/auth-actions"; // Adjust the import based on your file structure
+import { SeparatorWithText } from "@/components/ui/separator";
+import { createClient } from "@/utils/supabase/server";
 import { FormMessage, type Message } from "components/form-message";
 import { SubmitButton } from "components/submit-button";
 import { Input } from "components/ui/input";
 import { Label } from "components/ui/label";
 import Link from "next/link";
+import OneTapComponent from "./OneTapGoogle";
+import SignInWithGoogle from "./SignInWithGoogle";
 
 export default async function SignIn(props: {
 	searchParams: Promise<Message>;
 }) {
 	const searchParams = await props.searchParams;
+	// const returnTo = searchParams.get("return_to");
+	const supabase = await createClient();
+	const returnTo = "https://example.com";
+	// const handleGoogleSignIn = async () => {
+	// 	const redirectTo = new URL("/api/auth/callback", window.location.origin);
+
+	// 	if (returnTo) {
+	// 		redirectTo.searchParams.append("return_to", returnTo);
+	// 	}
+
+	// 	redirectTo.searchParams.append("provider", "google");
+
+	// 	await supabase.auth.signInWithOAuth({
+	// 		provider: "google",
+	// 		options: {
+	// 			redirectTo: redirectTo.toString(),
+	// 		},
+	// 	});
+	// }
+
 	if ("message" in searchParams) {
 		return (
 			<div className="w-full flex-1 flex items-center h-screen sm:max-w-md justify-center gap-2 p-4">
@@ -52,6 +77,9 @@ export default async function SignIn(props: {
 				<SubmitButton formAction={signInAction} pendingText="Signing in...">
 					Sign in
 				</SubmitButton>
+				<SeparatorWithText text="or" />
+				<SignInWithGoogle />
+				<OneTapComponent />
 				<FormMessage message={searchParams} />
 			</div>
 		</form>
