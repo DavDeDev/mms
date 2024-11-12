@@ -121,9 +121,8 @@ export function NavUser({ user }: { user: User }) {
 							</div>
 						</DropdownMenuLabel>
 						<DropdownMenuSeparator />
-						<DropdownMenuItem>
+						<DropdownMenuItem asChild>
 							<ThemeSwitcher className="mr-2" renderSwitcher />
-							Change Theme
 						</DropdownMenuItem>
 						<DropdownMenuSeparator />
 						<DropdownMenuGroup>

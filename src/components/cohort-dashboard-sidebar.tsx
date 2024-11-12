@@ -6,6 +6,7 @@ import {
 	SidebarContent,
 	SidebarFooter,
 	SidebarHeader,
+	SidebarMenu,
 	SidebarRail,
 } from "@/components/ui/sidebar";
 import {
@@ -16,6 +17,7 @@ import {
 import CohortSwitcher from "./cohort-switcher";
 import { NavMain } from "./nav-main";
 import { NavUser } from "./nav-user";
+import { ThemeSwitcher } from "./theme-switcher";
 
 export async function CohortDashboardSidebar({
 	cohortId,
@@ -41,6 +43,10 @@ export async function CohortDashboardSidebar({
 				{/* <NavProjects projects={data.projects} /> */}
 			</SidebarContent>
 			<SidebarFooter>
+				<SidebarMenu className="hidden group-data-[collapsible=icon]:flex">
+					<ThemeSwitcher className="border-2" />
+				</SidebarMenu>
+
 				<NavUser user={userWithCohortRole} />
 			</SidebarFooter>
 			<SidebarRail />

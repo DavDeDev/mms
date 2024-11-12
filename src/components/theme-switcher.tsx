@@ -12,6 +12,7 @@ import {
 import { Laptop, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
+import { ToggleGroup, ToggleGroupItem } from "./ui/toggle-group";
 
 interface ThemeSwitcherProps {
 	renderSwitcher?: boolean;
@@ -37,21 +38,25 @@ const ThemeSwitcher = ({ renderSwitcher, className }: ThemeSwitcherProps) => {
 		setTheme(newTheme);
 	};
 
+	// TODO: try to create a nice switcher component like the one on https://vercel.com/geist/colors (top right)
 	if (renderSwitcher) {
-		// Direct sun/moon switcher button for light/dark mode
 		return (
-			<Button
-				variant="ghost"
-				size="sm"
-				onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-				className={clsx(className)}
+			<ToggleGroup
+				variant="outline"
+				type="single"
+				value={theme}
+				onValueChange={handleThemeChange}
 			>
-				{theme === "light" ? (
-					<Sun size={ICON_SIZE} className="text-muted-foreground" />
-				) : (
-					<Moon size={ICON_SIZE} className="text-muted-foreground" />
-				)}
-			</Button>
+				<ToggleGroupItem value="light" aria-label="Toggle light mode">
+					<Sun className="h-4 w-4" />
+				</ToggleGroupItem>
+				<ToggleGroupItem value="dark" aria-label="Toggle dark mode">
+					<Moon className="h-4 w-4" />
+				</ToggleGroupItem>
+				<ToggleGroupItem value="system" aria-label="Toggle system mode">
+					<Laptop className="h-4 w-4" />
+				</ToggleGroupItem>
+			</ToggleGroup>
 		);
 	}
 
