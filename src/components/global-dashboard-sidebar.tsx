@@ -4,6 +4,7 @@ import type * as React from "react";
 import {
 	Sidebar,
 	SidebarContent,
+	SidebarFooter,
 	SidebarGroup,
 	SidebarGroupLabel,
 	SidebarHeader,
@@ -13,6 +14,7 @@ import {
 } from "@/components/ui/sidebar";
 import { getUserProfile } from "@/queries/cached-queries";
 import { GalleryVerticalEnd } from "lucide-react";
+import { NavUser } from "./nav-user";
 
 export async function GlobalDashboardSidebar({
 	children,
@@ -20,7 +22,7 @@ export async function GlobalDashboardSidebar({
 }: React.ComponentProps<typeof Sidebar>) {
 	const user = await getUserProfile();
 	return (
-		<Sidebar variant="floating" {...props}>
+		<Sidebar {...props}>
 			<SidebarHeader>
 				<SidebarMenu>
 					<SidebarMenuItem>
@@ -46,6 +48,9 @@ export async function GlobalDashboardSidebar({
 					</SidebarMenu>
 				</SidebarGroup>
 			</SidebarContent>
+			<SidebarFooter>
+				<NavUser user={user} />
+			</SidebarFooter>
 		</Sidebar>
 	);
 }

@@ -41,7 +41,7 @@ export async function CohortDashboardSidebar({
 				{/* <NavProjects projects={data.projects} /> */}
 			</SidebarContent>
 			<SidebarFooter>
-				<NavUser {...userWithCohortRole} />
+				<NavUser user={userWithCohortRole} />
 			</SidebarFooter>
 			<SidebarRail />
 		</Sidebar>
