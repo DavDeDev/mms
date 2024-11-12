@@ -41,7 +41,7 @@ export default function RootLayout({
 }
 
 function SignOutButton() {
-	if (process.env.NODE_ENV === "production") return null;
+	// if (process.env.NODE_ENV === "production") return null;
 
 	return (
 		<form action={signOutAction} className="fixed bottom-1 right-1 z-50">
