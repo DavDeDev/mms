@@ -1,14 +1,19 @@
+"use clientg";
 import { signInAction } from "@/actions/auth-actions"; // Adjust the import based on your file structure
+import { SeparatorWithText } from "@/components/ui/separator";
 import { FormMessage, type Message } from "components/form-message";
 import { SubmitButton } from "components/submit-button";
 import { Input } from "components/ui/input";
 import { Label } from "components/ui/label";
 import Link from "next/link";
+import OneTapComponent from "./OneTapGoogle";
+import SignInWithGoogle from "./SignInWithGoogle";
 
 export default async function SignIn(props: {
 	searchParams: Promise<Message>;
 }) {
 	const searchParams = await props.searchParams;
+
 	if ("message" in searchParams) {
 		return (
 			<div className="w-full flex-1 flex items-center h-screen sm:max-w-md justify-center gap-2 p-4">
@@ -52,6 +57,9 @@ export default async function SignIn(props: {
 				<SubmitButton formAction={signInAction} pendingText="Signing in...">
 					Sign in
 				</SubmitButton>
+				<SeparatorWithText text="or" />
+				<SignInWithGoogle />
+				<OneTapComponent />
 				<FormMessage message={searchParams} />
 			</div>
 		</form>

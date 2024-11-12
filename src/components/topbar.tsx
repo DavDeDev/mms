@@ -1,6 +1,4 @@
 "use client";
-
-import { signOutAction } from "@/actions/auth-actions";
 import { Button } from "components/ui/button";
 import { BookOpen, Menu, X } from "lucide-react";
 import Link from "next/link";
@@ -47,7 +45,6 @@ export function Topbar() {
 					<Button asChild className="hidden md:inline-flex" size="xs">
 						<Link href="/dashboard">Dashboard</Link>
 					</Button>
-				
 				</div>
 				{/* TODO: This shifts content down when opened */}
 				{isOpen && (
@@ -65,7 +62,6 @@ export function Topbar() {
 						<Button asChild className="mt-2 " onClick={() => setIsOpen(false)}>
 							<Link href="/dashboard">Dashboard</Link>
 						</Button>
-					
 					</nav>
 				)}
 			</div>
