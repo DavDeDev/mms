@@ -1,5 +1,6 @@
 "use client";
 
+import clsx from "clsx";
 import { Button } from "components/ui/button";
 import {
 	DropdownMenu,
@@ -12,7 +13,12 @@ import { Laptop, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
-const ThemeSwitcher = () => {
+interface ThemeSwitcherProps {
+	renderSwitcher?: boolean;
+	className?: string;
+}
+
+const ThemeSwitcher = ({ renderSwitcher, className }: ThemeSwitcherProps) => {
 	const [mounted, setMounted] = useState(false);
 	const { theme, setTheme } = useTheme();
 
@@ -27,10 +33,32 @@ const ThemeSwitcher = () => {
 
 	const ICON_SIZE = 16;
 
+	const handleThemeChange = (newTheme: string) => {
+		setTheme(newTheme);
+	};
+
+	if (renderSwitcher) {
+		// Direct sun/moon switcher button for light/dark mode
+		return (
+			<Button
+				variant="ghost"
+				size="sm"
+				onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+				className={clsx(className)}
+			>
+				{theme === "light" ? (
+					<Sun size={ICON_SIZE} className="text-muted-foreground" />
+				) : (
+					<Moon size={ICON_SIZE} className="text-muted-foreground" />
+				)}
+			</Button>
+		);
+	}
+
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<Button variant="ghost" size={"sm"}>
+				<Button variant="ghost" size="sm" className={clsx(className)}>
 					{theme === "light" ? (
 						<Sun
 							key="light"
@@ -52,11 +80,11 @@ const ThemeSwitcher = () => {
 					)}
 				</Button>
 			</DropdownMenuTrigger>
-			<DropdownMenuContent className="w-content" align="start">
-				<DropdownMenuRadioGroup
-					value={theme}
-					onValueChange={(e) => setTheme(e)}
-				>
+			<DropdownMenuContent
+				className={clsx("w-content", className)}
+				align="start"
+			>
+				<DropdownMenuRadioGroup value={theme} onValueChange={handleThemeChange}>
 					<DropdownMenuRadioItem className="flex gap-2" value="light">
 						<Sun size={ICON_SIZE} className="text-muted-foreground" />{" "}
 						<span>Light</span>

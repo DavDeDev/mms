@@ -33,7 +33,6 @@ export default function RootLayout({
 					{children}
 					<Toaster richColors position="top-right" />
 					<TailwindIndicator />
-					<SignOutButton />
 				</ThemeProvider>
 			</body>
 		</html>

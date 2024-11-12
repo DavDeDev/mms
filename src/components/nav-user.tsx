@@ -24,6 +24,7 @@ import type { getUserProfile } from "@/queries/cached-queries";
 import type { Enums } from "@/types";
 import { getCohortRoleColors } from "@/utils/utils";
 import Link from "next/link";
+import { ThemeSwitcher } from "./theme-switcher";
 import { Badge } from "./ui/badge";
 
 type User = Awaited<ReturnType<Awaited<typeof getUserProfile>>> & {
@@ -119,6 +120,11 @@ export function NavUser({ user }: { user: User }) {
 								)}
 							</div>
 						</DropdownMenuLabel>
+						<DropdownMenuSeparator />
+						<DropdownMenuItem>
+							<ThemeSwitcher className="mr-2" renderSwitcher />
+							Change Theme
+						</DropdownMenuItem>
 						<DropdownMenuSeparator />
 						<DropdownMenuGroup>
 							<DropdownMenuItem asChild>
