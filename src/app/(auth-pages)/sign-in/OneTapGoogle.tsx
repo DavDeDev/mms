@@ -76,7 +76,7 @@ const OneTapComponent = () => {
 					nonce: hashedNonce,
 					// with chrome's removal of third-party cookiesm, we need to use FedCM instead (https://developers.google.com/identity/gsi/web/guides/fedcm-migration)
 					use_fedcm_for_prompt: true,
-          auto_select: true,
+					auto_select: true,
 				});
 				// @ts-ignore
 				google.accounts.id.prompt(); // Display the One Tap UI

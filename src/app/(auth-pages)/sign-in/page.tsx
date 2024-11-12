@@ -1,7 +1,6 @@
 "use clientg";
 import { signInAction } from "@/actions/auth-actions"; // Adjust the import based on your file structure
 import { SeparatorWithText } from "@/components/ui/separator";
-import { createClient } from "@/utils/supabase/server";
 import { FormMessage, type Message } from "components/form-message";
 import { SubmitButton } from "components/submit-button";
 import { Input } from "components/ui/input";
@@ -14,25 +13,6 @@ export default async function SignIn(props: {
 	searchParams: Promise<Message>;
 }) {
 	const searchParams = await props.searchParams;
-	// const returnTo = searchParams.get("return_to");
-	const supabase = await createClient();
-	const returnTo = "https://example.com";
-	// const handleGoogleSignIn = async () => {
-	// 	const redirectTo = new URL("/api/auth/callback", window.location.origin);
-
-	// 	if (returnTo) {
-	// 		redirectTo.searchParams.append("return_to", returnTo);
-	// 	}
-
-	// 	redirectTo.searchParams.append("provider", "google");
-
-	// 	await supabase.auth.signInWithOAuth({
-	// 		provider: "google",
-	// 		options: {
-	// 			redirectTo: redirectTo.toString(),
-	// 		},
-	// 	});
-	// }
 
 	if ("message" in searchParams) {
 		return (
