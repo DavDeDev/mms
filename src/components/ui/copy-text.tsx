@@ -42,11 +42,10 @@ export default function CopyText({ children, className }: CopyTextProps) {
 			<TooltipTrigger asChild>
 				<Button
 					className={cn(
-						"group flex items-center justify-between space-x-1 w-full",
-						"p-1 text-sm text-muted-foreground bg-muted/40",
+						"group flex items-center justify-between space-x-1 w-full h-fit",
+						"p-1 text-xs text-muted-foreground bg-muted/40",
 						"transition-colors duration-200 ease-in-out",
 						"hover:bg-muted",
-
 						className,
 					)}
 					onClick={copyToClipboard}
