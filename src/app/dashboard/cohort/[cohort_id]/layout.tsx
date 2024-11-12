@@ -27,7 +27,10 @@ export default async function CohortDashboardLayout({
 
 	try {
 		cohortId = Number.parseInt((await params).cohort_id, 10);
-		if (isNaN(cohortId) || cohortId.toString() !== (await params).cohort_id) {
+		if (
+			Number.isNaN(cohortId) ||
+			cohortId.toString() !== (await params).cohort_id
+		) {
 			throw new Error("Invalid cohort_id");
 		}
 	} catch (error) {

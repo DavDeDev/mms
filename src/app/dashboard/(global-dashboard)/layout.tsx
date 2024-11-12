@@ -7,9 +7,11 @@ export default function RootLayout({
 	children: React.ReactNode;
 }) {
 	return (
-		<SidebarProvider>
+		<SidebarProvider defaultOpen={true}>
 			<GlobalDashboardSidebar />
-			<SidebarInset>{children}</SidebarInset>
+			<SidebarInset>
+				<div className="container my-4">{children}</div>
+			</SidebarInset>
 		</SidebarProvider>
 	);
 }

@@ -201,7 +201,8 @@ export default function CreateCohortForm({
 									<FormItem>
 										<FormLabel>Cohort Image</FormLabel>
 										<FormControl>
-											<div
+											<Button
+												variant={"outline"}
 												className="w-full h-64 rounded-lg border-2 border-dashed flex items-center justify-center cursor-pointer overflow-hidden"
 												onClick={() =>
 													document.getElementById("image-upload")?.click()
@@ -213,7 +214,7 @@ export default function CreateCohortForm({
 													}
 												}}
 												tabIndex={0} // Makes the div focusable
-												role="button" // Sets the role to button for better accessibility
+												type="button"
 											>
 												{imagePreview ? (
 													<img
@@ -247,7 +248,7 @@ export default function CreateCohortForm({
 														}
 													}}
 												/>
-											</div>
+											</Button>
 										</FormControl>
 										<FormDescription>
 											Upload an image for the cohort (optional).

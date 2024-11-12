@@ -11,7 +11,7 @@ import type { z } from "zod";
 
 type ErrorName = "UserInviteError" | "CohortCreationError";
 
-class CohortCreationError extends ErrorBase<ErrorName> { }
+class CohortCreationError extends ErrorBase<ErrorName> {}
 /**
  * This action performs the following steps:
  * 1. Create a cohort

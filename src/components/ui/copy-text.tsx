@@ -8,6 +8,7 @@ import {
 import { cn } from "@/utils/cn";
 import { Check, Copy } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { Button } from "./button";
 
 interface CopyTextProps {
 	children: string;
@@ -39,10 +40,10 @@ export default function CopyText({ children, className }: CopyTextProps) {
 	return (
 		<Tooltip open={isCopied}>
 			<TooltipTrigger asChild>
-				<button
+				<Button
 					className={cn(
-						"group flex items-center justify-between space-x-2 w-full",
-						" text-sm text-muted-foreground bg-muted/40",
+						"group flex items-center justify-between space-x-1 w-full",
+						"p-1 text-sm text-muted-foreground bg-muted/40",
 						"transition-colors duration-200 ease-in-out",
 						"hover:bg-muted",
 
@@ -58,7 +59,7 @@ export default function CopyText({ children, className }: CopyTextProps) {
 							<Copy className="h-4 w-4" />
 						)}
 					</span>
-				</button>
+				</Button>
 			</TooltipTrigger>
 			<TooltipContent side="top" className="bg-primary text-primary-foreground">
 				<p>Copied!</p>
