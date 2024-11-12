@@ -17,6 +17,7 @@ const OneTapComponent = () => {
 		);
 		const encoder = new TextEncoder();
 		const encodedNonce = encoder.encode(nonce);
+		// @ts-ignore
 		const hashBuffer = await crypto.subtle.digest("SHA-256", encodedNonce);
 		const hashArray = Array.from(new Uint8Array(hashBuffer));
 		const hashedNonce = hashArray
@@ -43,7 +44,14 @@ const OneTapComponent = () => {
 					return;
 				}
 
-				/* global google */
+				if (!process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID) {
+					console.error(
+						"Google Client ID is missing. Please set NEXT_PUBLIC_GOOGLE_CLIENT_ID in your environment variables.",
+					);
+					return;
+				}
+
+				// @ts-ignore
 				google.accounts.id.initialize({
 					client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
 					callback: async (response: CredentialResponse) => {
@@ -69,6 +77,7 @@ const OneTapComponent = () => {
 					// with chrome's removal of third-party cookiesm, we need to use FedCM instead (https://developers.google.com/identity/gsi/web/guides/fedcm-migration)
 					use_fedcm_for_prompt: true,
 				});
+				// @ts-ignore
 				google.accounts.id.prompt(); // Display the One Tap UI
 			});
 		};
