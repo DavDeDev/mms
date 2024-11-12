@@ -118,7 +118,8 @@ export const columns: ColumnDef<CohortMember>[] = [
 		cell: ({ row }) => {
 			return (
 				<Badge
-					className={`${getCohortRoleColors(row.original.role)}  capitalize`}
+					variant="primary"
+					className={`${getCohortRoleColors(row.original.role)}  capitalize `}
 				>
 					{row.original.role}
 				</Badge>
