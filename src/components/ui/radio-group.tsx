@@ -5,19 +5,25 @@ import * as RadioGroupPrimitive from "@radix-ui/react-radio-group";
 import { Circle } from "lucide-react";
 import * as React from "react";
 
+const ORIENTATION_VERTICAL = "vertical";
+const ORIENTATION_HORIZONTAL = "horizontal";
+
 const RadioGroup = React.forwardRef<
-	React.ElementRef<typeof RadioGroupPrimitive.Root>,
-	React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Root>
->(({ className, ...props }, ref) => {
-	return (
-		<RadioGroupPrimitive.Root
-			className={cn("grid gap-2", className)}
-			{...props}
-			ref={ref}
-		/>
-	);
+  React.ElementRef<typeof RadioGroupPrimitive.Root>,
+  {
+    orientation?: "vertical" | "horizontal";
+  } & React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Root>
+>(({ className, orientation = ORIENTATION_HORIZONTAL, ...props }, ref) => {
+  const orientationClass = orientation === ORIENTATION_VERTICAL ? "flex flex-col" : "flex";
+
+  return (
+    <RadioGroupPrimitive.Root
+      className={cn("grid gap-2", orientationClass, className)}
+      {...props}
+      ref={ref}
+    />
+  );
 });
-RadioGroup.displayName = RadioGroupPrimitive.Root.displayName;
 
 const RadioGroupItem = React.forwardRef<
 	React.ElementRef<typeof RadioGroupPrimitive.Item>,
