@@ -36,7 +36,6 @@ export default function MentorAvailabilityForm({
 	});
 
 	const onSubmit = async (data: FormValues) => {
-		console.log(data);
 		// Handle form submission here
 		const res = await submitMentorAvailabilityAction(data, cohortId);
 
