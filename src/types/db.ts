@@ -236,6 +236,7 @@ export type Database = {
 					campus: Database["public"]["Enums"]["college_campuses"] | null;
 					country_of_origin: string | null;
 					created_at: string | null;
+					dob: string | null;
 					email: string;
 					first_name: string | null;
 					id: string;
@@ -254,6 +255,7 @@ export type Database = {
 					campus?: Database["public"]["Enums"]["college_campuses"] | null;
 					country_of_origin?: string | null;
 					created_at?: string | null;
+					dob?: string | null;
 					email: string;
 					first_name?: string | null;
 					id: string;
@@ -272,6 +274,7 @@ export type Database = {
 					campus?: Database["public"]["Enums"]["college_campuses"] | null;
 					country_of_origin?: string | null;
 					created_at?: string | null;
+					dob?: string | null;
 					email?: string;
 					first_name?: string | null;
 					id?: string;

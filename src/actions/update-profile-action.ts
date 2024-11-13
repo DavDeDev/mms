@@ -34,8 +34,8 @@ export const updateUserAction = async (
 		country,
 		interests,
 		avatarUrl,
+		dob,
 	} = data;
-
 	const mappedData: Partial<Tables<"users">> = {
 		first_name: firstName,
 		last_name: lastName,
@@ -49,6 +49,7 @@ export const updateUserAction = async (
 		country_of_origin: country || null,
 		interests,
 		avatar_url: avatarUrl || null,
+		dob: dob?.toDateString() || null,
 	};
 
 	try {

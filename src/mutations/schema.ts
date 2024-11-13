@@ -67,6 +67,7 @@ export const updateUserSchema = z.object({
 		)
 		.max(5, "Maximum 5 interests allowed"),
 	avatarUrl: z.string().url().nullable(),
+	dob: z.date().optional(),
 });
 
 export const createCohortSchema = z.object({

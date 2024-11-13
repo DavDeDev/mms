@@ -1,9 +1,11 @@
 "use client";
 
 import { updateUserAction } from "@/actions/update-profile-action";
+import { Calendar } from "@/components/ui/calendar";
 import { updateUserSchema } from "@/mutations/schema";
 import type { Tables } from "@/types";
 import { CollegeCampuses, UserSex } from "@/types/enums";
+import { cn } from "@/utils/cn";
 import { createClient } from "@/utils/supabase/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "components/ui/button";
@@ -28,14 +30,17 @@ import {
 } from "components/ui/select";
 import { Separator } from "components/ui/separator";
 import { Textarea } from "components/ui/textarea";
-import { Loader2, Upload, X } from "lucide-react";
+import { format } from "date-fns";
+import { CalendarIcon, Loader2, Upload, X } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
 import InterestsInput from "../interests-input";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { CountryDropdown } from "../ui/country-dropdown";
 import { Label } from "../ui/label";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
 const clientUpdateUserSchema = updateUserSchema.extend({
 	avatarUrl: z.union([z.string().url().nullable(), z.instanceof(File)]),
@@ -65,6 +70,7 @@ export default function UserProfileUpdateForm({
 			country: user.country_of_origin ?? "",
 			interests: user.interests ?? [],
 			avatarUrl: user.avatar_url,
+			dob: user.dob ? new Date(user.dob) : undefined,
 		},
 	});
 
@@ -238,35 +244,94 @@ export default function UserProfileUpdateForm({
 								</FormItem>
 							)}
 						/>
-						<FormField
-							control={form.control}
-							name="sex"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Sex</FormLabel>
-									<FormControl>
-										<RadioGroup
-											onValueChange={field.onChange}
-											defaultValue={field.value}
-											className="flex space-x-4"
-										>
-											{Object.values(UserSex).map((sex) => (
-												<FormItem
-													key={sex}
-													className="flex items-center space-x-2"
-												>
-													<FormControl>
-														<RadioGroupItem value={sex} />
-													</FormControl>
-													<FormLabel className="font-normal">{sex}</FormLabel>
-												</FormItem>
-											))}
-										</RadioGroup>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
+						<div className="flex space-x-4">
+							<FormField
+								control={form.control}
+								name="dob"
+								render={({ field }) => (
+									<FormItem className="flex flex-col">
+										<FormLabel>Date of birth</FormLabel>
+										<Popover>
+											<PopoverTrigger asChild>
+												<FormControl>
+													<Button
+														variant={"outline"}
+														className={cn(
+															"w-[240px] pl-3 text-left font-normal",
+															!field.value && "text-muted-foreground",
+														)}
+													>
+														{field.value ? (
+															format(field.value, "PPP")
+														) : (
+															<span>Pick a date</span>
+														)}
+														<CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+													</Button>
+												</FormControl>
+											</PopoverTrigger>
+											<PopoverContent className="w-auto p-0" align="start">
+												{/* https://github.com/shadcn-ui/ui/issues/2982#issuecomment-1988927458 */}
+												<Calendar
+													mode="single"
+													selected={field.value}
+													onSelect={field.onChange}
+													disabled={(date) =>
+														date > new Date() || date < new Date("1900-01-01")
+													}
+													captionLayout="dropdown"
+													toYear={2010}
+													fromYear={1950}
+													classNames={{
+														day_hidden: "invisible",
+														dropdown:
+															"px-2 py-1.5 rounded-md bg-popover text-popover-foreground text-sm  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background",
+														caption_dropdowns: "flex gap-3",
+														vhidden: "hidden",
+														caption_label: "hidden",
+													}}
+													initialFocus
+												/>
+											</PopoverContent>
+										</Popover>
+										<FormDescription>
+											Your date of birth is used to calculate your age.
+										</FormDescription>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+
+							<FormField
+								control={form.control}
+								name="sex"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Sex</FormLabel>
+										<FormControl>
+											<RadioGroup
+												onValueChange={field.onChange}
+												defaultValue={field.value}
+												className="flex space-x-4"
+											>
+												{Object.values(UserSex).map((sex) => (
+													<FormItem
+														key={sex}
+														className="flex items-center space-x-2"
+													>
+														<FormControl>
+															<RadioGroupItem value={sex} />
+														</FormControl>
+														<FormLabel className="font-normal">{sex}</FormLabel>
+													</FormItem>
+												))}
+											</RadioGroup>
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+						</div>
 					</div>
 				</div>
 
@@ -292,70 +357,92 @@ export default function UserProfileUpdateForm({
 						Details about your studies.
 					</p>
 				</div>
-
-				<FormField
-					control={form.control}
-					name="campus"
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>College Campus</FormLabel>
-							<Select onValueChange={field.onChange} defaultValue={field.value}>
+				<div className="flex space-x-4">
+					<FormField
+						control={form.control}
+						name="schoolId"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>School ID</FormLabel>
 								<FormControl>
-									<SelectTrigger>
-										<SelectValue placeholder="Select a campus" />
-									</SelectTrigger>
+									<Input placeholder="3012XXXXX" {...field} />
 								</FormControl>
-								<SelectContent>
-									{Object.values(CollegeCampuses).map((campus) => (
-										<SelectItem key={campus} value={campus}>
-											{campus}
-										</SelectItem>
-									))}
-								</SelectContent>
-							</Select>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
-
-				<FormField
-					control={form.control}
-					name="program"
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>Program of Studies</FormLabel>
-							<Select onValueChange={field.onChange} defaultValue={field.value}>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+					{/* <FormField
+								control={form.control}
+								name="program"
+								render={({ field }) => (
+									<FormItem className="flex-grow">
+										<FormLabel>Program of Studies</FormLabel>
+										<Select
+											onValueChange={field.onChange}
+											defaultValue={field.value}
+										>
+											<FormControl>
+												<SelectTrigger>
+													<SelectValue placeholder="Softwaer engineering technology" />
+												</SelectTrigger>
+											</FormControl>
+											<SelectContent>
+												{programs.map((program) => (
+                            <SelectItem key={program} value={program.toLowerCase().replace(' ', '-')}>
+                                {program}
+                            </SelectItem>
+                        ))}
+											</SelectContent>
+										</Select>
+										<FormControl>
+											<Input placeholder="Type your program of studies..." {...field} />
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/> */}
+					<FormField
+						control={form.control}
+						name="program"
+						render={({ field }) => (
+							<FormItem className="flex-grow">
+								<FormLabel>Program of Studies</FormLabel>
 								<FormControl>
-									<SelectTrigger>
-										<SelectValue placeholder="Select a program" />
-									</SelectTrigger>
+									<Input placeholder="Program of studies" {...field} />
 								</FormControl>
-								<SelectContent>
-									{/* {programs.map((program) => (
-                        <SelectItem key={program} value={program.toLowerCase().replace(' ', '-')}>
-                          {program}
-                        </SelectItem>
-                      ))} */}
-								</SelectContent>
-							</Select>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
 
-				<FormField
-					control={form.control}
-					name="schoolId"
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>School ID</FormLabel>
-							<FormControl>
-								<Input placeholder="3012XXXXX" {...field} />
-							</FormControl>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
+					<FormField
+						control={form.control}
+						name="campus"
+						render={({ field }) => (
+							<FormItem className="flex-grow-0 w-1/3">
+								<FormLabel>College Campus</FormLabel>
+								<Select
+									onValueChange={field.onChange}
+									defaultValue={field.value}
+								>
+									<FormControl>
+										<SelectTrigger>
+											<SelectValue placeholder="Select a campus" />
+										</SelectTrigger>
+									</FormControl>
+									<SelectContent>
+										{Object.values(CollegeCampuses).map((campus) => (
+											<SelectItem key={campus} value={campus}>
+												{campus}
+											</SelectItem>
+										))}
+									</SelectContent>
+								</Select>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+				</div>
 
 				<FormField
 					control={form.control}
@@ -387,10 +474,14 @@ export default function UserProfileUpdateForm({
 						name="country"
 						render={({ field }) => (
 							<FormItem>
-								<FormLabel>Country of Origin</FormLabel>
-								<FormControl>
-									<Input placeholder="Enter your country" {...field} />
-								</FormControl>
+								<FormLabel>Country</FormLabel>
+								<CountryDropdown
+									placeholder="Country"
+									defaultValue={field.value}
+									onChange={(country) => {
+										field.onChange(country.alpha3);
+									}}
+								/>
 								<FormMessage />
 							</FormItem>
 						)}
@@ -449,7 +540,5 @@ export default function UserProfileUpdateForm({
 				</Button>
 			</form>
 		</Form>
-		// 	</CardContent>
-		// </Card>
 	);
 }
