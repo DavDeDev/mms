@@ -309,76 +309,76 @@ export default function UserProfileUpdateForm({
 								Details about your studies.
 							</p>
 						</div>
-
-						<FormField
-							control={form.control}
-							name="campus"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>College Campus</FormLabel>
-									<Select
-										onValueChange={field.onChange}
-										defaultValue={field.value}
-									>
+						<div className="flex space-x-4">
+							<FormField
+								control={form.control}
+								name="schoolId"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>School ID</FormLabel>
 										<FormControl>
-											<SelectTrigger>
-												<SelectValue placeholder="Select a campus" />
-											</SelectTrigger>
+											<Input placeholder="3012XXXXX" {...field} />
 										</FormControl>
-										<SelectContent>
-											{Object.values(CollegeCampuses).map((campus) => (
-												<SelectItem key={campus} value={campus}>
-													{campus}
-												</SelectItem>
-											))}
-										</SelectContent>
-									</Select>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+							<FormField
+								control={form.control}
+								name="program"
+								render={({ field }) => (
+									<FormItem className="flex-grow">
+										<FormLabel>Program of Studies</FormLabel>
+										<Select
+											onValueChange={field.onChange}
+											defaultValue={field.value}
+										>
+											<FormControl>
+												<SelectTrigger>
+													<SelectValue placeholder="Softwaer engineering technology" />
+												</SelectTrigger>
+											</FormControl>
+											<SelectContent>
+												{/* {programs.map((program) => (
+                            <SelectItem key={program} value={program.toLowerCase().replace(' ', '-')}>
+                                {program}
+                            </SelectItem>
+                        ))} */}
+											</SelectContent>
+										</Select>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
 
-						<FormField
-							control={form.control}
-							name="program"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Program of Studies</FormLabel>
-									<Select
-										onValueChange={field.onChange}
-										defaultValue={field.value}
-									>
-										<FormControl>
-											<SelectTrigger>
-												<SelectValue placeholder="Select a program" />
-											</SelectTrigger>
-										</FormControl>
-										<SelectContent>
-											{/* {programs.map((program) => (
-                        <SelectItem key={program} value={program.toLowerCase().replace(' ', '-')}>
-                          {program}
-                        </SelectItem>
-                      ))} */}
-										</SelectContent>
-									</Select>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-
-						<FormField
-							control={form.control}
-							name="schoolId"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>School ID</FormLabel>
-									<FormControl>
-										<Input placeholder="3012XXXXX" {...field} />
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
+							<FormField
+								control={form.control}
+								name="campus"
+								render={({ field }) => (
+									<FormItem className="flex-grow-0 w-1/3">
+										<FormLabel>College Campus</FormLabel>
+										<Select
+											onValueChange={field.onChange}
+											defaultValue={field.value}
+										>
+											<FormControl>
+												<SelectTrigger>
+													<SelectValue placeholder="Select a campus" />
+												</SelectTrigger>
+											</FormControl>
+											<SelectContent>
+												{Object.values(CollegeCampuses).map((campus) => (
+													<SelectItem key={campus} value={campus}>
+														{campus}
+													</SelectItem>
+												))}
+											</SelectContent>
+										</Select>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+						</div>
 
 						<FormField
 							control={form.control}
