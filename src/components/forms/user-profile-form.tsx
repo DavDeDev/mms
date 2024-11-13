@@ -1,9 +1,11 @@
 "use client";
 
 import { updateUserAction } from "@/actions/update-profile-action";
+import { Calendar } from "@/components/ui/calendar";
 import { updateUserSchema } from "@/mutations/schema";
 import type { Tables } from "@/types";
 import { CollegeCampuses, UserSex } from "@/types/enums";
+import { cn } from "@/utils/cn";
 import { createClient } from "@/utils/supabase/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "components/ui/button";
@@ -35,7 +37,8 @@ import {
 } from "components/ui/select";
 import { Separator } from "components/ui/separator";
 import { Textarea } from "components/ui/textarea";
-import { Loader2, Upload, X } from "lucide-react";
+import { format } from "date-fns";
+import { CalendarIcon, Loader2, Upload, X } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -44,6 +47,7 @@ import InterestsInput from "../interests-input";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { CountryDropdown } from "../ui/country-dropdown";
 import { Label } from "../ui/label";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
 const clientUpdateUserSchema = updateUserSchema.extend({
 	avatarUrl: z.union([z.string().url().nullable(), z.instanceof(File)]),
@@ -73,6 +77,7 @@ export default function UserProfileUpdateForm({
 			country: user.country_of_origin ?? "",
 			interests: user.interests ?? [],
 			avatarUrl: user.avatar_url,
+			dob: user.dob ? new Date(user.dob) : undefined,
 		},
 	});
 
@@ -254,38 +259,97 @@ export default function UserProfileUpdateForm({
 										</FormItem>
 									)}
 								/>
+								<div className="flex space-x-4">
+									<FormField
+										control={form.control}
+										name="dob"
+										render={({ field }) => (
+											<FormItem className="flex flex-col">
+												<FormLabel>Date of birth</FormLabel>
+												<Popover>
+													<PopoverTrigger asChild>
+														<FormControl>
+															<Button
+																variant={"outline"}
+																className={cn(
+																	"w-[240px] pl-3 text-left font-normal",
+																	!field.value && "text-muted-foreground",
+																)}
+															>
+																{field.value ? (
+																	format(field.value, "PPP")
+																) : (
+																	<span>Pick a date</span>
+																)}
+																<CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+															</Button>
+														</FormControl>
+													</PopoverTrigger>
+													<PopoverContent className="w-auto p-0" align="start">
+														{/* https://github.com/shadcn-ui/ui/issues/2982#issuecomment-1988927458 */}
+														<Calendar
+															mode="single"
+															selected={field.value}
+															onSelect={field.onChange}
+															disabled={(date) =>
+																date > new Date() ||
+																date < new Date("1900-01-01")
+															}
+															captionLayout="dropdown"
+															toYear={2010}
+															fromYear={1950}
+															classNames={{
+																day_hidden: "invisible",
+																dropdown:
+																	"px-2 py-1.5 rounded-md bg-popover text-popover-foreground text-sm  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background",
+																caption_dropdowns: "flex gap-3",
+																vhidden: "hidden",
+																caption_label: "hidden",
+															}}
+															initialFocus
+														/>
+													</PopoverContent>
+												</Popover>
+												<FormDescription>
+													Your date of birth is used to calculate your age.
+												</FormDescription>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
 
-								<FormField
-									control={form.control}
-									name="sex"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Sex</FormLabel>
-											<FormControl>
-												<RadioGroup
-													onValueChange={field.onChange}
-													defaultValue={field.value}
-													className="flex space-x-4"
-												>
-													{Object.values(UserSex).map((sex) => (
-														<FormItem
-															key={sex}
-															className="flex items-center space-x-2"
-														>
-															<FormControl>
-																<RadioGroupItem value={sex} />
-															</FormControl>
-															<FormLabel className="font-normal">
-																{sex}
-															</FormLabel>
-														</FormItem>
-													))}
-												</RadioGroup>
-											</FormControl>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
+									<FormField
+										control={form.control}
+										name="sex"
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel>Sex</FormLabel>
+												<FormControl>
+													<RadioGroup
+														onValueChange={field.onChange}
+														defaultValue={field.value}
+														className="flex space-x-4"
+													>
+														{Object.values(UserSex).map((sex) => (
+															<FormItem
+																key={sex}
+																className="flex items-center space-x-2"
+															>
+																<FormControl>
+																	<RadioGroupItem value={sex} />
+																</FormControl>
+																<FormLabel className="font-normal">
+																	{sex}
+																</FormLabel>
+															</FormItem>
+														))}
+													</RadioGroup>
+												</FormControl>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+								</div>
 							</div>
 						</div>
 
