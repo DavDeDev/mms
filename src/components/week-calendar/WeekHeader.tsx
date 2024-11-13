@@ -67,7 +67,6 @@ export const WeekHeader: React.FC<WeekHeaderProps> = ({
 		return date.toDateString() === today.toDateString();
 	};
 
-	const gridCols = showWeekends ? "grid-cols-8" : "grid-cols-6";
 
 	return (
 		<div
@@ -90,7 +89,7 @@ export const WeekHeader: React.FC<WeekHeaderProps> = ({
 								{date.toLocaleString("default", { weekday: "short" })}
 							</div>
 							<div
-								className={`text-xl font-semibold ${isToday(date) ? "text-blue-600" : "text-gray-800"}`}
+								className={`text-xl font-semibold ${isToday(date) ? "text-blue-600" : "text-muted"}`}
 							>
 								{date.getDate()}
 							</div>

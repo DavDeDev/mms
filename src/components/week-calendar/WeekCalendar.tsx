@@ -65,15 +65,15 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({
 					<div className="flex gap-2">
 						<button
 							onClick={() => navigateWeek("prev")}
-							className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+							className="p-2 text-muted hover:text-primary hover:bg-muted rounded-full transition-colors"
 						>
-							<ChevronLeft className="w-5 h-5 text-gray-600" />
+							<ChevronLeft className="w-5 h-5 " />
 						</button>
 						<button
 							onClick={() => navigateWeek("next")}
-							className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+							className="p-2 text-muted hover:text-primary hover:bg-muted rounded-full transition-colors"
 						>
-							<ChevronRight className="w-5 h-5 text-gray-600" />
+							<ChevronRight className="w-5 h-5" />
 						</button>
 					</div>
 				</div>
