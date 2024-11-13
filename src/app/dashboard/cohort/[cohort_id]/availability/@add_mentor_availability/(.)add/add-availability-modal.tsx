@@ -9,12 +9,22 @@ export default function AddAvailabilityModal({
 	cohortId,
 }: { cohortId: number }) {
 	const router = useRouter();
+	const handleClose = () => {
+		router.back();
+	};
+
+	const handleSubmitSuccess = () => {
+		handleClose();
+	};
 	return (
-		<Dialog open onOpenChange={() => router.back()}>
+		<Dialog open onOpenChange={handleClose}>
 			<DialogContent className="container w-fit">
 				<DialogTitle className="hidden">Add Availability</DialogTitle>
 				<div className="p-1">
-					<MentorAvailabilityForm cohortId={cohortId} />
+					<MentorAvailabilityForm
+						cohortId={cohortId}
+						onSubmitSuccess={handleSubmitSuccess}
+					/>
 				</div>
 			</DialogContent>
 		</Dialog>

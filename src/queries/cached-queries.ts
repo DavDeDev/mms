@@ -6,6 +6,7 @@ import { cache } from "react";
 import {
 	getCohortMembersQuery,
 	getCohortMentorsQuery,
+	getMentorsAvailabilityQuery,
 	getUserCohortRoleQuery,
 	getUserCohortsQuery,
 	getUserProfileQuery,
@@ -116,6 +117,24 @@ export const getCohortMentors = async (cohortId: number) => {
 		["cohort_mentors", cohortId.toString()],
 		{
 			tags: [`cohort_mentors_${cohortId}`],
+			revalidate: 1,
+		},
+	)();
+};
+
+/**
+ * Function to pull all the mentors' availability in a cohort
+ */
+
+export const getCohortMentorsAvailability = async (cohortId: number) => {
+	const supabase = await createClient();
+	return unstable_cache(
+		async () => {
+			return getMentorsAvailabilityQuery(supabase, cohortId);
+		},
+		["cohort_mentor_availability", cohortId.toString()],
+		{
+			tags: [`cohort_mentor_availability_${cohortId}`],
 			revalidate: 1,
 		},
 	)();

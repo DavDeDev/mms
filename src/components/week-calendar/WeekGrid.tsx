@@ -1,35 +1,12 @@
+import type { getCohortMentorsAvailability } from "@/queries/cached-queries";
 import type React from "react";
-import TimeSlot from "./TimeSlot";
-
-export interface MentorAvailability {
-	cohort_mentor_id: number | null;
-	day_of_week: string | null;
-	end_time: string | null;
-	id: number;
-	start_time: string | null;
-}
-
-export interface CalendarConfig {
-	showDates?: boolean;
-	showWeekends?: boolean;
-	showAllHours?: boolean;
-	startHour?: number;
-	endHour?: number;
-}
-
-export interface Event {
-	id: string;
-	title: string;
-	day: number;
-	startHour: number;
-	duration: number;
-	color: string;
-}
+import { TimeSlot } from "./TimeSlot";
+import type { CalendarConfig } from "./WeekCalendar";
 
 interface WeekGridProps {
 	currentDate: Date;
 	config: CalendarConfig;
-	mentorAvailability: MentorAvailability[];
+	mentorAvailability: Awaited<ReturnType<typeof getCohortMentorsAvailability>>;
 }
 
 export const WeekGrid: React.FC<WeekGridProps> = ({
@@ -37,23 +14,33 @@ export const WeekGrid: React.FC<WeekGridProps> = ({
 	mentorAvailability,
 }) => {
 	const { showWeekends, startHour = 9, endHour = 19 } = config;
-
 	const hours = Array.from(
 		{ length: endHour - startHour + 1 },
 		(_, i) => i + startHour,
 	);
-
 	const daysCount = showWeekends ? 7 : 5;
 	const gridCols = showWeekends ? "grid-cols-8" : "grid-cols-6";
 
+	// Helper to map days of the week to indices
+	const dayMapping: Record<string, number> = {
+		monday: 1,
+		tuesday: 2,
+		wednesday: 3,
+		thursday: 4,
+		friday: 5,
+		saturday: 6,
+		sunday: 7,
+	};
+
+	// Adjusted availability checker with day and hour filtering
 	const getAvailabilityForSlot = (day: number, hour: number) => {
 		return mentorAvailability.filter((avail) => {
 			if (!avail.day_of_week || !avail.start_time || !avail.end_time)
 				return false;
 
-			const dayMatch = Number.parseInt(avail.day_of_week) === day;
-			const startHour = Number.parseInt(avail.start_time.split(":")[0]);
-			const endHour = Number.parseInt(avail.end_time.split(":")[0]);
+			const dayMatch = dayMapping[avail.day_of_week.toLowerCase()] === day;
+			const startHour = Number.parseInt(avail.start_time.split(":")[0], 10);
+			const endHour = Number.parseInt(avail.end_time.split(":")[0], 10);
 
 			return dayMatch && hour >= startHour && hour < endHour;
 		});
@@ -61,7 +48,7 @@ export const WeekGrid: React.FC<WeekGridProps> = ({
 
 	return (
 		<div
-			className="grid "
+			className={`grid ${gridCols}`}
 			style={{
 				gridTemplateColumns: `minmax(5rem, auto) repeat(${daysCount}, 1fr)`,
 			}}
@@ -86,8 +73,7 @@ export const WeekGrid: React.FC<WeekGridProps> = ({
 					{hours.map((hour) => (
 						<TimeSlot
 							key={`${dayIndex}-${hour}`}
-							// hour={hour}
-							availability={getAvailabilityForSlot(dayIndex + 1, hour)}
+							availabilities={getAvailabilityForSlot(dayIndex + 1, hour)}
 						/>
 					))}
 				</div>

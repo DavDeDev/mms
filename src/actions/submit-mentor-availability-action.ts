@@ -51,7 +51,7 @@ export const submitMentorAvailabilityAction = async (
 		if (memberInCohort.role !== "mentor") {
 			throw new AvailabilitySubmissionError({
 				name: "NotAMentorError",
-				message: "User is not a mentor in the cohor",
+				message: "User is not a mentor in the cohort",
 			});
 		}
 

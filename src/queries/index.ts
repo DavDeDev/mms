@@ -205,3 +205,35 @@ export async function getCohortMemberQuery(
 	}
 	return data;
 }
+
+/**
+ * Pull all mentors availability and their profiles
+ */
+
+export async function getMentorsAvailabilityQuery(
+	supabase: Client,
+	cohortId: number,
+) {
+	const { data, error } = await supabase
+		.from("mentor_availability")
+		.select(`
+		cohort_member:cohort_members!inner (
+			cohort_id,
+			mentorProfile:users!inner(
+				id,
+				avatar_url,
+				first_name,
+				last_name
+			)
+		),
+		*
+	`)
+		.eq("cohort_members.cohort_id", cohortId)
+		.throwOnError();
+
+	if (error) {
+		console.error("Error fetching mentor availability:", error);
+		throw error;
+	}
+	return data;
+}

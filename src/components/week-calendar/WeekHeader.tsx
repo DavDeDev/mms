@@ -1,28 +1,5 @@
 import type React from "react";
-export interface MentorAvailability {
-	cohort_mentor_id: number | null;
-	day_of_week: string | null;
-	end_time: string | null;
-	id: number;
-	start_time: string | null;
-}
-
-export interface CalendarConfig {
-	showDates?: boolean;
-	showWeekends?: boolean;
-	showAllHours?: boolean;
-	startHour?: number;
-	endHour?: number;
-}
-
-export interface Event {
-	id: string;
-	title: string;
-	day: number;
-	startHour: number;
-	duration: number;
-	color: string;
-}
+import type { CalendarConfig } from "./WeekCalendar";
 
 interface WeekHeaderProps {
 	currentDate: Date;

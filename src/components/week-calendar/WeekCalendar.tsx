@@ -1,4 +1,5 @@
 "use client";
+import type { getCohortMentorsAvailability } from "@/queries/cached-queries";
 import { ChevronLeft, ChevronRight, PlusIcon } from "lucide-react";
 import Link from "next/link";
 import type React from "react";
@@ -6,13 +7,10 @@ import { useState } from "react";
 import { Button } from "../ui/button";
 import { WeekGrid } from "./WeekGrid";
 import { WeekHeader } from "./WeekHeader";
-export interface MentorAvailability {
-	cohort_mentor_id: number | null;
-	day_of_week: string | null;
-	end_time: string | null;
-	id: number;
-	start_time: string | null;
-}
+
+export type MentorsAvailability = Awaited<
+	ReturnType<typeof getCohortMentorsAvailability>
+>;
 
 export interface CalendarConfig {
 	showDates?: boolean;
@@ -21,16 +19,8 @@ export interface CalendarConfig {
 	endHour?: number;
 }
 
-export interface Event {
-	id: string;
-	title: string;
-	day: number;
-	startHour: number;
-	duration: number;
-	color: string;
-}
 interface WeeklyCalendarProps {
-	mentorAvailability?: MentorAvailability[];
+	mentorAvailability?: MentorsAvailability;
 	config?: CalendarConfig;
 }
 
