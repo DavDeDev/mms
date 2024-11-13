@@ -15,4 +15,8 @@ export type ServerActionResponse<T = undefined> =
 			// data is not included here at all
 	  };
 
+export type RecursivePartial<T> = {
+	[P in keyof T]?: RecursivePartial<T[P]>;
+};
+
 export * from "./db";

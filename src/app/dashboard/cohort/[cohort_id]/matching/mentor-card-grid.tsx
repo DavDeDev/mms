@@ -8,6 +8,7 @@ export default async function MentorCohortGrid({
 	const dummyMentors: Awaited<ReturnType<Awaited<typeof getCohortMentors>>> = [
 		{
 			mentorProfile: {
+				dob: "fds",
 				avatar_url: "https://example.com/avatar1.jpg",
 				bio: "Experienced software engineer with a passion for teaching.",
 				campus: "Progress",
@@ -37,6 +38,7 @@ export default async function MentorCohortGrid({
 		},
 		{
 			mentorProfile: {
+				dob: "cioa",
 				avatar_url: "https://example.com/avatar2.jpg",
 				bio: "Data scientist with a love for data visualization.",
 				campus: "Morningside",
