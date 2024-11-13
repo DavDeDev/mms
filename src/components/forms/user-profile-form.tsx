@@ -42,6 +42,7 @@ import { toast } from "sonner";
 import * as z from "zod";
 import InterestsInput from "../interests-input";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { CountryDropdown } from "../ui/country-dropdown";
 import { Label } from "../ui/label";
 
 const clientUpdateUserSchema = updateUserSchema.extend({
@@ -253,6 +254,7 @@ export default function UserProfileUpdateForm({
 										</FormItem>
 									)}
 								/>
+
 								<FormField
 									control={form.control}
 									name="sex"
@@ -410,10 +412,14 @@ export default function UserProfileUpdateForm({
 								name="country"
 								render={({ field }) => (
 									<FormItem>
-										<FormLabel>Country of Origin</FormLabel>
-										<FormControl>
-											<Input placeholder="Enter your country" {...field} />
-										</FormControl>
+										<FormLabel>Country</FormLabel>
+										<CountryDropdown
+											placeholder="Country"
+											defaultValue={field.value}
+											onChange={(country) => {
+												field.onChange(country.alpha3);
+											}}
+										/>
 										<FormMessage />
 									</FormItem>
 								)}
