@@ -28,7 +28,7 @@ export default async function MentorCohortGrid({
 			mentorAvailability: [
 				{
 					cohort_mentor_id: 1,
-					day_of_week: "Monday",
+					day_of_week: "monday",
 					end_time: "17:00",
 					id: 1,
 					start_time: "09:00",
@@ -57,7 +57,7 @@ export default async function MentorCohortGrid({
 			mentorAvailability: [
 				{
 					cohort_mentor_id: 2,
-					day_of_week: "Tuesday",
+					day_of_week: "tuesday",
 					end_time: "18:00",
 					id: 2,
 					start_time: "10:00",
