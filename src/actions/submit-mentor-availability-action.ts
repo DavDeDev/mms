@@ -6,7 +6,7 @@ import { getUserId } from "@/queries/cached-queries";
 import type { ServerActionResponse } from "@/types";
 import { ErrorBase } from "@/utils/ErrorBase";
 import { createClient } from "@/utils/supabase/server";
-import { revalidatePath } from "next/cache";
+import { revalidateTag } from "next/cache";
 import type { z } from "zod";
 
 type ErrorName = "NotAMentorError" | "AvailabilityCreationError";
@@ -73,9 +73,9 @@ export const submitMentorAvailabilityAction = async (
 				cause: availabilityError,
 			});
 		}
+		// Invalidate cached mentor availability data
+		revalidateTag(`cohort_mentor_availability_${cohortId}`);
 
-		// Revalidate page path and return success response
-		revalidatePath(`/dashboard/cohort/${cohortId}/availability`, "page");
 		return { success: true, data: availabilityData ?? null };
 	} catch (error) {
 		if (error instanceof AvailabilitySubmissionError) {
