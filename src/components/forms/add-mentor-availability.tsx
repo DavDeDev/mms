@@ -3,7 +3,9 @@ import { createMentorAvailabilitySchema } from "@/mutations/schema";
 import { DayOfWeek } from "@/types/enums";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import { submitMentorAvailabilityAction } from "@/actions/submit-mentor-availability-action";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import type { z } from "zod";
 import { Button } from "../ui/button";
 import {
@@ -20,7 +22,10 @@ import WeekDayPicker from "../week-day-picker";
 
 type FormValues = z.infer<typeof createMentorAvailabilitySchema>;
 
-export default function MentorAvailabilityForm() {
+export default function MentorAvailabilityForm({
+	cohortId,
+	onSubmitSuccess,
+}: { cohortId: number; onSubmitSuccess?: () => void }) {
 	const form = useForm<FormValues>({
 		resolver: zodResolver(createMentorAvailabilitySchema),
 		defaultValues: {
@@ -30,9 +35,20 @@ export default function MentorAvailabilityForm() {
 		},
 	});
 
-	const onSubmit = (data: FormValues) => {
+	const onSubmit = async (data: FormValues) => {
 		console.log(data);
 		// Handle form submission here
+		const res = await submitMentorAvailabilityAction(data, cohortId);
+
+		if (res.success) {
+			toast.success("Availability added successfully");
+			if (onSubmitSuccess) {
+				onSubmitSuccess();
+			}
+		} else {
+			console.error("Error submitting availability:", res.error);
+			toast.error("Failed to add availability");
+		}
 	};
 
 	return (

@@ -121,14 +121,6 @@ export default function UserProfileUpdateForm({
 	};
 
 	return (
-		// <Card className="container">
-		// 	<CardHeader>
-		// 		<CardTitle>Update Your Profile</CardTitle>
-		// 		<CardDescription>
-		// 			Make changes to your profile here. Click save when you're done.
-		// 		</CardDescription>
-		// 	</CardHeader>
-		// 	<CardContent>
 		<Form {...form}>
 			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
 				<div className="flex flex-col md:flex-row gap-6">

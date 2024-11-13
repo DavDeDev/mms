@@ -54,8 +54,10 @@ const clientCreateCohortSchema = createCohortSchema.extend({
 
 export default function CreateCohortForm({
 	userEmail,
+	onSubmitSuccess,
 }: {
 	userEmail: string;
+	onSubmitSuccess?: () => void;
 }) {
 	const router = useRouter();
 	const supabase = createClient();
@@ -133,6 +135,9 @@ export default function CreateCohortForm({
 			toast.success("Cohort created successfully!"); // Show success notification
 			// Optionally, redirect or update UI after successful cohort creation
 			router.push("/dashboard/cohorts"); // Redirect to the cohorts page
+			if (onSubmitSuccess) {
+				onSubmitSuccess();
+			}
 		} else {
 			// Access properties safely when success is false
 			const { error } = response; // Access the error message

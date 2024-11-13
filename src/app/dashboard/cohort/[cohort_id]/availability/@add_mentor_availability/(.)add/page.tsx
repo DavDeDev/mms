@@ -1,9 +1,10 @@
 export const dynamic = "force-dynamic";
 
-import { getUserProfile } from "@/queries/cached-queries";
 import AddAvailabilityModal from "./add-availability-modal";
 
-export default async function Page() {
-	const user = await getUserProfile();
-	return <AddAvailabilityModal />;
+export default async function Page({
+	params,
+}: { params: Promise<{ cohort_id: number }> }) {
+	const { cohort_id } = await params;
+	return <AddAvailabilityModal cohortId={cohort_id} />;
 }

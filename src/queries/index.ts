@@ -182,3 +182,26 @@ export async function getCohortMentorsQuery(
 	}
 	return data;
 }
+
+/**
+ * Function to pull a cohort member
+ */
+export async function getCohortMemberQuery(
+	supabase: Client,
+	cohortId: number,
+	userId: string,
+) {
+	const { data, error } = await supabase
+		.from("cohort_members")
+		.select("*")
+		.eq("cohort_id", cohortId)
+		.eq("user_id", userId)
+		.single()
+		.throwOnError();
+
+	if (error) {
+		console.error("Error fetching cohort member:", error);
+		throw error;
+	}
+	return data;
+}

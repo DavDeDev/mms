@@ -52,3 +52,16 @@ export async function addUserToCohort(
 		.insert([{ user_id: userId, role, cohort_id: cohortId }])
 		.throwOnError();
 }
+
+/**
+ * Add mentor availability
+ */
+export async function addMentorAvailability(
+	supabase: Client,
+	data: Omit<Tables<"mentor_availability">, "id">,
+) {
+	return await supabase
+		.from("mentor_availability")
+		.insert([data])
+		.throwOnError();
+}

@@ -99,8 +99,17 @@ export const createMentorAvailabilitySchema = z
 	.refine(
 		(data) => {
 			console.log(data);
+			// FIXME: if i set 11 PM to 12 AM, it will fail
+			// because the diff is 1 hour and 3600 seconds
+			// so we need to check if the diff is 3600 seconds
+
 			const start = new Date(`1970-01-01T${data.startTime}`);
 			const end = new Date(`1970-01-01T${data.endTime}`);
+
+			if (end < start) {
+				end.setHours(end.getHours() + 24);
+			}
+
 			const diffInSecs = Math.abs((end.getTime() - start.getTime()) / 1000);
 			console.log(diffInSecs);
 			return diffInSecs === 3600;
