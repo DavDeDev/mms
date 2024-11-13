@@ -36,9 +36,6 @@ export const updateUserAction = async (
 		avatarUrl,
 		dob,
 	} = data;
-
-	console.log("DAAAATE", dob);
-
 	const mappedData: Partial<Tables<"users">> = {
 		first_name: firstName,
 		last_name: lastName,
