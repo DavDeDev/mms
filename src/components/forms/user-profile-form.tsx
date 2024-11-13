@@ -389,7 +389,7 @@ export default function UserProfileUpdateForm({
 									</FormItem>
 								)}
 							/>
-							<FormField
+							{/* <FormField
 								control={form.control}
 								name="program"
 								render={({ field }) => (
@@ -405,13 +405,29 @@ export default function UserProfileUpdateForm({
 												</SelectTrigger>
 											</FormControl>
 											<SelectContent>
-												{/* {programs.map((program) => (
+												{programs.map((program) => (
                             <SelectItem key={program} value={program.toLowerCase().replace(' ', '-')}>
                                 {program}
                             </SelectItem>
-                        ))} */}
+                        ))}
 											</SelectContent>
 										</Select>
+										<FormControl>
+											<Input placeholder="Type your program of studies..." {...field} />
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/> */}
+							<FormField
+								control={form.control}
+								name="program"
+								render={({ field }) => (
+									<FormItem className="flex-grow">
+										<FormLabel>Program of Studies</FormLabel>
+										<FormControl>
+											<Input placeholder="Program of studies" {...field} />
+										</FormControl>
 										<FormMessage />
 									</FormItem>
 								)}
