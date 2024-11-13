@@ -224,8 +224,8 @@ export default function CreateCohortForm({
 													/>
 												) : (
 													<div className="text-center">
-														<Upload className="mx-auto h-12 w-12 text-gray-400" />
-														<p className="mt-2 text-sm text-gray-500">
+														<Upload className="mx-auto h-12 w-12 text-muted" />
+														<p className="mt-2 text-sm text-muted">
 															Click to upload image
 														</p>
 													</div>

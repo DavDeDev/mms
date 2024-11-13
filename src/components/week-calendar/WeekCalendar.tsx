@@ -1,7 +1,9 @@
 "use client";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, PlusIcon } from "lucide-react";
+import Link from "next/link";
 import type React from "react";
 import { useState } from "react";
+import { Button } from "../ui/button";
 import { WeekGrid } from "./WeekGrid";
 import { WeekHeader } from "./WeekHeader";
 export interface MentorAvailability {
@@ -54,7 +56,7 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({
 
 	return (
 		<div>
-			{finalConfig.showDates && (
+			{finalConfig.showDates ? (
 				<div className="flex items-center justify-between mb-6">
 					<h2 className="text-2xl font-semibold ">
 						{currentDate.toLocaleString("default", {
@@ -62,20 +64,40 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({
 							year: "numeric",
 						})}
 					</h2>
-					<div className="flex gap-2">
-						<button
-							onClick={() => navigateWeek("prev")}
-							className="p-2 text-muted hover:text-primary hover:bg-muted rounded-full transition-colors"
-						>
-							<ChevronLeft className="w-5 h-5 " />
-						</button>
-						<button
-							onClick={() => navigateWeek("next")}
-							className="p-2 text-muted hover:text-primary hover:bg-muted rounded-full transition-colors"
-						>
-							<ChevronRight className="w-5 h-5" />
-						</button>
+
+					<div className="flex gap-4">
+						<Link href={`${window.location.pathname}/add`}>
+							<Button className="bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors">
+								<PlusIcon className="h-4 w-4" />
+								Add your availability
+							</Button>
+						</Link>
+						<div className="flex gap-2">
+							<Button
+								onClick={() => navigateWeek("prev")}
+								variant="outline"
+								size="icon"
+							>
+								<ChevronLeft />
+							</Button>
+							<Button
+								onClick={() => navigateWeek("next")}
+								variant="outline"
+								size="icon"
+							>
+								<ChevronRight />
+							</Button>
+						</div>
 					</div>
+				</div>
+			) : (
+				<div className="w-full flex p-4">
+					<Link href={`${window.location.pathname}/add`}>
+						<Button className="bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors">
+							<PlusIcon className="h-4 w-4" />
+							Add your availability
+						</Button>
+					</Link>
 				</div>
 			)}
 

@@ -67,7 +67,6 @@ export const WeekHeader: React.FC<WeekHeaderProps> = ({
 		return date.toDateString() === today.toDateString();
 	};
 
-
 	return (
 		<div
 			className="grid"

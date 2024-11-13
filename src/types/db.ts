@@ -81,21 +81,21 @@ export type Database = {
 			mentor_availability: {
 				Row: {
 					cohort_mentor_id: number | null;
-					day_of_week: string | null;
+					day_of_week: Database["public"]["Enums"]["day_of_week"] | null;
 					end_time: string | null;
 					id: number;
 					start_time: string | null;
 				};
 				Insert: {
 					cohort_mentor_id?: number | null;
-					day_of_week?: string | null;
+					day_of_week?: Database["public"]["Enums"]["day_of_week"] | null;
 					end_time?: string | null;
 					id?: never;
 					start_time?: string | null;
 				};
 				Update: {
 					cohort_mentor_id?: number | null;
-					day_of_week?: string | null;
+					day_of_week?: Database["public"]["Enums"]["day_of_week"] | null;
 					end_time?: string | null;
 					id?: never;
 					start_time?: string | null;
@@ -315,6 +315,14 @@ export type Database = {
 				| "Ashtonbee"
 				| "Story Arts Centre";
 			college_semesters: "fall" | "winter" | "summer";
+			day_of_week:
+				| "monday"
+				| "tuesday"
+				| "wednesday"
+				| "thursday"
+				| "friday"
+				| "saturday"
+				| "sunday";
 			match_status: "pending" | "confirmed" | "cancelled";
 			user_sex: "male" | "female" | "other";
 		};

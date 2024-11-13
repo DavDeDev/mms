@@ -2,7 +2,7 @@ const fs = require("node:fs");
 const ts = require("typescript");
 
 // Read the types.ts file
-const fileContent = fs.readFileSync("./types/db.ts", "utf8");
+const fileContent = fs.readFileSync("./src/types/db.ts", "utf8");
 
 // Function to transform enum names to PascalCase and remove '_enum' suffix
 function transformEnumName(name) {
@@ -92,4 +92,4 @@ const extractedEnums = extractEnums(fileContent);
 const enumStrings = createEnumStrings(extractedEnums);
 
 // Write enums to a new file
-fs.writeFileSync("./types/enums.ts", enumStrings);
+fs.writeFileSync("./src/types/enums.ts", enumStrings);
