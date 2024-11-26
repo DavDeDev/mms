@@ -1,4 +1,4 @@
-# Mentorship Platform README
+# Mentorship Platform
 
 Welcome to the Mentorship Platform! This document provides a straightforward overview of our project, its features, and how to use it effectively.
 
