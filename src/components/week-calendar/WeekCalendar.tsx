@@ -1,106 +1,61 @@
-"use client";
-import type { getCohortMentorsAvailability } from "@/queries/cached-queries";
-import { ChevronLeft, ChevronRight, PlusIcon } from "lucide-react";
-import Link from "next/link";
+import { addDays, startOfWeek } from "date-fns";
 import type React from "react";
-import { useState } from "react";
-import { Button } from "../ui/button";
-import { WeekGrid } from "./WeekGrid";
-import { WeekHeader } from "./WeekHeader";
+import { ScrollArea } from "../ui/scroll-area";
+import CalendarHeader from "./CalendarHeader";
+import EventLayer from "./EventLayer";
+import TimeGrid from "./TimeGrid";
+import TimeLabels from "./TimeLabels";
 
-export type MentorsAvailability = Awaited<
-	ReturnType<typeof getCohortMentorsAvailability>
->;
-
-export interface CalendarConfig {
-	showDates?: boolean;
-	showWeekends?: boolean;
-	startHour?: number;
-	endHour?: number;
+interface WeekCalendarProps {
+	events: CalendarEvent[];
 }
-
-interface WeeklyCalendarProps {
-	mentorAvailability?: MentorsAvailability;
-	config?: CalendarConfig;
+export interface CalendarEvent {
+	id: number;
+	title: string;
+	start: Date;
+	end: Date;
+	color: string;
 }
+const WeekCalendar: React.FC<WeekCalendarProps> = ({
+	events,
+}: WeekCalendarProps) => {
+	const today = new Date();
+	const weekStart = startOfWeek(today);
+	const days = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
+	const hours = Array.from({ length: 24 }, (_, i) => i);
 
-const defaultConfig: CalendarConfig = {
-	showDates: false,
-	showWeekends: false,
-	startHour: 9,
-	endHour: 19, // 7 PM
-};
+	const getEventPosition = (event: CalendarEvent) => {
+		const startHour = event.start.getHours();
+		const startMinutes = event.start.getMinutes();
+		const endHour = event.end.getHours();
+		const endMinutes = event.end.getMinutes();
 
-const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({
-	mentorAvailability = [],
-	config = defaultConfig,
-}) => {
-	const [currentDate, setCurrentDate] = useState(new Date());
-	const finalConfig = { ...defaultConfig, ...config };
+		const top = (startHour + startMinutes / 60) * 60;
+		const height =
+			(endHour + endMinutes / 60 - (startHour + startMinutes / 60)) * 60;
+		const dayIndex = event.start.getDay();
 
-	const navigateWeek = (direction: "prev" | "next") => {
-		const newDate = new Date(currentDate);
-		newDate.setDate(currentDate.getDate() + (direction === "next" ? 7 : -7));
-		setCurrentDate(newDate);
+		return {
+			top: `${top}px`,
+			height: `${height}px`,
+			left: `${(100 / 7) * dayIndex}%`,
+			width: `${100 / 7}%`,
+		};
 	};
 
 	return (
-		<div>
-			{finalConfig.showDates ? (
-				<div className="flex items-center justify-between mb-6">
-					<h2 className="text-2xl font-semibold ">
-						{currentDate.toLocaleString("default", {
-							month: "long",
-							year: "numeric",
-						})}
-					</h2>
+		<div className="h-full flex flex-col">
+			<CalendarHeader days={days} />
 
-					<div className="flex gap-4">
-						<Link href={`${window.location.pathname}/add`}>
-							<Button className="bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors">
-								<PlusIcon className="h-4 w-4" />
-								Add your availability
-							</Button>
-						</Link>
-						<div className="flex gap-2">
-							<Button
-								onClick={() => navigateWeek("prev")}
-								variant="outline"
-								size="icon"
-							>
-								<ChevronLeft />
-							</Button>
-							<Button
-								onClick={() => navigateWeek("next")}
-								variant="outline"
-								size="icon"
-							>
-								<ChevronRight />
-							</Button>
-						</div>
-					</div>
+			<ScrollArea className=" h-full flex-1 inset-0">
+				<div className="relative flex">
+					<TimeLabels hours={hours} />
+					<TimeGrid hours={hours} />
+					<EventLayer events={events} getEventPosition={getEventPosition} />
 				</div>
-			) : (
-				<div className="w-full flex p-4">
-					<Link href={`${window.location.pathname}/add`}>
-						<Button className="bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors">
-							<PlusIcon className="h-4 w-4" />
-							Add your availability
-						</Button>
-					</Link>
-				</div>
-			)}
-
-			<div className="min-w-[800px]">
-				<WeekHeader currentDate={currentDate} config={finalConfig} />
-				<WeekGrid
-					currentDate={currentDate}
-					config={finalConfig}
-					mentorAvailability={mentorAvailability}
-				/>
-			</div>
+			</ScrollArea>
 		</div>
 	);
 };
 
-export default WeeklyCalendar;
+export default WeekCalendar;
