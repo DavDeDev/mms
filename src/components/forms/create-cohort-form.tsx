@@ -54,8 +54,10 @@ const clientCreateCohortSchema = createCohortSchema.extend({
 
 export default function CreateCohortForm({
 	userEmail,
+	onSubmitSuccess,
 }: {
 	userEmail: string;
+	onSubmitSuccess?: () => void;
 }) {
 	const router = useRouter();
 	const supabase = createClient();
@@ -133,6 +135,9 @@ export default function CreateCohortForm({
 			toast.success("Cohort created successfully!"); // Show success notification
 			// Optionally, redirect or update UI after successful cohort creation
 			router.push("/dashboard/cohorts"); // Redirect to the cohorts page
+			if (onSubmitSuccess) {
+				onSubmitSuccess();
+			}
 		} else {
 			// Access properties safely when success is false
 			const { error } = response; // Access the error message
@@ -201,7 +206,8 @@ export default function CreateCohortForm({
 									<FormItem>
 										<FormLabel>Cohort Image</FormLabel>
 										<FormControl>
-											<div
+											<Button
+												variant={"outline"}
 												className="w-full h-64 rounded-lg border-2 border-dashed flex items-center justify-center cursor-pointer overflow-hidden"
 												onClick={() =>
 													document.getElementById("image-upload")?.click()
@@ -213,7 +219,7 @@ export default function CreateCohortForm({
 													}
 												}}
 												tabIndex={0} // Makes the div focusable
-												role="button" // Sets the role to button for better accessibility
+												type="button"
 											>
 												{imagePreview ? (
 													<img
@@ -223,8 +229,8 @@ export default function CreateCohortForm({
 													/>
 												) : (
 													<div className="text-center">
-														<Upload className="mx-auto h-12 w-12 text-gray-400" />
-														<p className="mt-2 text-sm text-gray-500">
+														<Upload className="mx-auto h-12 w-12 text-muted" />
+														<p className="mt-2 text-sm text-muted">
 															Click to upload image
 														</p>
 													</div>
@@ -247,7 +253,7 @@ export default function CreateCohortForm({
 														}
 													}}
 												/>
-											</div>
+											</Button>
 										</FormControl>
 										<FormDescription>
 											Upload an image for the cohort (optional).

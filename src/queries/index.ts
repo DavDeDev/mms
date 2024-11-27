@@ -134,3 +134,137 @@ export async function getCohortMembersQuery(
 	}
 	return data;
 }
+
+// Function to pull the role in the cohort of the user
+export async function getUserCohortRoleQuery(
+	supabase: Client,
+	cohortId: number,
+	userId: string,
+) {
+	const { data, error } = await supabase
+		.from("cohort_members")
+		.select("cohortRole:role")
+		.eq("cohort_id", cohortId)
+		.eq("user_id", userId)
+		.single()
+		.throwOnError();
+	if (error) {
+		console.error("Error fetching user cohort role:", error);
+		throw error;
+	}
+	return data;
+}
+
+/**
+ * Function to pull all the mentors in a cohort
+ */
+export async function getCohortMentorsQuery(
+	supabase: Client,
+	cohortId: number,
+) {
+	const { data, error } = await supabase
+		.from("cohort_members")
+		.select(`
+			mentorProfile:users!inner (
+				*
+			),
+			mentorAvailability:mentor_availability!inner (
+			*
+		)
+		`)
+		.eq("cohort_id", cohortId)
+		.eq("role", "mentor")
+		.throwOnError();
+
+	if (error) {
+		console.error("Error fetching cohort mentors:", error);
+		throw error;
+	}
+	return data;
+}
+
+/**
+ * Function to pull a cohort member
+ */
+export async function getCohortMemberQuery(
+	supabase: Client,
+	cohortId: number,
+	userId: string,
+) {
+	const { data, error } = await supabase
+		.from("cohort_members")
+		.select("*")
+		.eq("cohort_id", cohortId)
+		.eq("user_id", userId)
+		.single()
+		.throwOnError();
+
+	if (error) {
+		console.error("Error fetching cohort member:", error);
+		throw error;
+	}
+	return data;
+}
+
+/**
+ * Pull all mentors availability and their profiles
+ */
+
+export async function getMentorsAvailabilityQuery(
+	supabase: Client,
+	cohortId: number,
+) {
+	const { data, error } = await supabase
+		.from("mentor_availability")
+		.select(`
+		cohort_member:cohort_members!inner (
+			cohort_id,
+			mentorProfile:users!inner(
+				id,
+				avatar_url,
+				first_name,
+				last_name
+			)
+		),
+		*
+	`)
+		.eq("cohort_members.cohort_id", cohortId)
+		.throwOnError();
+
+	if (error) {
+		console.error("Error fetching mentor availability:", error);
+		throw error;
+	}
+	return data;
+}
+
+/**
+ * Pull mentor's availability
+ */
+
+export async function getCohortMentorAvailabilityQuery(
+	supabase: Client,
+	cohortId: number,
+	userId: string,
+) {
+	const { data, error } = await supabase
+		.from("mentor_availability")
+		.select(`*,
+			cohort_member:cohort_members!inner (
+				cohort_id,
+				mentorProfile:users!inner(
+					id
+				)
+			)
+					`)
+		.eq("cohort_members.cohort_id", cohortId)
+		.eq("cohort_members.user_id", userId)
+		.single()
+		.throwOnError();
+
+	if (error) {
+		console.error("Error fetching mentor availability:", error);
+		throw error;
+	}
+	return data;
+}

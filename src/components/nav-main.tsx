@@ -39,7 +39,6 @@ const navMain = [
 			{ title: "Add Mentee", url: "/mentees/add" },
 		],
 	},
-
 	{
 		title: "Programs",
 		url: "/programs",
@@ -54,6 +53,15 @@ const navMain = [
 		title: "Settings",
 		url: "/settings",
 		icon: Settings,
+	},
+	{
+		title: "Matching",
+		url: "/matching",
+		icon: Users,
+		items: [
+			{ title: "Matchings", url: "/matching" },
+			{ title: "Availability", url: "/availability" },
+		],
 	},
 ];
 

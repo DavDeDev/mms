@@ -21,7 +21,8 @@
 		"rules": {
 			"recommended": true,
 			"correctness": {
-				"noUnusedImports": "error"
+				"noUnusedImports": "error",
+				"useExhaustiveDependencies": "off"
 			},
 			"complexity": {
 				"noForEach": "off"

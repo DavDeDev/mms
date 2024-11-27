@@ -10,10 +10,11 @@ import {
 	SidebarHeader,
 	SidebarMenu,
 	SidebarMenuButton,
-	SidebarRail,
-	SidebarSeparator,
+	SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { getUserProfile } from "@/queries/cached-queries";
+import { GalleryVerticalEnd } from "lucide-react";
+import { NavUser } from "./nav-user";
 
 export async function GlobalDashboardSidebar({
 	children,
@@ -21,20 +22,35 @@ export async function GlobalDashboardSidebar({
 }: React.ComponentProps<typeof Sidebar>) {
 	const user = await getUserProfile();
 	return (
-		<Sidebar className="h-screen" collapsible="none" {...props}>
+		<Sidebar {...props}>
 			<SidebarHeader>
-				{/* TODO: Insert a LOGO */}
-				LOGO
+				<SidebarMenu>
+					<SidebarMenuItem>
+						<SidebarMenuButton size="lg" asChild>
+							<a href="/">
+								<div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+									<GalleryVerticalEnd className="size-4" />
+								</div>
+								<div className="flex flex-col gap-0.5 leading-none">
+									<span className="font-semibold">LOGO</span>
+									<span className="">v1.0.0</span>
+								</div>
+							</a>
+						</SidebarMenuButton>
+					</SidebarMenuItem>
+				</SidebarMenu>
 			</SidebarHeader>
 			<SidebarContent>
-				<SidebarSeparator />
-				<CohortsNav />
-				<SidebarSeparator />
-				<AccountNav />
-				{/* <NavProjects projects={data.projects} /> */}
+				<SidebarGroup>
+					<SidebarMenu className="gap-2">
+						<CohortsNav />
+						<AccountNav />
+					</SidebarMenu>
+				</SidebarGroup>
 			</SidebarContent>
-			<SidebarFooter>{/* <NavUser {...user} /> */}</SidebarFooter>
-			<SidebarRail />
+			<SidebarFooter>
+				<NavUser user={user} />
+			</SidebarFooter>
 		</Sidebar>
 	);
 }

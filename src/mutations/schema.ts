@@ -2,6 +2,7 @@ import {
 	CohortRole,
 	CollegeCampuses,
 	CollegeSemesters,
+	DayOfWeek,
 	UserSex,
 } from "@/types/enums";
 import { z } from "zod";
@@ -85,3 +86,31 @@ export const createCohortSchema = z.object({
 	),
 	avatarUrl: z.string().url().nullable(),
 });
+
+export const createMentorAvailabilitySchema = z
+	.object({
+		dayOfWeek: z.nativeEnum(DayOfWeek),
+		startTime: z
+			.string()
+			.regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, "Invalid time format"),
+		endTime: z
+			.string()
+			.regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, "Invalid time format"),
+	})
+	.refine(
+		(data) => {
+			const start = new Date(`1970-01-01T${data.startTime}`);
+			const end = new Date(`1970-01-01T${data.endTime}`);
+
+			if (end < start) {
+				end.setHours(end.getHours() + 24);
+			}
+
+			const diffInSecs = Math.abs((end.getTime() - start.getTime()) / 1000);
+			return diffInSecs === 3600;
+		},
+		{
+			message: "Session must be exactly one hour long",
+			path: ["endTime"],
+		},
+	);

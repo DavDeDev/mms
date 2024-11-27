@@ -30,6 +30,16 @@ export enum CollegeSemesters {
 	summer = "summer",
 }
 
+export enum DayOfWeek {
+	monday = "monday",
+	tuesday = "tuesday",
+	wednesday = "wednesday",
+	thursday = "thursday",
+	friday = "friday",
+	saturday = "saturday",
+	sunday = "sunday",
+}
+
 export enum MatchStatus {
 	pending = "pending",
 	confirmed = "confirmed",
