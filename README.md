@@ -1,4 +1,4 @@
-# My Supabase + Next.js Project
+# MMS - Mentorship Management System
 
 ![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
 ![Next JS](https://img.shields.io/badge/Next-black?style=for-the-badge&logo=next.js&logoColor=white)
@@ -7,7 +7,9 @@ This project is built with Supabase and Next.js, providing a powerful and scalab
 
 ## 🚨 Important Note
 
-> **Warning**: Adding environment variables to Vercel is a Pro feature. Make sure you have the appropriate plan to use this feature in production.
+
+> [!WARNING]  
+> I can't add you to the Vercel project as it's a PRO feature, so you'll need to deploy the project to your own Vercel account.
 
 ## 🚀 Getting Started
 
@@ -73,10 +75,12 @@ To obtain these variables:
 
 3. `NEXT_PUBLIC_GOOGLE_CLIENT_ID`:
    - Go to the [Google Cloud Console](https://console.cloud.google.com/)
-   - Select your project or create a new one
-   - Go to "APIs & Services" > "Credentials"
-   - Create a new OAuth client ID or use an existing one
-   - The client ID will be displayed in the credentials list
+      - Select your project or create a new one
+      - Go to "APIs & Services" > "Credentials"
+      - Create a new OAuth client ID or use an existing one
+      - The client ID will be displayed in the credentials list
+
+      If you encounter any issues retrieving your environment variables, please feel free to [contact me](https://github.com/DavDeDev) for assistance.
 
 ## 🤝 Contributing
 
@@ -88,7 +92,11 @@ We welcome contributions to this project. Please follow these steps to contribut
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-Please make sure to update tests as appropriate and adhere to the project's code style.
+Please make sure to pass the pipeline before asking for review. Run the following command to check if the pipeline passes:
+
+```bash
+pnpm build
+```
 
 ## 📄 License
 
