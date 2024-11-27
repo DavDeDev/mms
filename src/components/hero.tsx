@@ -12,7 +12,7 @@ export function Hero() {
 					</Badge>
 					<div className="space-y-2">
 						<h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
-							Empower Your School's <br />
+							Empower Your College's <br />
 							<span className="text-brand">Mentorship Program</span>
 						</h1>
 						<p className="mx-auto max-w-[650px] text-gray-500 md:text-xl dark:text-gray-400">
