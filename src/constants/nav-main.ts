@@ -30,7 +30,11 @@ export const navMain: NavItem[] = [
 		icon: Users,
 		roles: ["coordinator", "mentor"],
 		items: [
-			{ title: "All Members", url: "/members", roles: ["coordinator","mentor"] },
+			{
+				title: "All Members",
+				url: "/members",
+				roles: ["coordinator", "mentor"],
+			},
 			{ title: "Add Members", url: "/members/add", roles: ["coordinator"] },
 		],
 	},
