@@ -1,96 +1,101 @@
-<a href="https://demo-nextjs-with-supabase.vercel.app/">
-  <img alt="Next.js and Supabase Starter Kit - the fastest way to build apps with Next.js and Supabase" src="https://demo-nextjs-with-supabase.vercel.app/opengraph-image.png">
-  <h1 align="center">Next.js and Supabase Starter Kit</h1>
-</a>
+# My Supabase + Next.js Project
 
-<p align="center">
- The fastest way to build apps with Next.js and Supabase
-</p>
+![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
+![Next JS](https://img.shields.io/badge/Next-black?style=for-the-badge&logo=next.js&logoColor=white)
 
-<p align="center">
-  <a href="#features"><strong>Features</strong></a> ·
-  <a href="#demo"><strong>Demo</strong></a> ·
-  <a href="#deploy-to-vercel"><strong>Deploy to Vercel</strong></a> ·
-  <a href="#clone-and-run-locally"><strong>Clone and run locally</strong></a> ·
-  <a href="#feedback-and-issues"><strong>Feedback and issues</strong></a>
-  <a href="#more-supabase-examples"><strong>More Examples</strong></a>
-</p>
-<br/>
+This project is built with Supabase and Next.js, providing a powerful and scalable foundation for your web application.
 
-## Features
+## 🚨 Important Note
 
-- Works across the entire [Next.js](https://nextjs.org) stack
-  - App Router
-  - Pages Router
-  - Middleware
-  - Client
-  - Server
-  - It just works!
-- supabase-ssr. A package to configure Supabase Auth to use cookies
-- Styling with [Tailwind CSS](https://tailwindcss.com)
-- Components with [shadcn/ui](https://ui.shadcn.com/)
-- Optional deployment with [Supabase Vercel Integration and Vercel deploy](#deploy-your-own)
-  - Environment variables automatically assigned to Vercel project
+> **Warning**: Adding environment variables to Vercel is a Pro feature. Make sure you have the appropriate plan to use this feature in production.
 
-## Demo
+## 🚀 Getting Started
 
-You can view a fully working demo at [demo-nextjs-with-supabase.vercel.app](https://demo-nextjs-with-supabase.vercel.app/).
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
-## Deploy to Vercel
+### Prerequisites
 
-Vercel deployment will guide you through creating a Supabase account and project.
+- Node.js (v14 or later)
+- pnpm
 
-After installation of the Supabase integration, all relevant environment variables will be assigned to the project so the deployment is fully functioning.
+If you don't have pnpm installed, you can install it using npm:
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fnext.js%2Ftree%2Fcanary%2Fexamples%2Fwith-supabase&project-name=nextjs-with-supabase&repository-name=nextjs-with-supabase&demo-title=nextjs-with-supabase&demo-description=This+starter+configures+Supabase+Auth+to+use+cookies%2C+making+the+user%27s+session+available+throughout+the+entire+Next.js+app+-+Client+Components%2C+Server+Components%2C+Route+Handlers%2C+Server+Actions+and+Middleware.&demo-url=https%3A%2F%2Fdemo-nextjs-with-supabase.vercel.app%2F&external-id=https%3A%2F%2Fgithub.com%2Fvercel%2Fnext.js%2Ftree%2Fcanary%2Fexamples%2Fwith-supabase&demo-image=https%3A%2F%2Fdemo-nextjs-with-supabase.vercel.app%2Fopengraph-image.png)
+```bash
+npm install -g pnpm
+```
 
-The above will also clone the Starter kit to your GitHub, you can clone that locally and develop locally.
+### Installation
 
-If you wish to just develop locally and not deploy to Vercel, [follow the steps below](#clone-and-run-locally).
-
-## Clone and run locally
-
-1. You'll first need a Supabase project which can be made [via the Supabase dashboard](https://database.new)
-
-2. Create a Next.js app using the Supabase Starter template npx command
-
+1. Clone the repository:
    ```bash
-   npx create-next-app -e with-supabase
+   git clone https://github.com/yourusername/your-repo-name.git
+   cd your-repo-name
    ```
 
-3. Use `cd` to change into the app's directory
-
+2. Install dependencies:
    ```bash
-   cd name-of-new-app
+   pnpm install
    ```
 
-4. Rename `.env.example` to `.env.local` and update the following:
-
-   ```
-   NEXT_PUBLIC_SUPABASE_URL=[INSERT SUPABASE PROJECT URL]
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=[INSERT SUPABASE PROJECT API ANON KEY]
-   ```
-
-   Both `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` can be found in [your Supabase project's API settings](https://app.supabase.com/project/_/settings/api)
-
-5. You can now run the Next.js local development server:
-
+3. Copy the `.env.example` file to `.env.local`:
    ```bash
-   npm run dev
+   cp .env.example .env.local
    ```
 
-   The starter kit should now be running on [localhost:3000](http://localhost:3000/).
+4. Fill in the environment variables in `.env.local` (see Environment Variables section below)
 
-6. This template comes with the default shadcn/ui style initialized. If you instead want other ui.shadcn styles, delete `components.json` and [re-install shadcn/ui](https://ui.shadcn.com/docs/installation/next)
+5. Run the development server:
+   ```bash
+   pnpm dev
+   ```
 
-> Check out [the docs for Local Development](https://supabase.com/docs/guides/getting-started/local-development) to also run Supabase locally.
+## 🔐 Environment Variables
 
-## Feedback and issues
+This project uses the following environment variables:
 
-Please file feedback and issues over on the [Supabase GitHub org](https://github.com/supabase/supabase/issues/new/choose).
+- `NEXT_PUBLIC_SUPABASE_URL`: Your Supabase project URL
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Your Supabase project's anon key
+- `SUPABASE_SERVICE_ROLE_KEY`: Your Supabase project's service role key
+- `NEXT_PUBLIC_GOOGLE_CLIENT_ID`: Your Google OAuth client ID
 
-## More Supabase examples
+To obtain these variables:
 
-- [Next.js Subscription Payments Starter](https://github.com/vercel/nextjs-subscription-payments)
-- [Cookie-based Auth and the Next.js 13 App Router (free course)](https://youtube.com/playlist?list=PL5S4mPUpp4OtMhpnp93EFSo42iQ40XjbF)
-- [Supabase Auth and the Next.js App Router](https://github.com/supabase/supabase/tree/master/examples/auth/nextjs)
+1. `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`: 
+   - Log in to your Supabase account
+   - Go to your project's dashboard
+   - Click on the "Settings" icon in the left sidebar
+   - Click on "API" in the settings menu
+   - You'll find the URL and anon key under "Project API keys"
+
+2. `SUPABASE_SERVICE_ROLE_KEY`:
+   - In the same "API" section of your Supabase project settings
+   - You'll find the service role key under "Project API keys"
+
+3. `NEXT_PUBLIC_GOOGLE_CLIENT_ID`:
+   - Go to the [Google Cloud Console](https://console.cloud.google.com/)
+   - Select your project or create a new one
+   - Go to "APIs & Services" > "Credentials"
+   - Create a new OAuth client ID or use an existing one
+   - The client ID will be displayed in the credentials list
+
+## 🤝 Contributing
+
+We welcome contributions to this project. Please follow these steps to contribute:
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+Please make sure to update tests as appropriate and adhere to the project's code style.
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
+
+## 🙏 Acknowledgments
+
+- [Supabase](https://supabase.io/)
+- [Next.js](https://nextjs.org/)
+- [Vercel](https://vercel.com/)
