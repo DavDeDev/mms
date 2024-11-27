@@ -1,7 +1,10 @@
 "use server";
 import { addMentorAvailability } from "@/mutations";
 import { createMentorAvailabilitySchema } from "@/mutations/schema";
-import { getCohortMemberQuery } from "@/queries";
+import {
+	getCohortMemberQuery,
+	getCohortMentorAvailabilityQuery,
+} from "@/queries";
 import { getUserId } from "@/queries/cached-queries";
 import type { ServerActionResponse } from "@/types";
 import { ErrorBase } from "@/utils/ErrorBase";
@@ -9,7 +12,10 @@ import { createClient } from "@/utils/supabase/server";
 import { revalidateTag } from "next/cache";
 import type { z } from "zod";
 
-type ErrorName = "NotAMentorError" | "AvailabilityCreationError";
+type ErrorName =
+	| "NotAMentorError"
+	| "AvailabilityCreationError"
+	| "AlreadyExistsError";
 
 class AvailabilitySubmissionError extends ErrorBase<ErrorName> {}
 
@@ -17,6 +23,7 @@ export const submitMentorAvailabilityAction = async (
 	formData: z.infer<typeof createMentorAvailabilitySchema>,
 	cohortId: number,
 ): Promise<ServerActionResponse> => {
+	console.log("starting action!!1");
 	// Validate form data
 	const { success, error, data } =
 		createMentorAvailabilitySchema.safeParse(formData);
@@ -39,6 +46,20 @@ export const submitMentorAvailabilityAction = async (
 	try {
 		const supabase = await createClient();
 		const userId = await getUserId();
+
+		// Check if the user has already submitted availability for the cohort
+		const mentorAvailability = await getCohortMentorAvailabilityQuery(
+			supabase,
+			cohortId,
+			userId,
+		);
+
+		if (mentorAvailability) {
+			throw new AvailabilitySubmissionError({
+				name: "AlreadyExistsError",
+				message: "User has already submitted availability for the cohort",
+			});
+		}
 
 		// Retrieve the user's cohort membership information
 		const memberInCohort = await getCohortMemberQuery(
@@ -87,7 +108,7 @@ export const submitMentorAvailabilityAction = async (
 		// Generic error handling
 		return {
 			success: false,
-			error: "An unexpected error occurred. Please try again.",
+			error: `Failed to submit mentor availability: ${error}`,
 		};
 	}
 };

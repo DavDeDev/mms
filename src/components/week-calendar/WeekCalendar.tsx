@@ -44,7 +44,7 @@ const WeekCalendar: React.FC<WeekCalendarProps> = ({
 	};
 
 	return (
-		<div className="h-full flex flex-col">
+		<div className="overflow-hidden grow flex flex-col">
 			<CalendarHeader days={days} />
 
 			<ScrollArea className=" h-full flex-1 inset-0">

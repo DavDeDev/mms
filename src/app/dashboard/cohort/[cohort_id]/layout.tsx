@@ -64,7 +64,7 @@ export default async function CohortDashboardLayout({
 						</Breadcrumb>
 					</div>
 				</header>
-				<div className="container flex-1 h-[calc(100vh-4rem)]">{children}</div>
+				<div className="container grow h-[calc(100vh-4rem)]">{children}</div>
 			</SidebarInset>
 		</SidebarProvider>
 	);

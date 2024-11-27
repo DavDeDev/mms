@@ -237,3 +237,34 @@ export async function getMentorsAvailabilityQuery(
 	}
 	return data;
 }
+
+/**
+ * Pull mentor's availability
+ */
+
+export async function getCohortMentorAvailabilityQuery(
+	supabase: Client,
+	cohortId: number,
+	userId: string,
+) {
+	const { data, error } = await supabase
+		.from("mentor_availability")
+		.select(`*,
+			cohort_member:cohort_members!inner (
+				cohort_id,
+				mentorProfile:users!inner(
+					id
+				)
+			)
+					`)
+		.eq("cohort_members.cohort_id", cohortId)
+		.eq("cohort_members.user_id", userId)
+		.single()
+		.throwOnError();
+
+	if (error) {
+		console.error("Error fetching mentor availability:", error);
+		throw error;
+	}
+	return data;
+}

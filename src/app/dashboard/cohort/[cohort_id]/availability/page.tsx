@@ -1,6 +1,11 @@
-import WeekCalendar, { CalendarEvent } from "@/components/week-calendar/WeekCalendar";
+import { Button } from "@/components/ui/button";
+import WeekCalendar, {
+	type CalendarEvent,
+} from "@/components/week-calendar/WeekCalendar";
 import { getCohortMentorsAvailability } from "@/queries/cached-queries";
 import type { Database } from "@/types";
+import { PlusIcon } from "lucide-react";
+import Link from "next/link";
 
 export default async function Page({
 	params,
@@ -67,7 +72,19 @@ export default async function Page({
 				color: "bg-blue-500",
 			};
 		});
-	// console.log("Mentor Availability",cohortAvailabilities );
-	// console.log("Events",events);
-	return <WeekCalendar events={events} />;
+
+	return (
+		<div className="h-full shrink-1 flex flex-col">
+			<div className="flex justify-between items-center gap-4">
+				<h1 className="text-2xl font-medium">Cohort's Availability</h1>
+				<Link href={`/dashboard/cohort/${cohort_id}/availability/add`}>
+					<Button className="bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors">
+						<PlusIcon className="h-4 w-4" />
+						Add your availability
+					</Button>
+				</Link>
+			</div>
+			<WeekCalendar events={events} />
+		</div>
+	);
 }
