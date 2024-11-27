@@ -27,7 +27,10 @@ export default async function CohortDashboardLayout({
 
 	try {
 		cohortId = Number.parseInt((await params).cohort_id, 10);
-		if (isNaN(cohortId) || cohortId.toString() !== (await params).cohort_id) {
+		if (
+			Number.isNaN(cohortId) ||
+			cohortId.toString() !== (await params).cohort_id
+		) {
 			throw new Error("Invalid cohort_id");
 		}
 	} catch (error) {
@@ -41,7 +44,7 @@ export default async function CohortDashboardLayout({
 	return (
 		<SidebarProvider defaultOpen={defaultOpen}>
 			<CohortDashboardSidebar cohortId={cohortId} />
-			<SidebarInset>
+			<SidebarInset className="max-h-screen flex flex-col">
 				<header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
 					<div className="flex items-center gap-2 px-4">
 						<SidebarTrigger className="-ml-1" />
@@ -61,7 +64,7 @@ export default async function CohortDashboardLayout({
 						</Breadcrumb>
 					</div>
 				</header>
-				{children}
+				<div className="container grow h-[calc(100vh-4rem)]">{children}</div>
 			</SidebarInset>
 		</SidebarProvider>
 	);

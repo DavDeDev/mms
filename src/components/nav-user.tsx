@@ -24,13 +24,14 @@ import type { getUserProfile } from "@/queries/cached-queries";
 import type { Enums } from "@/types";
 import { getCohortRoleColors } from "@/utils/utils";
 import Link from "next/link";
+import { ThemeSwitcher } from "./theme-switcher";
 import { Badge } from "./ui/badge";
 
 type User = Awaited<ReturnType<Awaited<typeof getUserProfile>>> & {
-	cohort_role: Enums<"cohort_role">;
+	cohort_role?: Enums<"cohort_role">; // Make cohort_role optional
 };
 
-export function NavUser(user: User) {
+export function NavUser({ user }: { user: User }) {
 	const { isMobile } = useSidebar();
 
 	const getInitials = (name: string) => {
@@ -44,7 +45,10 @@ export function NavUser(user: User) {
 	const fullName = `${user.first_name || ""} ${user.last_name || ""}`.trim();
 	const initials = getInitials(fullName || user.email || "Unknown User");
 
-	const cohortRoleColor = getCohortRoleColors(user.cohort_role);
+	// Get the cohort role color only if cohort_role is present
+	const cohortRoleColor = user.cohort_role
+		? getCohortRoleColors(user.cohort_role)
+		: "";
 
 	return (
 		<SidebarMenu>
@@ -70,12 +74,15 @@ export function NavUser(user: User) {
 								</span>
 								<span className="truncate text-xs">{user.email}</span>
 							</div>
-							<Badge
-								variant="outline"
-								className={`ml-auto capitalize ${cohortRoleColor}`}
-							>
-								{user.cohort_role}
-							</Badge>
+							{/* Only render Badge if cohort_role is present */}
+							{user.cohort_role && (
+								<Badge
+									variant="outline"
+									className={`ml-auto capitalize ${cohortRoleColor}`}
+								>
+									{user.cohort_role}
+								</Badge>
+							)}
 							<ChevronsUpDown className="ml-2 size-4" />
 						</SidebarMenuButton>
 					</DropdownMenuTrigger>
@@ -102,14 +109,21 @@ export function NavUser(user: User) {
 									</span>
 									<span className="truncate text-xs">{user.email}</span>
 								</div>
-								<Badge
-									variant="outline"
-									className={`capitalize ${cohortRoleColor}`}
-								>
-									{user.cohort_role}
-								</Badge>
+								{/* Only render Badge if cohort_role is present */}
+								{user.cohort_role && (
+									<Badge
+										variant="outline"
+										className={`capitalize ${cohortRoleColor}`}
+									>
+										{user.cohort_role}
+									</Badge>
+								)}
 							</div>
 						</DropdownMenuLabel>
+						<DropdownMenuSeparator />
+						<DropdownMenuItem asChild>
+							<ThemeSwitcher className="mr-2" renderSwitcher />
+						</DropdownMenuItem>
 						<DropdownMenuSeparator />
 						<DropdownMenuGroup>
 							<DropdownMenuItem asChild>

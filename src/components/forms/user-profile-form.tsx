@@ -9,13 +9,6 @@ import { cn } from "@/utils/cn";
 import { createClient } from "@/utils/supabase/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "components/ui/button";
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from "components/ui/card";
 import { Checkbox } from "components/ui/checkbox";
 import {
 	Form,
@@ -134,262 +127,251 @@ export default function UserProfileUpdateForm({
 	};
 
 	return (
-		<Card className="container">
-			<CardHeader>
-				<CardTitle>Update Your Profile</CardTitle>
-				<CardDescription>
-					Make changes to your profile here. Click save when you're done.
-				</CardDescription>
-			</CardHeader>
-			<CardContent>
-				<Form {...form}>
-					<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-						<div className="flex flex-col md:flex-row gap-6">
-							<div className="flex flex-col items-center space-y-2">
-								<FormField
-									control={form.control}
-									name="avatarUrl"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel className="sr-only">Profile Picture</FormLabel>
-											<FormControl>
-												<div className="flex flex-col items-center space-y-4">
-													<div className="relative">
-														<Label
-															htmlFor="avatar-upload"
-															className="cursor-pointer"
-														>
-															<Avatar className="w-64 h-64 border-2 border-border hover:border-primary transition-colors ">
-																<AvatarImage
-																	src={imagePreview || undefined}
-																	alt="Profile picture"
-																/>
-																<AvatarFallback>
-																	<Upload className="h-8 w-8 text-muted-foreground" />
-																</AvatarFallback>
-															</Avatar>
-														</Label>
-														<Input
-															id="avatar-upload"
-															type="file"
-															accept="image/*"
-															className="hidden"
-															onChange={(e) => {
-																const file = e.target.files?.[0];
-																if (file) {
-																	const reader = new FileReader();
-																	reader.onloadend = () => {
-																		// Pass the file object to the react hook form
-																		field.onChange(file);
-																		// Use the encoded image as the preview
-																		if (typeof reader.result === "string") {
-																			setImagePreview(reader.result);
-																		}
-																	};
-																	reader.readAsDataURL(file);
-																}
-															}}
-														/>
-														{imagePreview && (
-															<Button
-																type="button"
-																size="icon"
-																className="absolute top-1 right-1 rounded-full h-8 w-8 border-2 "
-																onClick={removeAvatar}
-															>
-																<X className="h-4 w-4" />
-																<span className="sr-only">Remove avatar</span>
-															</Button>
-														)}
-													</div>
-												</div>
-											</FormControl>
-											<FormDescription>
-												Click the avatar to upload a new profile picture.
-											</FormDescription>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-							</div>
-							<div className="flex-1 space-y-4">
-								<div className="grid grid-cols-2 gap-4">
-									<FormField
-										control={form.control}
-										name="firstName"
-										render={({ field }) => (
-											<FormItem>
-												<FormLabel>First Name</FormLabel>
-												<FormControl>
-													<Input placeholder="John" {...field} />
-												</FormControl>
-												<FormMessage />
-											</FormItem>
-										)}
-									/>
-									<FormField
-										control={form.control}
-										name="lastName"
-										render={({ field }) => (
-											<FormItem>
-												<FormLabel>Last Name</FormLabel>
-												<FormControl>
-													<Input placeholder="Doe" {...field} />
-												</FormControl>
-												<FormMessage />
-											</FormItem>
-										)}
-									/>
-								</div>
-								<FormField
-									control={form.control}
-									name="email"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Email</FormLabel>
-											<FormControl>
-												<Input
-													type="email"
-													placeholder="john@example.com"
-													{...field}
-													disabled
-												/>
-											</FormControl>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-								<div className="flex space-x-4">
-									<FormField
-										control={form.control}
-										name="dob"
-										render={({ field }) => (
-											<FormItem className="flex flex-col">
-												<FormLabel>Date of birth</FormLabel>
-												<Popover>
-													<PopoverTrigger asChild>
-														<FormControl>
-															<Button
-																variant={"outline"}
-																className={cn(
-																	"w-[240px] pl-3 text-left font-normal",
-																	!field.value && "text-muted-foreground",
-																)}
-															>
-																{field.value ? (
-																	format(field.value, "PPP")
-																) : (
-																	<span>Pick a date</span>
-																)}
-																<CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-															</Button>
-														</FormControl>
-													</PopoverTrigger>
-													<PopoverContent className="w-auto p-0" align="start">
-														{/* https://github.com/shadcn-ui/ui/issues/2982#issuecomment-1988927458 */}
-														<Calendar
-															mode="single"
-															selected={field.value}
-															onSelect={field.onChange}
-															disabled={(date) =>
-																date > new Date() ||
-																date < new Date("1900-01-01")
-															}
-															captionLayout="dropdown"
-															toYear={2010}
-															fromYear={1950}
-															classNames={{
-																day_hidden: "invisible",
-																dropdown:
-																	"px-2 py-1.5 rounded-md bg-popover text-popover-foreground text-sm  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background",
-																caption_dropdowns: "flex gap-3",
-																vhidden: "hidden",
-																caption_label: "hidden",
-															}}
-															initialFocus
-														/>
-													</PopoverContent>
-												</Popover>
-												<FormDescription>
-													Your date of birth is used to calculate your age.
-												</FormDescription>
-												<FormMessage />
-											</FormItem>
-										)}
-									/>
-
-									<FormField
-										control={form.control}
-										name="sex"
-										render={({ field }) => (
-											<FormItem>
-												<FormLabel>Sex</FormLabel>
-												<FormControl>
-													<RadioGroup
-														onValueChange={field.onChange}
-														defaultValue={field.value}
-														className="flex space-x-4"
-													>
-														{Object.values(UserSex).map((sex) => (
-															<FormItem
-																key={sex}
-																className="flex items-center space-x-2"
-															>
-																<FormControl>
-																	<RadioGroupItem value={sex} />
-																</FormControl>
-																<FormLabel className="font-normal">
-																	{sex}
-																</FormLabel>
-															</FormItem>
-														))}
-													</RadioGroup>
-												</FormControl>
-												<FormMessage />
-											</FormItem>
-										)}
-									/>
-								</div>
-							</div>
-						</div>
-
+		<Form {...form}>
+			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+				<div className="flex flex-col md:flex-row gap-6">
+					<div className="flex flex-col items-center space-y-2">
 						<FormField
 							control={form.control}
-							name="bio"
+							name="avatarUrl"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Bio</FormLabel>
+									<FormLabel className="sr-only">Profile Picture</FormLabel>
 									<FormControl>
-										<Textarea placeholder="Tell us about yourself" {...field} />
+										<div className="flex flex-col items-center space-y-4">
+											<div className="relative">
+												<Label
+													htmlFor="avatar-upload"
+													className="cursor-pointer"
+												>
+													<Avatar className="w-64 h-64 border-2 border-border hover:border-primary transition-colors ">
+														<AvatarImage
+															src={imagePreview || undefined}
+															alt="Profile picture"
+														/>
+														<AvatarFallback>
+															<Upload className="h-8 w-8 text-muted-foreground" />
+														</AvatarFallback>
+													</Avatar>
+												</Label>
+												<Input
+													id="avatar-upload"
+													type="file"
+													accept="image/*"
+													className="hidden"
+													onChange={(e) => {
+														const file = e.target.files?.[0];
+														if (file) {
+															const reader = new FileReader();
+															reader.onloadend = () => {
+																// Pass the file object to the react hook form
+																field.onChange(file);
+																// Use the encoded image as the preview
+																if (typeof reader.result === "string") {
+																	setImagePreview(reader.result);
+																}
+															};
+															reader.readAsDataURL(file);
+														}
+													}}
+												/>
+												{imagePreview && (
+													<Button
+														type="button"
+														size="icon"
+														className="absolute top-1 right-1 rounded-full h-8 w-8 border-2 "
+														onClick={removeAvatar}
+													>
+														<X className="h-4 w-4" />
+														<span className="sr-only">Remove avatar</span>
+													</Button>
+												)}
+											</div>
+										</div>
 									</FormControl>
+									<FormDescription>
+										Click the avatar to upload a new profile picture.
+									</FormDescription>
 									<FormMessage />
 								</FormItem>
 							)}
 						/>
-
-						<Separator />
-
-						<div>
-							<h3 className="text-lg font-medium">Academic Information</h3>
-							<p className="text-sm text-muted-foreground">
-								Details about your studies.
-							</p>
-						</div>
-						<div className="flex space-x-4">
+					</div>
+					<div className="flex-1 space-y-4">
+						<div className="grid grid-cols-2 gap-4">
 							<FormField
 								control={form.control}
-								name="schoolId"
+								name="firstName"
 								render={({ field }) => (
 									<FormItem>
-										<FormLabel>School ID</FormLabel>
+										<FormLabel>First Name</FormLabel>
 										<FormControl>
-											<Input placeholder="3012XXXXX" {...field} />
+											<Input placeholder="John" {...field} />
 										</FormControl>
 										<FormMessage />
 									</FormItem>
 								)}
 							/>
-							{/* <FormField
+							<FormField
+								control={form.control}
+								name="lastName"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Last Name</FormLabel>
+										<FormControl>
+											<Input placeholder="Doe" {...field} />
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+						</div>
+						<FormField
+							control={form.control}
+							name="email"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Email</FormLabel>
+									<FormControl>
+										<Input
+											type="email"
+											placeholder="john@example.com"
+											{...field}
+											disabled
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<div className="flex space-x-4">
+							<FormField
+								control={form.control}
+								name="dob"
+								render={({ field }) => (
+									<FormItem className="flex flex-col">
+										<FormLabel>Date of birth</FormLabel>
+										<Popover>
+											<PopoverTrigger asChild>
+												<FormControl>
+													<Button
+														variant={"outline"}
+														className={cn(
+															"w-[240px] pl-3 text-left font-normal",
+															!field.value && "text-muted-foreground",
+														)}
+													>
+														{field.value ? (
+															format(field.value, "PPP")
+														) : (
+															<span>Pick a date</span>
+														)}
+														<CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+													</Button>
+												</FormControl>
+											</PopoverTrigger>
+											<PopoverContent className="w-auto p-0" align="start">
+												{/* https://github.com/shadcn-ui/ui/issues/2982#issuecomment-1988927458 */}
+												<Calendar
+													mode="single"
+													selected={field.value}
+													onSelect={field.onChange}
+													disabled={(date) =>
+														date > new Date() || date < new Date("1900-01-01")
+													}
+													captionLayout="dropdown"
+													toYear={2010}
+													fromYear={1950}
+													classNames={{
+														day_hidden: "invisible",
+														dropdown:
+															"px-2 py-1.5 rounded-md bg-popover text-popover-foreground text-sm  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background",
+														caption_dropdowns: "flex gap-3",
+														vhidden: "hidden",
+														caption_label: "hidden",
+													}}
+													initialFocus
+												/>
+											</PopoverContent>
+										</Popover>
+										<FormDescription>
+											Your date of birth is used to calculate your age.
+										</FormDescription>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+
+							<FormField
+								control={form.control}
+								name="sex"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Sex</FormLabel>
+										<FormControl>
+											<RadioGroup
+												onValueChange={field.onChange}
+												defaultValue={field.value}
+												className="flex space-x-4"
+											>
+												{Object.values(UserSex).map((sex) => (
+													<FormItem
+														key={sex}
+														className="flex items-center space-x-2"
+													>
+														<FormControl>
+															<RadioGroupItem value={sex} />
+														</FormControl>
+														<FormLabel className="font-normal">{sex}</FormLabel>
+													</FormItem>
+												))}
+											</RadioGroup>
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+						</div>
+					</div>
+				</div>
+
+				<FormField
+					control={form.control}
+					name="bio"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Bio</FormLabel>
+							<FormControl>
+								<Textarea placeholder="Tell us about yourself" {...field} />
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+
+				<Separator />
+
+				<div>
+					<h3 className="text-lg font-medium">Academic Information</h3>
+					<p className="text-sm text-muted-foreground">
+						Details about your studies.
+					</p>
+				</div>
+				<div className="flex space-x-4">
+					<FormField
+						control={form.control}
+						name="schoolId"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>School ID</FormLabel>
+								<FormControl>
+									<Input placeholder="3012XXXXX" {...field} />
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+					{/* <FormField
 								control={form.control}
 								name="program"
 								render={({ field }) => (
@@ -419,149 +401,144 @@ export default function UserProfileUpdateForm({
 									</FormItem>
 								)}
 							/> */}
-							<FormField
-								control={form.control}
-								name="program"
-								render={({ field }) => (
-									<FormItem className="flex-grow">
-										<FormLabel>Program of Studies</FormLabel>
-										<FormControl>
-											<Input placeholder="Program of studies" {...field} />
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-
-							<FormField
-								control={form.control}
-								name="campus"
-								render={({ field }) => (
-									<FormItem className="flex-grow-0 w-1/3">
-										<FormLabel>College Campus</FormLabel>
-										<Select
-											onValueChange={field.onChange}
-											defaultValue={field.value}
-										>
-											<FormControl>
-												<SelectTrigger>
-													<SelectValue placeholder="Select a campus" />
-												</SelectTrigger>
-											</FormControl>
-											<SelectContent>
-												{Object.values(CollegeCampuses).map((campus) => (
-													<SelectItem key={campus} value={campus}>
-														{campus}
-													</SelectItem>
-												))}
-											</SelectContent>
-										</Select>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-						</div>
-
-						<FormField
-							control={form.control}
-							name="isInternational"
-							render={({ field }) => (
-								<FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
-									<FormControl>
-										<Checkbox
-											checked={field.value}
-											onCheckedChange={(checked) => {
-												field.onChange(checked);
-												setIsInternational(checked as boolean);
-											}}
-										/>
-									</FormControl>
-									<div className="space-y-1 leading-none">
-										<FormLabel>International Student</FormLabel>
-										<FormDescription>
-											Check this if you are an international student.
-										</FormDescription>
-									</div>
-								</FormItem>
-							)}
-						/>
-
-						{isInternational && (
-							<FormField
-								control={form.control}
-								name="country"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Country</FormLabel>
-										<CountryDropdown
-											placeholder="Country"
-											defaultValue={field.value}
-											onChange={(country) => {
-												field.onChange(country.alpha3);
-											}}
-										/>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
+					<FormField
+						control={form.control}
+						name="program"
+						render={({ field }) => (
+							<FormItem className="flex-grow">
+								<FormLabel>Program of Studies</FormLabel>
+								<FormControl>
+									<Input placeholder="Program of studies" {...field} />
+								</FormControl>
+								<FormMessage />
+							</FormItem>
 						)}
+					/>
 
-						<Separator />
-
-						<div>
-							<h3 className="text-lg font-medium">Additional Information</h3>
-							<p className="text-sm text-muted-foreground">
-								Other details that help us match you better.
-							</p>
-						</div>
-
-						<FormField
-							control={form.control}
-							name="interests"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Interests (max 5)</FormLabel>
+					<FormField
+						control={form.control}
+						name="campus"
+						render={({ field }) => (
+							<FormItem className="flex-grow-0 w-1/3">
+								<FormLabel>College Campus</FormLabel>
+								<Select
+									onValueChange={field.onChange}
+									defaultValue={field.value}
+								>
 									<FormControl>
-										<InterestsInput
-											value={field.value}
-											onChange={field.onChange}
-										/>
+										<SelectTrigger>
+											<SelectValue placeholder="Select a campus" />
+										</SelectTrigger>
 									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
+									<SelectContent>
+										{Object.values(CollegeCampuses).map((campus) => (
+											<SelectItem key={campus} value={campus}>
+												{campus}
+											</SelectItem>
+										))}
+									</SelectContent>
+								</Select>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+				</div>
 
-						<div className="bg-muted p-4 rounded-md">
-							<p className="text-sm text-muted-foreground">
-								Disclaimer: The information provided in this form is optional
-								but will help our system to better match you with mentors or
-								mentees, depending on your role. Your privacy is important to
-								us, and this information will be used solely for the purpose of
-								improving your experience on our platform.
-							</p>
+				<FormField
+					control={form.control}
+					name="isInternational"
+					render={({ field }) => (
+						<FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+							<FormControl>
+								<Checkbox
+									checked={field.value}
+									onCheckedChange={(checked) => {
+										field.onChange(checked);
+										setIsInternational(checked as boolean);
+									}}
+								/>
+							</FormControl>
+							<div className="space-y-1 leading-none">
+								<FormLabel>International Student</FormLabel>
+								<FormDescription>
+									Check this if you are an international student.
+								</FormDescription>
+							</div>
+						</FormItem>
+					)}
+				/>
+
+				{isInternational && (
+					<FormField
+						control={form.control}
+						name="country"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Country</FormLabel>
+								<CountryDropdown
+									placeholder="Country"
+									defaultValue={field.value}
+									onChange={(country) => {
+										field.onChange(country.alpha3);
+									}}
+								/>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+				)}
+
+				<Separator />
+
+				<div>
+					<h3 className="text-lg font-medium">Additional Information</h3>
+					<p className="text-sm text-muted-foreground">
+						Other details that help us match you better.
+					</p>
+				</div>
+
+				<FormField
+					control={form.control}
+					name="interests"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Interests (max 5)</FormLabel>
+							<FormControl>
+								<InterestsInput value={field.value} onChange={field.onChange} />
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+
+				<div className="bg-muted p-4 rounded-md">
+					<p className="text-sm text-muted-foreground">
+						Disclaimer: The information provided in this form is optional but
+						will help our system to better match you with mentors or mentees,
+						depending on your role. Your privacy is important to us, and this
+						information will be used solely for the purpose of improving your
+						experience on our platform.
+					</p>
+				</div>
+
+				<Button
+					type="submit"
+					className="w-full"
+					disabled={form.formState.isSubmitting}
+				>
+					{form.formState.isSubmitting ? (
+						<div className="flex gap-1">
+							<Loader2
+								className="animate-spin text-foreground-muted mt-0.5"
+								size={16}
+							/>
+							<span>Saving...</span>
 						</div>
-
-						<Button
-							type="submit"
-							className="w-full"
-							disabled={form.formState.isSubmitting}
-						>
-							{form.formState.isSubmitting ? (
-								<div className="flex gap-1">
-									<Loader2
-										className="animate-spin text-foreground-muted mt-0.5"
-										size={16}
-									/>
-									<span>Saving...</span>
-								</div>
-							) : (
-								"Save Changes"
-							)}
-						</Button>
-					</form>
-				</Form>
-			</CardContent>
-		</Card>
+					) : (
+						"Save Changes"
+					)}
+				</Button>
+			</form>
+		</Form>
 	);
 }

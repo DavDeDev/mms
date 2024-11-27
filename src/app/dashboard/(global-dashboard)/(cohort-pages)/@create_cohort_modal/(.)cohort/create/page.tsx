@@ -6,9 +6,5 @@ import CreateCohortModal from "./create-cohort-modal";
 export default async function Page() {
 	const user = await getUserProfile();
 
-	return (
-		<div className="container">
-			<CreateCohortModal userEmail={user.email} />
-		</div>
-	);
+	return <CreateCohortModal userEmail={user.email} />;
 }

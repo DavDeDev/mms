@@ -1,5 +1,6 @@
 "use client";
 
+import clsx from "clsx";
 import { Button } from "components/ui/button";
 import {
 	DropdownMenu,
@@ -11,8 +12,14 @@ import {
 import { Laptop, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
+import { ToggleGroup, ToggleGroupItem } from "./ui/toggle-group";
 
-const ThemeSwitcher = () => {
+interface ThemeSwitcherProps {
+	renderSwitcher?: boolean;
+	className?: string;
+}
+
+const ThemeSwitcher = ({ renderSwitcher, className }: ThemeSwitcherProps) => {
 	const [mounted, setMounted] = useState(false);
 	const { theme, setTheme } = useTheme();
 
@@ -27,10 +34,36 @@ const ThemeSwitcher = () => {
 
 	const ICON_SIZE = 16;
 
+	const handleThemeChange = (newTheme: string) => {
+		setTheme(newTheme);
+	};
+
+	// TODO: try to create a nice switcher component like the one on https://vercel.com/geist/colors (top right)
+	if (renderSwitcher) {
+		return (
+			<ToggleGroup
+				variant="outline"
+				type="single"
+				value={theme}
+				onValueChange={handleThemeChange}
+			>
+				<ToggleGroupItem value="light" aria-label="Toggle light mode">
+					<Sun className="h-4 w-4" />
+				</ToggleGroupItem>
+				<ToggleGroupItem value="dark" aria-label="Toggle dark mode">
+					<Moon className="h-4 w-4" />
+				</ToggleGroupItem>
+				<ToggleGroupItem value="system" aria-label="Toggle system mode">
+					<Laptop className="h-4 w-4" />
+				</ToggleGroupItem>
+			</ToggleGroup>
+		);
+	}
+
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<Button variant="ghost" size={"sm"}>
+				<Button variant="ghost" size="sm" className={clsx(className)}>
 					{theme === "light" ? (
 						<Sun
 							key="light"
@@ -52,11 +85,11 @@ const ThemeSwitcher = () => {
 					)}
 				</Button>
 			</DropdownMenuTrigger>
-			<DropdownMenuContent className="w-content" align="start">
-				<DropdownMenuRadioGroup
-					value={theme}
-					onValueChange={(e) => setTheme(e)}
-				>
+			<DropdownMenuContent
+				className={clsx("w-content", className)}
+				align="start"
+			>
+				<DropdownMenuRadioGroup value={theme} onValueChange={handleThemeChange}>
 					<DropdownMenuRadioItem className="flex gap-2" value="light">
 						<Sun size={ICON_SIZE} className="text-muted-foreground" />{" "}
 						<span>Light</span>
