@@ -3,32 +3,38 @@ import React from 'react';
 const features = [
   {
     title: 'Mentor-Mentee Matching',
-    description: 'Intelligent algorithm to pair mentors with mentees based on goals and interests.',
+    description:
+      'Utilize advanced algorithms to connect mentors and mentees effectively, ensuring alignment of goals, interests, and expertise for a successful mentorship journey.',
     icon: '👥',
   },
   {
     title: 'Session Scheduling',
-    description: 'Easy-to-use calendar for scheduling and managing mentorship sessions.',
+    description:
+      'Effortlessly schedule and manage mentorship sessions with our intuitive calendar. Features include automated reminders, conflict resolution, and integration with popular calendar apps.',
     icon: '📅',
   },
   {
     title: 'Progress Tracking',
-    description: 'Monitor and analyze the impact of your mentorship program with detailed reports.',
+    description:
+      'Gain insights into your mentorship program with real-time analytics and comprehensive reporting tools. Track milestones and analyze progress to optimize outcomes.',
     icon: '📈',
   },
   {
     title: 'Resource Library',
-    description: 'Curated collection of materials to support mentors and mentees throughout their journey.',
+    description:
+      'Access a rich repository of high-quality resources, including templates, articles, and videos, to support ongoing learning and development for both mentors and mentees.',
     icon: '📖',
   },
   {
     title: 'Feedback System',
-    description: 'Collect and analyze feedback from mentors and mentees to continuously improve the program.',
+    description:
+      'Encourage open communication with an effective feedback platform. Gather, evaluate, and implement suggestions to continuously improve the mentorship experience.',
     icon: '💬',
   },
   {
     title: 'Quick Actions',
-    description: 'Streamlined interface for common tasks to save time and increase efficiency.',
+    description:
+      'Boost productivity with a streamlined interface that allows you to perform frequent tasks, such as rescheduling sessions or updating progress, with just a few clicks.',
     icon: '⚡',
   },
 ];
