@@ -95,6 +95,7 @@ We welcome contributions to this project. Please follow these steps to contribut
 Please make sure to pass the pipeline before asking for review. Run the following command to check if the pipeline passes:
 
 ```bash
+pnpm fix
 pnpm build
 ```
 
