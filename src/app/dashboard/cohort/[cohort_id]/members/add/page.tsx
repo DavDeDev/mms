@@ -6,7 +6,5 @@ export default async function Page({
 	params: Promise<{ cohort_id: number }>;
 }) {
 	const cohortId = (await params).cohort_id;
-	return(
-		<InviteUserToCohortForm cohortId={cohortId} />
-	)
+	return <InviteUserToCohortForm cohortId={cohortId} />;
 }

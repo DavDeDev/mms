@@ -1,4 +1,4 @@
-import MentorAvailabilityForm from "@/components/forms/add-mentor-availability";
+import MentorAvailabilityForm from "@/components/forms/add-mentor-availability-form";
 
 export default async function Page({
 	params,

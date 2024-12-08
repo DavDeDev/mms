@@ -259,7 +259,7 @@ export async function getCohortMentorAvailabilityQuery(
 					`)
 		.eq("cohort_members.cohort_id", cohortId)
 		.eq("cohort_members.user_id", userId)
-		.single()
+		.maybeSingle()
 		.throwOnError();
 
 	if (error) {

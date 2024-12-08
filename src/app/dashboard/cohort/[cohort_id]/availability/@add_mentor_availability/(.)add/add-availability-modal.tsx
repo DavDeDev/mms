@@ -1,6 +1,6 @@
 "use client";
 
-import MentorAvailabilityForm from "@/components/forms/add-mentor-availability";
+import MentorAvailabilityForm from "@/components/forms/add-mentor-availability-form";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { Dialog, DialogContent } from "components/ui/dialog";
 import { useRouter } from "next/navigation";
