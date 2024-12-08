@@ -23,7 +23,6 @@ export const submitMentorAvailabilityAction = async (
 	formData: z.infer<typeof createMentorAvailabilitySchema>,
 	cohortId: number,
 ): Promise<ServerActionResponse> => {
-	console.log("starting action!!1");
 	// Validate form data
 	const { success, error, data } =
 		createMentorAvailabilitySchema.safeParse(formData);

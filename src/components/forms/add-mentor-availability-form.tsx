@@ -1,9 +1,10 @@
 "use client";
+
+import { submitMentorAvailabilityAction } from "@/actions/submit-mentor-availability-action";
 import { createMentorAvailabilitySchema } from "@/mutations/schema";
 import { DayOfWeek } from "@/types/enums";
 import { zodResolver } from "@hookform/resolvers/zod";
-
-import { submitMentorAvailabilityAction } from "@/actions/submit-mentor-availability-action";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { z } from "zod";
@@ -25,7 +26,10 @@ type FormValues = z.infer<typeof createMentorAvailabilitySchema>;
 export default function MentorAvailabilityForm({
 	cohortId,
 	onSubmitSuccess,
-}: { cohortId: number; onSubmitSuccess?: () => void }) {
+}: {
+	cohortId: number;
+	onSubmitSuccess?: () => void;
+}) {
 	const form = useForm<FormValues>({
 		resolver: zodResolver(createMentorAvailabilitySchema),
 		defaultValues: {
@@ -36,7 +40,6 @@ export default function MentorAvailabilityForm({
 	});
 
 	const onSubmit = async (data: FormValues) => {
-		// Handle form submission here
 		const res = await submitMentorAvailabilityAction(data, cohortId);
 
 		if (res.success) {
@@ -50,12 +53,25 @@ export default function MentorAvailabilityForm({
 		}
 	};
 
+	// Update end time when start time changes
+	useEffect(() => {
+		const subscription = form.watch((value, { name }) => {
+			if (name === "startTime" && value.startTime) {
+				const startTime = new Date(`2000-01-01T${value.startTime}`);
+				const endTime = new Date(startTime.getTime() + 60 * 60 * 1000);
+				form.setValue("endTime", endTime.toTimeString().slice(0, 5));
+			}
+		});
+		return () => subscription.unsubscribe();
+	}, [form]);
+
 	return (
 		<Form {...form}>
 			<h1 className="text-3xl font-bold">Select your Availability</h1>
-			<FormDescription>
-				Please select the day of the week and the time range during which you
-				are available to mentor.
+			<FormDescription className="mb-4">
+				Please select the day of the week and the start time for your mentoring
+				session. Each session is fixed at 1 hour to ensure consistency and
+				efficient scheduling.
 			</FormDescription>
 			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
 				<FormField
@@ -97,8 +113,11 @@ export default function MentorAvailabilityForm({
 							<FormItem className="flex-1">
 								<FormLabel>End Time</FormLabel>
 								<FormControl>
-									<Input type="time" step={0} {...field} />
+									<Input type="time" step={0} {...field} disabled />
 								</FormControl>
+								<FormDescription>
+									Automatically set to 1 hour after start time
+								</FormDescription>
 								<FormMessage />
 							</FormItem>
 						)}
