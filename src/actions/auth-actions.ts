@@ -9,17 +9,13 @@ import { getUserCohorts } from "@/queries/cached-queries";
 import type { Enums } from "@/types";
 import { cache } from "react";
 
-export const signUpAction = async (formData: FormData) : Promise<void> => {
+export const signUpAction = async (formData: FormData): Promise<void> => {
 	const email = formData.get("email")?.toString();
 	const password = formData.get("password")?.toString();
 	const firstName = formData.get("firstName")?.toString();
 	const lastName = formData.get("lastName")?.toString();
 	const supabase = await createClient();
 	const origin = (await headers()).get("origin");
-
-	// if (!email || !password || !firstName || !lastName) {
-	// 	return { error: "Email and password are required" };
-	// }
 
 	if (!email || !password || !firstName || !lastName) {
 		return encodedRedirect(
