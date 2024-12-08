@@ -1,11 +1,4 @@
-import {
-	BookOpen,
-	Briefcase,
-	ChevronRight,
-	Home,
-	Settings,
-	Users,
-} from "lucide-react";
+import { ChevronRight } from "lucide-react";
 
 import {
 	Collapsible,
@@ -22,56 +15,26 @@ import {
 	SidebarMenuSubButton,
 	SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
+import { navMain } from "@/constants/nav-main";
+import type { Enums } from "@/types";
 
-const navMain = [
-	{
-		title: "Dashboard",
-		url: "/dashboard",
-		icon: Home,
-		isActive: true,
-	},
-	{
-		title: "Members",
-		url: "/members",
-		icon: Users,
-		items: [
-			{ title: "All Members", url: "/members" },
-			{ title: "Add Mentee", url: "/mentees/add" },
-		],
-	},
-	{
-		title: "Programs",
-		url: "/programs",
-		icon: Briefcase,
-	},
-	{
-		title: "Resources",
-		url: "/resources",
-		icon: BookOpen,
-	},
-	{
-		title: "Settings",
-		url: "/settings",
-		icon: Settings,
-	},
-	{
-		title: "Matching",
-		url: "/matching",
-		icon: Users,
-		items: [
-			{ title: "Matchings", url: "/matching" },
-			{ title: "Availability", url: "/availability" },
-		],
-	},
-];
+interface NavMainProps {
+	cohortId: number;
+	userRole: Enums<"cohort_role">;
+}
 
-export function NavMain({ cohortId }: { cohortId: number }) {
+export function NavMain({ cohortId, userRole }: NavMainProps) {
 	const basePath = `/dashboard/cohort/${cohortId}/`;
+
+	const filteredNavMain = navMain.filter((item) =>
+		item.roles.includes(userRole),
+	);
+
 	return (
 		<SidebarGroup>
 			<SidebarGroupLabel>Platform</SidebarGroupLabel>
 			<SidebarMenu>
-				{navMain.map((item) => (
+				{filteredNavMain.map((item) => (
 					<Collapsible
 						key={item.title}
 						asChild
@@ -83,23 +46,28 @@ export function NavMain({ cohortId }: { cohortId: number }) {
 								<SidebarMenuButton tooltip={item.title}>
 									{item.icon && <item.icon />}
 									<span>{item.title}</span>
-									<ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+									{item.items && (
+										<ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+									)}
 								</SidebarMenuButton>
 							</CollapsibleTrigger>
-							<CollapsibleContent>
-								<SidebarMenuSub>
-									{item.items?.map((subItem) => (
-										<SidebarMenuSubItem key={subItem.title}>
-											<SidebarMenuSubButton asChild>
-												<a href={`${basePath}${subItem.url}`}>
-													{" "}
-													<span>{subItem.title}</span>
-												</a>
-											</SidebarMenuSubButton>
-										</SidebarMenuSubItem>
-									))}
-								</SidebarMenuSub>
-							</CollapsibleContent>
+							{item.items && (
+								<CollapsibleContent>
+									<SidebarMenuSub>
+										{item.items
+											.filter((subItem) => subItem.roles.includes(userRole))
+											.map((subItem) => (
+												<SidebarMenuSubItem key={subItem.title}>
+													<SidebarMenuSubButton asChild>
+														<a href={`${basePath}${subItem.url}`}>
+															<span>{subItem.title}</span>
+														</a>
+													</SidebarMenuSubButton>
+												</SidebarMenuSubItem>
+											))}
+									</SidebarMenuSub>
+								</CollapsibleContent>
+							)}
 						</SidebarMenuItem>
 					</Collapsible>
 				))}

@@ -192,6 +192,22 @@ export default function CreateCohortForm({
 		}
 	};
 
+	const addCoordinator = (email: string) => {
+		// Remove any existing coordinator from members
+		const updatedMembers = members.filter(
+			(member) => member.role !== CohortRole.coordinator,
+		);
+
+		// Add the new coordinator to members if not already present
+		if (!updatedMembers.some((member) => member.email === email)) {
+			updatedMembers.push({ email, role: CohortRole.coordinator });
+		}
+
+		setMembers(updatedMembers);
+		form.setValue("members", updatedMembers);
+		form.setValue("coordinator", email);
+	};
+
 	return (
 		<div className="">
 			<h1 className="text-3xl font-bold mb-6">Create New Cohort</h1>
@@ -377,14 +393,16 @@ export default function CreateCohortForm({
 														type="email"
 														placeholder="coordinator@example.com"
 														{...field}
+														onChange={(e) => {
+															field.onChange(e);
+															addCoordinator(e.target.value);
+														}}
 													/>
 												</FormControl>
 												<Button
 													type="button"
 													variant="outline"
-													onClick={() =>
-														form.setValue("coordinator", userEmail)
-													}
+													onClick={() => addCoordinator(userEmail)}
 												>
 													Add Me
 												</Button>
@@ -420,6 +438,9 @@ export default function CreateCohortForm({
 									<SelectItem value={CohortRole.mentor}>Mentor</SelectItem>
 									<SelectItem value={CohortRole.mentee}>Mentee</SelectItem>
 									<SelectItem value={CohortRole.admin}>Admin</SelectItem>
+									<SelectItem value={CohortRole.coordinator}>
+										Coordinator
+									</SelectItem>
 								</SelectContent>
 							</Select>
 							<Button
