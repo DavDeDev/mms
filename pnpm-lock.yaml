@@ -95,9 +95,6 @@ importers:
       lucide-react:
         specifier: ^0.436.0
         version: 0.436.0(react@19.0.0)
-      mms:
-        specifier: 'link:'
-        version: 'link:'
       next:
         specifier: 15.0.0
         version: 15.0.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
