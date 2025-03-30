@@ -1,0 +1,24 @@
+/**
+ * Global styles and Tailwind CSS configuration.
+ * Provides consistent styling and theme across the application.
+ * 
+ * Features:
+ * - Tailwind base styles
+ * - Custom focus states
+ * - Utility classes
+ * - Transition effects
+ */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Remove default focus outlines and replace with a subtle transition */
+input:focus, select:focus {
+  @apply outline-none ring-0 border-orange-500 transition-colors duration-200;
+}
+
+/* Custom focus styles without the outline */
+.focus-visible:focus {
+  @apply outline-none ring-0;
+}
