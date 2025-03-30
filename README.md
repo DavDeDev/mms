@@ -1,4 +1,4 @@
-# MMS - Mentorship Management System
+# MMS - Mentorship Management System Test
 
 ![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
 ![Next JS](https://img.shields.io/badge/Next-black?style=for-the-badge&logo=next.js&logoColor=white)
